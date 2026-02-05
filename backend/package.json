@@ -11,13 +11,13 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@fastify/cors": "^8.5.0",
-    "@fastify/helmet": "^11.1.1",
+    "@fastify/cors": "^11.2.0",
+    "@fastify/helmet": "^13.0.2",
     "@supabase/supabase-js": "^2.45.0",
     "@techtide/agents": "workspace:*",
     "@techtide/apis": "workspace:*",
     "dotenv": "^16.4.5",
-    "fastify": "^4.28.1",
+    "fastify": "^5.7.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {
