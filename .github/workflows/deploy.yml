@@ -103,17 +103,16 @@ jobs:
           name: backend-dist
           path: backend/
 
-      # ─── Plug in your deploy target here ───
-      # Examples:
-      #   - Railway:  railwayapp/cli-action
-      #   - Fly.io:   superfly/flyctl-actions
-      #   - AWS ECS:  aws-actions/amazon-ecs-deploy-task-definition
-      #   - Docker:   docker/build-push-action → container registry
-      - name: Deploy (placeholder)
-        run: |
-          echo "🚀 Deploy backend to ${{ github.event.inputs.environment || 'staging' }}"
-          echo "   Replace this step with your hosting provider's deploy action."
-          echo "   Backend artifact is at backend/dist/"
+      # ─── Railway deploy (swap for Fly.io / AWS ECS / Docker as needed) ───
+      # Required secrets: RAILWAY_TOKEN (set per-environment)
+      # Required vars:    RAILWAY_SERVICE_ID (set per-environment)
+      - name: Install Railway CLI
+        run: npm i -g @railway/cli
+
+      - name: Deploy backend to Railway
+        run: railway up --service ${{ vars.RAILWAY_SERVICE_ID }} --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
   # ──────────────────────────────────────────────
   # Deploy frontend
@@ -131,14 +130,21 @@ jobs:
           name: frontend-dist
           path: frontend/dist/
 
-      # ─── Plug in your deploy target here ───
-      # Examples:
-      #   - Vercel:      amondnet/vercel-action
-      #   - Cloudflare:  cloudflare/wrangler-action (Pages)
-      #   - Netlify:     nwtgck/actions-netlify
-      #   - AWS S3+CF:   jakejarvis/s3-sync-action
-      - name: Deploy (placeholder)
+      # ─── Vercel deploy (swap for Cloudflare Pages / Netlify / S3 as needed) ───
+      # Required secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=${{ github.event.inputs.environment == 'production' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy frontend to Vercel
         run: |
-          echo "🚀 Deploy frontend to ${{ github.event.inputs.environment || 'staging' }}"
-          echo "   Replace this step with your hosting provider's deploy action."
-          echo "   Frontend artifact is at frontend/dist/"
+          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+            vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+          else
+            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          fi
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

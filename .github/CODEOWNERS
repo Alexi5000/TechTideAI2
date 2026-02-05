@@ -1,15 +1,15 @@
-# Default owners for the entire repo
-* @techtide/engineering
+# Default owner for the entire repo
+* @Alexi5000
 
 # Workspace-level ownership
-/frontend/    @techtide/frontend
-/backend/     @techtide/backend
-/agents/      @techtide/agents
-/apis/        @techtide/agents
-/database/    @techtide/backend
-
-# Python agents
-/agents/python/ @techtide/agents
+# When you create a GitHub org with teams, replace @Alexi5000 with team handles:
+#   @techtide/frontend, @techtide/backend, @techtide/agents, @techtide/devops
+/frontend/      @Alexi5000
+/backend/       @Alexi5000
+/agents/        @Alexi5000
+/apis/          @Alexi5000
+/database/      @Alexi5000
+/agents/python/ @Alexi5000
 
 # CI/CD and repo config
-/.github/     @techtide/devops
+/.github/       @Alexi5000
