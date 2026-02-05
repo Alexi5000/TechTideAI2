@@ -1,0 +1,36 @@
+# Auto-label PRs based on changed file paths
+# Used by .github/workflows/pr.yml (actions/labeler)
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: "frontend/**"
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: "backend/**"
+
+agents:
+  - changed-files:
+      - any-glob-to-any-file: "agents/**"
+
+apis:
+  - changed-files:
+      - any-glob-to-any-file: "apis/**"
+
+database:
+  - changed-files:
+      - any-glob-to-any-file: "database/**"
+
+python:
+  - changed-files:
+      - any-glob-to-any-file: "agents/python/**"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "**/*.md"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**"

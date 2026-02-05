@@ -1,0 +1,17 @@
+﻿# Node
+node_modules/
+.pnpm-store/
+# Python
+__pycache__/
+.venv/
+# Env
+.env
+.env.*
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+# OS
+.DS_Store
+Thumbs.db
+nul

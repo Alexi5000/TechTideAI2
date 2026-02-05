@@ -1,0 +1,25 @@
+{
+  "name": "techtideai",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "apis",
+    "agents"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:frontend": "pnpm -C frontend dev",
+    "dev:backend": "pnpm -C backend dev",
+    "dev:agents": "pnpm -C agents dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}

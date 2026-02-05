@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@techtide/agents": ["../agents/src/index.ts"],
+      "@techtide/apis": ["../apis/src/index.ts"]
+    }
+  },
+  "include": ["src", "vitest.config.ts"]
+}

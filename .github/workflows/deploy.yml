@@ -1,0 +1,144 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: staging
+
+concurrency:
+  group: deploy-${{ github.event.inputs.environment || 'staging' }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Build all artifacts
+  # ──────────────────────────────────────────────
+  build:
+    name: Build artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build all workspaces
+        run: pnpm -r build
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist
+          path: |
+            backend/dist/
+            backend/package.json
+          retention-days: 7
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 7
+
+  # ──────────────────────────────────────────────
+  # Deploy database migrations
+  # ──────────────────────────────────────────────
+  migrate:
+    name: "Migrate DB → ${{ github.event.inputs.environment || 'staging' }}"
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link Supabase project
+        run: supabase link --project-ref ${{ vars.SUPABASE_PROJECT_REF }} --workdir database
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Push migrations
+        run: supabase db push --workdir database
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+  # ──────────────────────────────────────────────
+  # Deploy backend
+  # ──────────────────────────────────────────────
+  deploy-backend:
+    name: "Deploy backend → ${{ github.event.inputs.environment || 'staging' }}"
+    needs: [build, migrate]
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: backend-dist
+          path: backend/
+
+      # ─── Plug in your deploy target here ───
+      # Examples:
+      #   - Railway:  railwayapp/cli-action
+      #   - Fly.io:   superfly/flyctl-actions
+      #   - AWS ECS:  aws-actions/amazon-ecs-deploy-task-definition
+      #   - Docker:   docker/build-push-action → container registry
+      - name: Deploy (placeholder)
+        run: |
+          echo "🚀 Deploy backend to ${{ github.event.inputs.environment || 'staging' }}"
+          echo "   Replace this step with your hosting provider's deploy action."
+          echo "   Backend artifact is at backend/dist/"
+
+  # ──────────────────────────────────────────────
+  # Deploy frontend
+  # ──────────────────────────────────────────────
+  deploy-frontend:
+    name: "Deploy frontend → ${{ github.event.inputs.environment || 'staging' }}"
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+
+      # ─── Plug in your deploy target here ───
+      # Examples:
+      #   - Vercel:      amondnet/vercel-action
+      #   - Cloudflare:  cloudflare/wrangler-action (Pages)
+      #   - Netlify:     nwtgck/actions-netlify
+      #   - AWS S3+CF:   jakejarvis/s3-sync-action
+      - name: Deploy (placeholder)
+        run: |
+          echo "🚀 Deploy frontend to ${{ github.event.inputs.environment || 'staging' }}"
+          echo "   Replace this step with your hosting provider's deploy action."
+          echo "   Frontend artifact is at frontend/dist/"

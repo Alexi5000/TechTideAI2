@@ -1,0 +1,184 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Detect which workspaces changed
+  # ──────────────────────────────────────────────
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      agents: ${{ steps.filter.outputs.agents }}
+      apis: ${{ steps.filter.outputs.apis }}
+      python: ${{ steps.filter.outputs.python }}
+      database: ${{ steps.filter.outputs.database }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - 'pnpm-lock.yaml'
+            frontend:
+              - 'frontend/**'
+              - 'pnpm-lock.yaml'
+            agents:
+              - 'agents/src/**'
+              - 'agents/package.json'
+              - 'pnpm-lock.yaml'
+            apis:
+              - 'apis/**'
+              - 'pnpm-lock.yaml'
+            python:
+              - 'agents/python/**'
+            database:
+              - 'database/**'
+
+  # ──────────────────────────────────────────────
+  # TypeScript: lint + test + build (all workspaces)
+  # ──────────────────────────────────────────────
+  typescript:
+    name: "TS · ${{ matrix.workspace }}"
+    needs: changes
+    if: >-
+      needs.changes.outputs.backend == 'true' ||
+      needs.changes.outputs.frontend == 'true' ||
+      needs.changes.outputs.agents == 'true' ||
+      needs.changes.outputs.apis == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace: [apis, agents, backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Env stubs so Zod validation doesn't blow up during build/test
+      - name: Create env stubs
+        run: |
+          echo "NODE_ENV=test" >> backend/.env
+          echo "DEFAULT_LLM_PROVIDER=openai" >> backend/.env
+
+      - name: Lint
+        run: pnpm -C ${{ matrix.workspace }} lint
+
+      - name: Typecheck
+        run: pnpm -C ${{ matrix.workspace }} exec tsc --noEmit
+        # frontend uses tsc -b; handle separately
+        if: matrix.workspace != 'frontend'
+
+      - name: Typecheck (frontend)
+        run: pnpm -C frontend exec tsc -b --noEmit
+        if: matrix.workspace == 'frontend'
+
+      - name: Test
+        run: pnpm -C ${{ matrix.workspace }} test -- --run --reporter=default
+        # Only run if the workspace has test files
+        if: matrix.workspace == 'backend' || matrix.workspace == 'apis' || matrix.workspace == 'agents'
+
+      - name: Build
+        run: pnpm -C ${{ matrix.workspace }} build
+
+  # ──────────────────────────────────────────────
+  # Python agents: lint + test
+  # ──────────────────────────────────────────────
+  python:
+    name: Python agents
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: agents/python
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: agents/python/pyproject.toml
+
+      - name: Install dependencies
+        run: pip install -e .[dev]
+
+      - name: Ruff lint
+        run: ruff check .
+
+      - name: Ruff format check
+        run: ruff format --check .
+
+      - name: Pytest
+        run: pytest -v
+
+  # ──────────────────────────────────────────────
+  # Database migration validation
+  # ──────────────────────────────────────────────
+  database:
+    name: Database migrations
+    needs: changes
+    if: needs.changes.outputs.database == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Validate migrations
+        run: supabase db lint --workdir database
+
+  # ──────────────────────────────────────────────
+  # Gate — all checks must pass before merge
+  # ──────────────────────────────────────────────
+  ci-gate:
+    name: CI Gate
+    if: always()
+    needs: [typescript, python, database]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          echo "TS:       ${{ needs.typescript.result }}"
+          echo "Python:   ${{ needs.python.result }}"
+          echo "Database: ${{ needs.database.result }}"
+
+          # Fail if any required job failed (skipped is OK — means no changes)
+          if [[ "${{ needs.typescript.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.python.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.database.result }}" == "failure" ]]; then exit 1; fi
+
+          echo "✅ All checks passed or were skipped"

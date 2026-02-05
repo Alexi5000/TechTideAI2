@@ -1,0 +1,15 @@
+# Default owners for the entire repo
+* @techtide/engineering
+
+# Workspace-level ownership
+/frontend/    @techtide/frontend
+/backend/     @techtide/backend
+/agents/      @techtide/agents
+/apis/        @techtide/agents
+/database/    @techtide/backend
+
+# Python agents
+/agents/python/ @techtide/agents
+
+# CI/CD and repo config
+/.github/     @techtide/devops

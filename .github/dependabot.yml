@@ -1,0 +1,55 @@
+version: 2
+
+updates:
+  # ── Root + all pnpm workspaces ──
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - javascript
+    groups:
+      typescript:
+        patterns: ["typescript", "@typescript-eslint/*"]
+      eslint:
+        patterns: ["eslint", "eslint-*", "@eslint/*"]
+      vitest:
+        patterns: ["vitest", "@vitest/*"]
+      react:
+        patterns: ["react", "react-dom", "@types/react*"]
+      fastify:
+        patterns: ["fastify", "@fastify/*"]
+      tailwind:
+        patterns: ["tailwindcss", "@tailwindcss/*", "tailwind-merge"]
+      ai-sdks:
+        patterns: ["openai", "@anthropic-ai/*", "@mastra/*", "mastra"]
+      supabase:
+        patterns: ["@supabase/*"]
+
+  # ── Python agents ──
+  - package-ecosystem: pip
+    directory: /agents/python
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - python
+    groups:
+      langchain:
+        patterns: ["langchain*", "langgraph*"]
+
+  # ── GitHub Actions ──
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
