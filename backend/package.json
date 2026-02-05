@@ -13,7 +13,7 @@
   "dependencies": {
     "@fastify/cors": "^8.5.0",
     "@fastify/helmet": "^11.1.1",
-    "@supabase/supabase-js": "^2.45.0",
+    "@supabase/supabase-js": "^2.95.2",
     "@techtide/agents": "workspace:*",
     "@techtide/apis": "workspace:*",
     "dotenv": "^16.4.5",
