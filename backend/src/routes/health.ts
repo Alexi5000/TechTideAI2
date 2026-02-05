@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { env } from "../config/env";
+import { env } from "../config/env.js";
 
 export async function registerHealthRoutes(app: FastifyInstance) {
   app.get("/health", async () => ({

@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { LlmRequest, LlmResponse } from "./types";
+import type { LlmRequest, LlmResponse } from "./types.js";
 
 export type AnthropicRequest = Omit<LlmRequest, "provider"> & { provider?: "anthropic" };
 
@@ -11,13 +11,17 @@ export async function generateAnthropicText(
   request: AnthropicRequest,
   client = createAnthropicClient(),
 ): Promise<LlmResponse> {
-  const message = await client.messages.create({
-    model: request.model,
-    max_tokens: request.maxTokens ?? 1024,
-    messages: [{ role: "user", content: request.input }],
-    ...(request.system ? { system: request.system } : {}),
-    ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
-  });
+  const { model, input, system, temperature, maxTokens } = request;
+
+  const options: Anthropic.MessageCreateParams = {
+    model,
+    max_tokens: maxTokens ?? 1024,
+    messages: [{ role: "user", content: input }],
+  };
+  if (system) options.system = system;
+  if (temperature !== undefined) options.temperature = temperature;
+
+  const message = await client.messages.create(options);
 
   const text = message.content
     .filter((block) => block.type === "text")
@@ -26,7 +30,7 @@ export async function generateAnthropicText(
 
   return {
     provider: "anthropic",
-    model: request.model,
+    model,
     text,
     raw: message,
   };

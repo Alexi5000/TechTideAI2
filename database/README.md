@@ -7,6 +7,11 @@ Supabase local configuration, migrations, and seed data.
 supabase start --workdir database
 ```
 
+## Weaviate (vector store)
+```bash
+docker compose -f database/weaviate/docker-compose.yml up -d
+```
+
 ## Apply migrations
 ```bash
 supabase db reset --workdir database

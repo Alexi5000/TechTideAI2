@@ -12,6 +12,12 @@ export type {
   RunStatus,
   CreateRunInput,
 } from "./entities/run.js";
+export type {
+  KnowledgeDocument,
+  KnowledgeChunk,
+  CreateKnowledgeDocumentInput,
+  KnowledgeSearchResult,
+} from "./entities/knowledge.js";
 
 // Exceptions
 export {
@@ -20,6 +26,8 @@ export {
   InvalidStatusTransitionError,
   AgentNotFoundError,
   PersistenceUnavailableError,
+  VectorStoreUnavailableError,
+  EmbeddingProviderUnavailableError,
 } from "./exceptions/index.js";
 
 // Policies

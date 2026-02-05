@@ -81,6 +81,7 @@ export function useRunPolling(runId: string | null): UseRunPollingResult {
       return;
     }
 
+    const currentRunId = runId; // Capture for closure
     let cancelled = false;
 
     async function poll() {
@@ -88,7 +89,7 @@ export function useRunPolling(runId: string | null): UseRunPollingResult {
 
       setLoading(true);
       try {
-        const updatedRun = await apiClient.getRun(runId);
+        const updatedRun = await apiClient.getRun(currentRunId);
         if (cancelled) return;
 
         setRun(updatedRun);

@@ -85,8 +85,8 @@ export function createMastraRuntime(): IAgentRuntime {
             type: "tool_result",
             timestamp: new Date().toISOString(),
             payload: {
-              toolName: toolResult.toolName,
-              result: toolResult.result,
+              toolName: toolResult.payload.toolName,
+              result: toolResult.payload.result,
             },
           });
         }

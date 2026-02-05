@@ -5,16 +5,20 @@
  * Users can navigate to the console to run individual agents.
  */
 
-import { Link } from "react-router-dom";
-import { useAgents } from "../hooks/use-agents";
-import { Card } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
-import type { Agent } from "../lib/api-client";
+import { Link, useOutletContext } from "react-router-dom";
+import { useAgents } from "@/hooks/use-agents.js";
+import { Topbar } from "@/components/layout/index.js";
+import { PageTransition } from "@/components/page-transition.js";
+import { Card } from "@/components/ui/card.js";
+import { Button } from "@/components/ui/button.js";
+import { Badge } from "@/components/ui/badge.js";
+import { IconRefresh } from "@/components/icons/index.js";
+import type { Agent } from "@/lib/api-client.js";
+import type { DashboardContextType } from "@/components/layout/index.js";
 
 function AgentCard({ agent }: { agent: Agent }) {
   return (
-    <Card className="flex flex-col h-full">
+    <Card className="flex flex-col h-full hover:shadow-[var(--shadow-md)] transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <h3 className="text-lg font-semibold text-[var(--ink)]">{agent.name}</h3>
         <Badge>{agent.tier}</Badge>
@@ -40,7 +44,7 @@ function AgentCard({ agent }: { agent: Agent }) {
           </span>
         )}
       </div>
-      <Link to={`/console/${agent.id}`} className="mt-auto">
+      <Link to={`/dashboard/console/${agent.id}`} className="mt-auto">
         <Button size="sm" className="w-full">
           Run Agent
         </Button>
@@ -49,101 +53,142 @@ function AgentCard({ agent }: { agent: Agent }) {
   );
 }
 
-export function AgentsPage() {
-  const { registry, loading, error, refetch } = useAgents();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
-        <div className="text-[var(--muted-strong)]">Loading agents...</div>
+function AgentCardSkeleton() {
+  return (
+    <Card className="flex flex-col h-full animate-pulse">
+      <div className="flex items-start justify-between mb-3">
+        <div className="h-6 w-32 bg-[var(--stroke)] rounded" />
+        <div className="h-5 w-16 bg-[var(--stroke)] rounded-full" />
       </div>
-    );
-  }
+      <div className="h-4 w-24 bg-[var(--stroke)] rounded mb-3" />
+      <div className="space-y-2 flex-grow mb-4">
+        <div className="h-4 w-full bg-[var(--stroke)] rounded" />
+        <div className="h-4 w-3/4 bg-[var(--stroke)] rounded" />
+      </div>
+      <div className="flex gap-1 mb-4">
+        <div className="h-5 w-16 bg-[var(--stroke)] rounded" />
+        <div className="h-5 w-16 bg-[var(--stroke)] rounded" />
+      </div>
+      <div className="h-9 w-full bg-[var(--stroke)] rounded-full" />
+    </Card>
+  );
+}
+
+export function AgentsPage() {
+  const { onMobileMenuToggle } = useOutletContext<DashboardContextType>();
+  const { registry, loading, error, refetch } = useAgents();
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Error: {error.message}</p>
-          <Button onClick={refetch}>Retry</Button>
+      <PageTransition>
+        <Topbar title="Agent Registry" onMobileMenuToggle={onMobileMenuToggle} />
+        <div className="p-6 flex items-center justify-center min-h-[50vh]">
+          <div className="text-center">
+            <p className="text-[var(--error)] mb-4">Error: {error.message}</p>
+            <Button onClick={refetch}>Retry</Button>
+          </div>
         </div>
-      </div>
+      </PageTransition>
     );
   }
 
-  if (!registry) {
-    return null;
-  }
-
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)]">
-      <header className="border-b border-[var(--stroke)] bg-[var(--surface-2)]">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-xl bg-[var(--accent)]" />
-              <span className="font-semibold">TechTideAI</span>
-            </Link>
-          </div>
-          <nav className="flex items-center gap-4">
-            <Link to="/agents" className="text-sm font-medium text-[var(--ink)]">
-              Agents
-            </Link>
-            <Link
-              to="/runs"
-              className="text-sm font-medium text-[var(--muted-strong)] hover:text-[var(--ink)]"
-            >
-              Runs
-            </Link>
-          </nav>
-        </div>
-      </header>
+    <PageTransition>
+      <Topbar
+        title="Agent Registry"
+        onMobileMenuToggle={onMobileMenuToggle}
+        actions={
+          <Button variant="ghost" onClick={refetch} aria-label="Refresh agents">
+            <IconRefresh size={18} />
+          </Button>
+        }
+      />
 
-      <main className="mx-auto max-w-6xl px-6 py-12">
-        <div className="mb-12">
-          <h1 className="text-3xl font-bold mb-2">Agent Registry</h1>
-          <p className="text-[var(--muted-strong)]">
-            Browse and run AI agents across the organization hierarchy.
-          </p>
-        </div>
+      <div className="p-6 max-w-[var(--content-max-width)] mx-auto">
+        <p className="text-[var(--muted-strong)] mb-8">
+          Browse and run AI agents across the organization hierarchy.
+        </p>
 
-        {/* CEO */}
-        <section className="mb-12">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-[var(--accent)]" />
-            CEO
-          </h2>
-          <div className="max-w-md">
-            <AgentCard agent={registry.ceo} />
-          </div>
-        </section>
+        {loading ? (
+          <>
+            {/* CEO Skeleton */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[var(--accent)]" />
+                CEO
+              </h2>
+              <div className="max-w-md">
+                <AgentCardSkeleton />
+              </div>
+            </section>
 
-        {/* Orchestrators */}
-        <section className="mb-12">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-teal-500" />
-            Orchestrators ({registry.orchestrators.length})
-          </h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {registry.orchestrators.map((agent) => (
-              <AgentCard key={agent.id} agent={agent} />
-            ))}
-          </div>
-        </section>
+            {/* Orchestrators Skeleton */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-teal-500" />
+                Orchestrators
+              </h2>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <AgentCardSkeleton key={i} />
+                ))}
+              </div>
+            </section>
 
-        {/* Workers */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-blue-500" />
-            Workers ({registry.workers.length})
-          </h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {registry.workers.map((agent) => (
-              <AgentCard key={agent.id} agent={agent} />
-            ))}
-          </div>
-        </section>
-      </main>
-    </div>
+            {/* Workers Skeleton */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-blue-500" />
+                Workers
+              </h2>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <AgentCardSkeleton key={i} />
+                ))}
+              </div>
+            </section>
+          </>
+        ) : registry ? (
+          <>
+            {/* CEO */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[var(--accent)]" />
+                CEO
+              </h2>
+              <div className="max-w-md">
+                <AgentCard agent={registry.ceo} />
+              </div>
+            </section>
+
+            {/* Orchestrators */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-teal-500" />
+                Orchestrators ({registry.orchestrators.length})
+              </h2>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {registry.orchestrators.map((agent) => (
+                  <AgentCard key={agent.id} agent={agent} />
+                ))}
+              </div>
+            </section>
+
+            {/* Workers */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-blue-500" />
+                Workers ({registry.workers.length})
+              </h2>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {registry.workers.map((agent) => (
+                  <AgentCard key={agent.id} agent={agent} />
+                ))}
+              </div>
+            </section>
+          </>
+        ) : null}
+      </div>
+    </PageTransition>
   );
 }

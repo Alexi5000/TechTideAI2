@@ -1,11 +1,19 @@
-export type { LlmProvider, LlmRequest, LlmResponse } from "./types";
+export type {
+  LlmProvider,
+  LlmRequest,
+  LlmResponse,
+  EmbeddingRequest,
+  EmbeddingResponse,
+} from "./types.js";
 export {
   createOpenAIClient,
   generateOpenAIText,
+  generateOpenAIEmbeddings,
   type OpenAIRequest,
-} from "./openai";
+  type OpenAIEmbeddingRequest,
+} from "./openai.js";
 export {
   createAnthropicClient,
   generateAnthropicText,
   type AnthropicRequest,
-} from "./anthropic";
+} from "./anthropic.js";

@@ -1,13 +1,13 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "noEmit": true,
     "types": ["node"],
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "baseUrl": ".",
+    "paths": {
+      "@techtide/apis": ["../apis/src/index.ts"]
+    }
   },
   "include": ["src"]
 }

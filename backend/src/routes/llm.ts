@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { env } from "../config/env";
-import { generateText } from "../services/llm";
+import { env } from "../config/env.js";
+import { generateText } from "../services/llm.js";
 
 const requestSchema = z.object({
   provider: z.enum(["openai", "anthropic"]).default(env.DEFAULT_LLM_PROVIDER),

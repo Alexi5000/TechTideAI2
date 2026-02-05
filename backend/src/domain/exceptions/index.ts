@@ -43,3 +43,17 @@ export class PersistenceUnavailableError extends DomainError {
     this.name = "PersistenceUnavailableError";
   }
 }
+
+export class VectorStoreUnavailableError extends PersistenceUnavailableError {
+  constructor(message = "Vector store unavailable") {
+    super(message);
+    this.name = "VectorStoreUnavailableError";
+  }
+}
+
+export class EmbeddingProviderUnavailableError extends DomainError {
+  constructor(message = "Embedding provider unavailable") {
+    super(message);
+    this.name = "EmbeddingProviderUnavailableError";
+  }
+}

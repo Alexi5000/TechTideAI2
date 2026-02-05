@@ -1,4 +1,5 @@
 import { Agent } from "@mastra/core/agent";
+import type { MastraModelConfig } from "@mastra/core/llm";
 import type { AgentDefinition } from "../core/types.js";
 import { agentRegistry } from "../core/registry.js";
 import {
@@ -8,23 +9,28 @@ import {
   workflowRunnerTool,
 } from "./tools/index.js";
 
-const defaultModel = process.env.MASTRA_MODEL ?? "openai/gpt-5.1";
-const sharedTools = [
-  systemStatusTool,
-  llmRouterTool,
-  knowledgeBaseTool,
-  workflowRunnerTool,
-];
+const defaultModel = (process.env["MASTRA_MODEL"] ?? "openai/gpt-5.1") as MastraModelConfig;
+const sharedTools = {
+  "system-status": systemStatusTool,
+  "llm-router": llmRouterTool,
+  "knowledge-base": knowledgeBaseTool,
+  "workflow-runner": workflowRunnerTool,
+};
 
 const buildInstructions = (agent: AgentDefinition) => {
-  return [
+  const lines = [
     `You are ${agent.name}, leading ${agent.domain}.`,
     agent.mission,
     `Responsibilities: ${agent.responsibilities.join("; ")}.`,
     `Outputs you must maintain: ${agent.outputs.join("; ")}.`,
     `Metrics you are accountable for: ${agent.metrics.join("; ")}.`,
-    `Available tools: ${sharedTools.map((tool) => tool.id).join(", ")}.`,
-  ].join(" ");
+    `Available tools: ${Object.keys(sharedTools).join(", ")}.`,
+  ];
+  if (agent.reportsTo) {
+    const lead = agentRegistry.all.find((candidate) => candidate.id === agent.reportsTo);
+    lines.splice(2, 0, `Reports to: ${lead?.name ?? agent.reportsTo}.`);
+  }
+  return lines.join(" ");
 };
 
 export const mastraAgents = Object.fromEntries(
