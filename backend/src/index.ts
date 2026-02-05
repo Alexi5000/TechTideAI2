@@ -1,5 +1,5 @@
-import { buildServer } from "./server";
-import { env } from "./config/env";
+import { buildServer } from "./server.js";
+import { env } from "./config/env.js";
 
 const server = await buildServer();
 

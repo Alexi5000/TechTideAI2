@@ -6,40 +6,44 @@ import { SectionHeader } from "@/components/section-header";
 
 const orchestrators = [
   {
-    title: "Strategy",
-    description: "Competitive sensing, scenario planning, and objective alignment.",
+    title: "Veronica Cozy (Agent 0)",
+    description: "Executive orchestration, scheduling, and strategy synthesis.",
   },
   {
-    title: "Product",
-    description: "Roadmap, UX research, and customer value delivery.",
+    title: "Ava Cozy",
+    description: "Operations, SOPs, task routing, and process hygiene.",
   },
   {
-    title: "Engineering",
-    description: "Platform reliability, scale, and safety rails.",
+    title: "Finn Cozy",
+    description: "Internal support, onboarding, policy, and culture care.",
   },
   {
-    title: "Operations",
-    description: "Execution cadence, dependency mapping, and delivery health.",
+    title: "Cipher Cozy",
+    description: "Finance, forecasting, dashboards, and cost optimization.",
   },
   {
-    title: "Growth",
-    description: "Acquisition systems, activation loops, and messaging.",
+    title: "Axel Cozy",
+    description: "Sales execution, lead generation, and CRM hygiene.",
   },
   {
-    title: "Sales",
-    description: "Pipeline health, partnerships, and enterprise enablement.",
+    title: "Luna Cozy",
+    description: "Marketing campaigns, outreach, and distribution workflows.",
   },
   {
-    title: "Customer",
-    description: "Retention, onboarding, and support escalation.",
+    title: "Ellie Cozy",
+    description: "Customer support, intake, scheduling, and voice concierge.",
   },
   {
-    title: "Finance",
-    description: "Runway, budget control, and risk exposure.",
+    title: "Veronica Cozy (Lite)",
+    description: "Client-side orchestration without exposing internal systems.",
   },
   {
-    title: "People",
-    description: "Capacity planning, performance, and culture.",
+    title: "Audrey Cozy",
+    description: "AI and workflow audits, ROI discovery, and remediation plans.",
+  },
+  {
+    title: "Sage Cozy",
+    description: "Content operations that turn workflows into reusable assets.",
   },
 ];
 
@@ -119,9 +123,9 @@ export default function App() {
                 Run an entire company with an AI org chart that actually ships.
               </h1>
               <p className="text-lg text-[var(--muted-strong)] leading-relaxed">
-                TechTideAI connects a CEO agent, nine senior orchestrators, and a fleet of workers into a
-                single execution fabric. Every decision is backed by evidence, mapped to outcomes, and
-                measured in real time.
+                TechTideAI connects a CEO agent, ten orchestrators, and 50 worker agents into a single
+                execution fabric. Every decision is backed by evidence, mapped to outcomes, and measured
+                in real time.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/agents">
@@ -139,11 +143,11 @@ export default function App() {
                   <p>CEO Agent</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-semibold text-[var(--ink)]">9</p>
+                  <p className="text-2xl font-semibold text-[var(--ink)]">10</p>
                   <p>Orchestrators</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-semibold text-[var(--ink)]">Many</p>
+                  <p className="text-2xl font-semibold text-[var(--ink)]">50</p>
                   <p>Worker Agents</p>
                 </div>
               </div>
@@ -192,7 +196,7 @@ export default function App() {
           <section id="orchestrators" className="space-y-10">
             <SectionHeader
               eyebrow="Leadership layer"
-              title="Nine orchestrators keep every domain aligned."
+              title="Ten orchestrators keep every domain aligned."
               description="Each orchestrator owns a domain, reports to the CEO agent, and coordinates specialized workers."
             />
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

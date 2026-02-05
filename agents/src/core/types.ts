@@ -4,6 +4,7 @@ export interface AgentDefinition {
   id: string;
   name: string;
   tier: AgentTier;
+  reportsTo?: string;
   domain: string;
   mission: string;
   responsibilities: string[];

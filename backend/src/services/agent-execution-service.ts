@@ -107,7 +107,7 @@ export function createAgentExecutionService(
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       try {
         await runService.failRun(runId, errorMessage);
-      } catch (updateError) {
+      } catch (_updateError) {
         logger?.error(`Failed to update run ${runId} status after error: ${errorMessage}`);
       }
     }

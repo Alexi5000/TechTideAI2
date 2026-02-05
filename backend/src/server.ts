@@ -1,12 +1,13 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
-import { env } from "./config/env";
-import { parseOrigins } from "./utils/origin";
-import { registerHealthRoutes } from "./routes/health";
-import { registerAgentRoutes } from "./routes/agents";
-import { registerLlmRoutes } from "./routes/llm";
+import { env } from "./config/env.js";
+import { parseOrigins } from "./utils/origin.js";
+import { registerHealthRoutes } from "./routes/health.js";
+import { registerAgentRoutes } from "./routes/agents.js";
+import { registerLlmRoutes } from "./routes/llm.js";
 import { registerRunRoutes } from "./routes/runs.js";
+import { registerKnowledgeRoutes } from "./routes/knowledge.js";
 
 export async function buildServer() {
   const app = Fastify({
@@ -31,6 +32,7 @@ export async function buildServer() {
   await registerAgentRoutes(app);
   await registerLlmRoutes(app);
   await registerRunRoutes(app);
+  await registerKnowledgeRoutes(app);
 
   return app;
 }

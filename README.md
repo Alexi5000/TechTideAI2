@@ -1,13 +1,13 @@
 # TechTideAI
 
-TechTideAI is a company-scale AI agent platform: a CEO agent, nine senior orchestrators, and a fleet of worker agents operating on a shared execution fabric.
+TechTideAI is a company-scale AI agent platform: a CEO agent, ten orchestrators (including Agent 0), and fifty worker agents operating on a shared execution fabric.
 
 ## Stack
 - Frontend: React + Vite + Tailwind (shadcn-lite patterns)
 - Backend: Fastify + TypeScript orchestration APIs
 - Agents: Mastra (TypeScript) + Claude Agent SDK scaffolding
 - Python tools: LangGraph + LangChain
-- Database: Supabase (migrations + seed data)
+- Database: Supabase (migrations + seed data) + Weaviate (vector search)
 
 ## Repo structure
 - `frontend/` React UI

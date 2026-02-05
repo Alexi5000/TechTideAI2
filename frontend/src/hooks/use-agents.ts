@@ -79,6 +79,7 @@ export function useAgent(id: string | undefined): UseAgentResult {
       return;
     }
 
+    const agentId = id; // Capture for closure
     let cancelled = false;
 
     async function fetchAgent() {
@@ -86,7 +87,7 @@ export function useAgent(id: string | undefined): UseAgentResult {
       setError(null);
       setNotFound(false);
       try {
-        const data = await apiClient.getAgent(id);
+        const data = await apiClient.getAgent(agentId);
         if (!cancelled) {
           setAgent(data);
         }

@@ -20,4 +20,6 @@ export {
 
 export { createAgentLookup } from "./agent-lookup.js";
 
+export { createKnowledgeService } from "./knowledge-service.js";
+
 export { supabase } from "./supabase.js";

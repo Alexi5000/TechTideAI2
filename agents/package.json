@@ -13,13 +13,14 @@
   },
   "scripts": {
     "dev": "mastra dev",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "test": "vitest"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "latest",
     "@mastra/core": "latest",
+    "@techtide/apis": "workspace:*",
     "zod": "^3.23.8"
   },
   "devDependencies": {

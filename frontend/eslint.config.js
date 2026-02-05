@@ -7,7 +7,7 @@ import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 export default [
-  { ignores: ["dist"] },
+  { ignores: ["dist", "**/*.d.ts", "**/*.js", "!eslint.config.js"] },
   js.configs.recommended,
   {
     files: ["**/*.{ts,tsx}"],
@@ -32,6 +32,7 @@ export default [
     rules: {
       ...tsPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      "no-undef": "off",
       "react/react-in-jsx-scope": "off",
       "react-refresh/only-export-components": [
         "warn",

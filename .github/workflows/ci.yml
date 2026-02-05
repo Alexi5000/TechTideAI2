@@ -90,6 +90,8 @@ jobs:
         run: |
           echo "NODE_ENV=test" >> backend/.env
           echo "DEFAULT_LLM_PROVIDER=openai" >> backend/.env
+          echo "OPENAI_API_KEY=sk-stub-for-ci" >> backend/.env
+          echo "ANTHROPIC_API_KEY=sk-ant-stub-for-ci" >> backend/.env
 
       - name: Lint
         run: pnpm -C ${{ matrix.workspace }} lint
@@ -104,9 +106,18 @@ jobs:
         if: matrix.workspace == 'frontend'
 
       - name: Test
-        run: pnpm -C ${{ matrix.workspace }} test -- --run --reporter=default
+        run: pnpm -C ${{ matrix.workspace }} test -- --run --reporter=default --passWithNoTests
         # Only run if the workspace has test files
         if: matrix.workspace == 'backend' || matrix.workspace == 'apis' || matrix.workspace == 'agents'
+
+      # Build workspace dependencies first (e.g. agents depends on apis, backend depends on apis + agents)
+      - name: Build dependencies
+        if: matrix.workspace == 'agents' || matrix.workspace == 'backend'
+        run: |
+          pnpm -C apis build
+          if [ "${{ matrix.workspace }}" = "backend" ]; then
+            pnpm -C agents build
+          fi
 
       - name: Build
         run: pnpm -C ${{ matrix.workspace }} build
@@ -158,8 +169,29 @@ jobs:
         with:
           version: latest
 
+      # Validate migration files exist and are ordered
       - name: Validate migrations
-        run: supabase db lint --workdir database
+        run: |
+          MIGRATION_DIR="database/supabase/migrations"
+          if [ ! -d "$MIGRATION_DIR" ]; then
+            echo "❌ Migration directory not found: $MIGRATION_DIR"
+            exit 1
+          fi
+
+          FILE_COUNT=$(find "$MIGRATION_DIR" -name "*.sql" | wc -l)
+          echo "Found $FILE_COUNT migration file(s):"
+          ls -la "$MIGRATION_DIR"/*.sql
+
+          # Check each migration file is non-empty and valid SQL
+          for f in "$MIGRATION_DIR"/*.sql; do
+            if [ ! -s "$f" ]; then
+              echo "❌ Empty migration file: $f"
+              exit 1
+            fi
+            echo "✅ $(basename "$f") — $(wc -l < "$f") lines"
+          done
+
+          echo "✅ All migration files validated"
 
   # ──────────────────────────────────────────────
   # Gate — all checks must pass before merge

@@ -14,7 +14,7 @@ import {
   generateAnthropicText,
 } from "@techtide/apis";
 
-const DEFAULT_PROVIDER = process.env.DEFAULT_LLM_PROVIDER ?? "openai";
+const DEFAULT_PROVIDER = process.env["DEFAULT_LLM_PROVIDER"] ?? "openai";
 const DEFAULT_MODEL_OPENAI = "gpt-4o";
 const DEFAULT_MODEL_ANTHROPIC = "claude-3-5-sonnet-20241022";
 

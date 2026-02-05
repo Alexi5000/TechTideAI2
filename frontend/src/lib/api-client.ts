@@ -5,7 +5,7 @@
  * All API calls go through this module for consistency.
  */
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4050";
+const API_BASE = import.meta.env["VITE_API_BASE_URL"] ?? "http://localhost:4050";
 
 export type AgentTier = "ceo" | "orchestrator" | "worker";
 
@@ -13,6 +13,7 @@ export interface Agent {
   id: string;
   name: string;
   tier: AgentTier;
+  reportsTo?: string;
   domain: string;
   mission: string;
   responsibilities: string[];
@@ -46,6 +47,35 @@ export interface Run {
   finishedAt: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface KnowledgeDocument {
+  id: string;
+  orgId: string;
+  title: string;
+  source: string;
+  collection: string | null;
+  content: string;
+  metadata: Record<string, unknown>;
+  indexedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface KnowledgeIndexResult {
+  document: KnowledgeDocument;
+  chunkCount: number;
+}
+
+export interface KnowledgeSearchResult {
+  chunkId: string;
+  documentId: string;
+  title: string;
+  source: string;
+  collection: string | null;
+  content: string;
+  chunkIndex: number;
+  distance: number | null;
 }
 
 export class ApiError extends Error {
@@ -126,5 +156,41 @@ export const apiClient = {
       method: "POST",
     });
     return handleResponse<Run>(response);
+  },
+
+  /**
+   * Index a knowledge document
+   */
+  async indexKnowledgeDocument(input: {
+    orgId?: string;
+    title: string;
+    source: string;
+    collection?: string;
+    content: string;
+    metadata?: Record<string, unknown>;
+  }): Promise<KnowledgeIndexResult> {
+    const response = await fetch(`${API_BASE}/api/knowledge/documents`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    return handleResponse<KnowledgeIndexResult>(response);
+  },
+
+  /**
+   * Search knowledge chunks
+   */
+  async searchKnowledge(input: {
+    orgId?: string;
+    query: string;
+    limit?: number;
+    collections?: string[];
+  }): Promise<{ results: KnowledgeSearchResult[] }> {
+    const response = await fetch(`${API_BASE}/api/knowledge/search`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    return handleResponse<{ results: KnowledgeSearchResult[] }>(response);
   },
 };

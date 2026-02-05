@@ -11,6 +11,17 @@ __pycache__/
 dist/
 build/
 *.tsbuildinfo
+
+# Compiled TS output (co-located with source)
+frontend/src/**/*.js
+frontend/src/**/*.d.ts
+frontend/vite.config.js
+frontend/vite.config.d.ts
+apis/src/**/*.js
+apis/src/**/*.d.ts
+apis/src/**/*.map
+agents/dist/
+
 # OS
 .DS_Store
 Thumbs.db

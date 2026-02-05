@@ -2,34 +2,71 @@
  * Status Badge Component
  *
  * Displays run status with appropriate styling and optional animation.
- * Shared between Console and Runs pages.
+ * Uses the Badge component with semantic color variants.
  */
+
+import { Badge, type BadgeProps } from "@/components/ui/badge.js";
+import { IconCheck, IconX, IconLoader, IconAlert } from "@/components/icons/index.js";
+
+type RunStatus = "queued" | "running" | "succeeded" | "failed" | "canceled";
 
 interface StatusBadgeProps {
   status: string;
   showPulse?: boolean;
+  showIcon?: boolean;
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  queued: "bg-yellow-100 text-yellow-800",
-  running: "bg-blue-100 text-blue-800",
-  succeeded: "bg-green-100 text-green-800",
-  failed: "bg-red-100 text-red-800",
-  canceled: "bg-gray-100 text-gray-800",
+const STATUS_CONFIG: Record<
+  RunStatus,
+  { variant: BadgeProps["variant"]; icon: React.ReactNode; label: string }
+> = {
+  queued: {
+    variant: "warning",
+    icon: <IconAlert size={12} />,
+    label: "Queued",
+  },
+  running: {
+    variant: "info",
+    icon: <IconLoader size={12} className="animate-spin" />,
+    label: "Running",
+  },
+  succeeded: {
+    variant: "success",
+    icon: <IconCheck size={12} />,
+    label: "Succeeded",
+  },
+  failed: {
+    variant: "error",
+    icon: <IconX size={12} />,
+    label: "Failed",
+  },
+  canceled: {
+    variant: "outline",
+    icon: <IconX size={12} />,
+    label: "Canceled",
+  },
 };
 
-export function StatusBadge({ status, showPulse = true }: StatusBadgeProps) {
-  const colorClasses = STATUS_COLORS[status] ?? "bg-gray-100 text-gray-800";
+export function StatusBadge({
+  status,
+  showPulse = true,
+  showIcon = true,
+}: StatusBadgeProps) {
+  const config = STATUS_CONFIG[status as RunStatus] ?? {
+    variant: "default" as const,
+    icon: null,
+    label: status,
+  };
+
   const isRunning = status === "running";
 
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colorClasses}`}
-    >
-      {showPulse && isRunning && (
-        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse mr-1.5" />
+    <Badge variant={config.variant} className="gap-1.5">
+      {showIcon && config.icon}
+      {showPulse && isRunning && !showIcon && (
+        <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
       )}
-      {status}
-    </span>
+      {config.label}
+    </Badge>
   );
 }

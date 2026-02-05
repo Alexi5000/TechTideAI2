@@ -81,7 +81,7 @@ export const workflowRunnerTool = createTool({
   }),
 
   execute: async (params) => {
-    const { workflowId, input, dryRun } = params;
+    const { workflowId, input = {}, dryRun = false } = params;
 
     // Check if workflow exists
     const workflow = WORKFLOW_REGISTRY[workflowId];
