@@ -7,7 +7,7 @@
 
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { IconMenu, IconChevronRight, IconUser, IconSettings, IconExternalLink } from "@/components/icons/index.js";
+import { IconMenu, IconChevronRight, IconUser, IconExternalLink } from "@/components/icons/index.js";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -120,12 +120,8 @@ export function Topbar({ title, breadcrumbs, actions, onMobileMenuToggle }: Topb
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <IconSettings size={16} />
-              <span>Settings</span>
-            </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => window.open("https://docs.techtide.ai", "_blank")}
+              onClick={() => window.open("https://github.com/Alexi5000/TechTideAI", "_blank")}
             >
               <IconExternalLink size={16} />
               <span>Documentation</span>

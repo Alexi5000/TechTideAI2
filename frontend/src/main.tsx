@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import App from "./App.js";
 import { ErrorBoundary } from "./components/error-boundary.js";
 import { ToastProvider } from "./contexts/toast-context.js";
@@ -30,6 +30,11 @@ function LazyRoute({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<PageSkeleton />}>{children}</Suspense>;
 }
 
+function ConsoleRedirect() {
+  const { agentId } = useParams();
+  return <Navigate to={`/dashboard/console/${agentId}`} replace />;
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ErrorBoundary>
@@ -50,7 +55,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
           {/* Redirects from old routes */}
           <Route path="/agents" element={<Navigate to="/dashboard/agents" replace />} />
-          <Route path="/console/:agentId" element={<Navigate to="/dashboard/console/:agentId" replace />} />
+          <Route path="/console/:agentId" element={<ConsoleRedirect />} />
           <Route path="/runs" element={<Navigate to="/dashboard/runs" replace />} />
 
           {/* 404 - Not Found */}

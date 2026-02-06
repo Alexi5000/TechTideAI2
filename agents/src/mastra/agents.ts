@@ -31,7 +31,7 @@ const buildInstructions = (agent: AgentDefinition) => {
     `Responsibilities: ${agent.responsibilities.join("; ")}.`,
     `Outputs you must maintain: ${agent.outputs.join("; ")}.`,
     `Metrics you are accountable for: ${agent.metrics.join("; ")}.`,
-    `Available tools: ${Object.keys(sharedTools).join(", ")}.`,
+    `Available tools: ${agent.tools.length > 0 ? agent.tools.join(", ") : Object.keys(sharedTools).join(", ")}.`,
   ];
   if (agent.reportsTo) {
     const lead = agentRegistry.all.find((candidate) => candidate.id === agent.reportsTo);

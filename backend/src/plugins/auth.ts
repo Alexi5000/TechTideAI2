@@ -37,8 +37,9 @@ export async function registerAuth(app: FastifyInstance) {
       return;
     }
 
+    // If no API_KEY is configured, skip auth (open access for local dev)
     if (!env.API_KEY) {
-      throw new HttpError(503, "API key not configured");
+      return;
     }
 
     const token = extractApiKey(
