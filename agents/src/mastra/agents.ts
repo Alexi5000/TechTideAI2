@@ -7,14 +7,21 @@ import {
   llmRouterTool,
   knowledgeBaseTool,
   workflowRunnerTool,
+  orgKpiDashboardTool,
+  executionMapTool,
+  marketIntelTool,
 } from "./tools/index.js";
 
-const defaultModel = (process.env["MASTRA_MODEL"] ?? "openai/gpt-5.1") as MastraModelConfig;
+const defaultModel = (process.env["MASTRA_MODEL"] ?? "openai/gpt-4o") as MastraModelConfig;
 const sharedTools = {
+  // Implemented tools
   "system-status": systemStatusTool,
   "llm-router": llmRouterTool,
   "knowledge-base": knowledgeBaseTool,
   "workflow-runner": workflowRunnerTool,
+  "org-kpi-dashboard": orgKpiDashboardTool,
+  "execution-map": executionMapTool,
+  "market-intel": marketIntelTool,
 };
 
 const buildInstructions = (agent: AgentDefinition) => {

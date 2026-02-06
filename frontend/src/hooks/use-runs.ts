@@ -5,10 +5,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { apiClient, type Run, type RunStatus } from "../lib/api-client";
-
-// Default org ID for MVP (matches backend and seed data)
-const DEFAULT_ORG_ID = "00000000-0000-0000-0000-000000000001";
+import { apiClient, type Run, type RunEvent, type RunStatus } from "../lib/api-client";
 
 interface UseAgentRunResult {
   run: Run | null;
@@ -54,7 +51,10 @@ export function useAgentRun(): UseAgentRunResult {
   return { run, loading, error, startRun, reset };
 }
 
-const POLL_INTERVAL_MS = 2000;
+// Polling interval - configurable via environment variable
+const DEFAULT_POLL_INTERVAL_MS = 2000;
+const POLL_INTERVAL_MS =
+  parseInt(import.meta.env["VITE_RUN_POLL_INTERVAL_MS"] ?? "", 10) || DEFAULT_POLL_INTERVAL_MS;
 const TERMINAL_STATUSES: RunStatus[] = ["succeeded", "failed", "canceled"];
 
 interface UseRunPollingResult {
@@ -136,7 +136,7 @@ interface UseRunsResult {
 /**
  * Hook to list runs for an organization
  */
-export function useRuns(orgId: string = DEFAULT_ORG_ID, limit?: number): UseRunsResult {
+export function useRuns(orgId?: string, limit?: number): UseRunsResult {
   const [runs, setRuns] = useState<Run[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -174,4 +174,65 @@ export function useRuns(orgId: string = DEFAULT_ORG_ID, limit?: number): UseRuns
   const refetch = () => setRefreshToken((n) => n + 1);
 
   return { runs, loading, error, refetch };
+}
+
+interface UseRunEventsResult {
+  events: RunEvent[];
+  loading: boolean;
+  error: Error | null;
+}
+
+export function useRunEvents(
+  runId: string | null,
+  status?: RunStatus | null,
+): UseRunEventsResult {
+  const [events, setEvents] = useState<RunEvent[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!runId) {
+      setEvents([]);
+      setLoading(false);
+      return;
+    }
+
+    const currentRunId = runId;
+    let cancelled = false;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    async function fetchEvents() {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await apiClient.getRunEvents(currentRunId);
+        if (!cancelled) {
+          setEvents(data.events);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err : new Error("Failed to fetch run events"));
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchEvents();
+
+    if (!status || !TERMINAL_STATUSES.includes(status)) {
+      intervalId = setInterval(fetchEvents, POLL_INTERVAL_MS);
+    }
+
+    return () => {
+      cancelled = true;
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [runId, status]);
+
+  return { events, loading, error };
 }

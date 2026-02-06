@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@rollup/rollup-linux-x64-gnu':
+        specifier: ^4.57.1
+        version: 4.57.1
       prettier:
         specifier: ^3.2.5
         version: 3.8.1
@@ -5167,8 +5170,7 @@ snapshots:
   '@rollup/rollup-linux-x64-gnu@4.55.3':
     optional: true
 
-  '@rollup/rollup-linux-x64-gnu@4.57.1':
-    optional: true
+  '@rollup/rollup-linux-x64-gnu@4.57.1': {}
 
   '@rollup/rollup-linux-x64-musl@4.55.3':
     optional: true

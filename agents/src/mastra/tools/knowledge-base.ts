@@ -6,10 +6,9 @@
 
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import { buildAuthHeaders, getApiBase } from "./http.js";
 
-const API_BASE =
-  process.env["BACKEND_API_BASE_URL"] ?? "http://localhost:4050";
-const DEFAULT_ORG_ID = "00000000-0000-0000-0000-000000000001";
+const API_BASE = getApiBase();
 
 export const knowledgeBaseTool = createTool({
   id: "knowledge-base",
@@ -22,7 +21,9 @@ export const knowledgeBaseTool = createTool({
       .min(3)
       .describe("The search query to find relevant knowledge"),
     collections: z
-      .array(z.enum(["architecture", "policies", "operations", "guides"]))
+      .array(
+        z.enum(["architecture", "policies", "operations", "guides", "market-intel"]),
+      )
       .default(["architecture", "policies"])
       .describe("Collections to search within"),
   }),
@@ -37,9 +38,8 @@ export const knowledgeBaseTool = createTool({
     const { query, collections = ["architecture", "policies"] } = params;
     const response = await fetch(`${API_BASE}/api/knowledge/search`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: buildAuthHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify({
-        orgId: DEFAULT_ORG_ID,
         query,
         collections: collections.length > 0 ? collections : undefined,
         limit: 5,

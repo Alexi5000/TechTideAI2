@@ -35,7 +35,7 @@ export function EmptyState({
       {...props}
     >
       {icon && (
-        <div className="mb-4 text-[var(--muted)] [&>svg]:h-12 [&>svg]:w-12">
+        <div className="mb-4 text-[var(--muted)] [&>svg]:h-12 [&>svg]:w-12" aria-hidden="true">
           {icon}
         </div>
       )}

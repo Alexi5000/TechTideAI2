@@ -809,11 +809,32 @@ const workers: AgentDefinition[] = [
   },
 ];
 
+const IMPLEMENTED_TOOLS = new Set([
+  "system-status",
+  "llm-router",
+  "knowledge-base",
+  "workflow-runner",
+  "org-kpi-dashboard",
+  "execution-map",
+  "market-intel",
+]);
+
+function withImplementedTools(agent: AgentDefinition): AgentDefinition {
+  return {
+    ...agent,
+    tools: agent.tools.filter((tool) => IMPLEMENTED_TOOLS.has(tool)),
+  };
+}
+
+const registryCeo = withImplementedTools(ceoAgent);
+const registryOrchestrators = orchestrators.map(withImplementedTools);
+const registryWorkers = workers.map(withImplementedTools);
+
 export const agentRegistry = {
-  ceo: ceoAgent,
-  orchestrators,
-  workers,
-  all: [ceoAgent, ...orchestrators, ...workers],
+  ceo: registryCeo,
+  orchestrators: registryOrchestrators,
+  workers: registryWorkers,
+  all: [registryCeo, ...registryOrchestrators, ...registryWorkers],
 };
 
 export function getAgentById(id: string) {

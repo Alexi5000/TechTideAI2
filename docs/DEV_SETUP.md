@@ -23,6 +23,8 @@ Windows local development setup.
 - Backend env template: `backend/.env.example`
 - Frontend env template: `frontend/.env.example`
 - Agents env template: `agents/.env.example`
+- Set `API_KEY` in the backend env and `VITE_API_KEY` / `BACKEND_API_KEY` for client + agent access.
+- `DEFAULT_ORG_ID` controls the org used when an API request omits `orgId`.
 - For vector search, set `WEAVIATE_URL` and `OPENAI_API_KEY` in backend env.
 - For agent knowledge tools, set `BACKEND_API_BASE_URL` in the agents env (defaults to `http://localhost:4050`).
 

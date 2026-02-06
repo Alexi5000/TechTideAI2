@@ -57,6 +57,7 @@ export interface IRunRepository {
     eventType: string,
     payload: Record<string, unknown>,
   ): Promise<RunEvent>;
+  listEvents(runId: string): Promise<RunEvent[]>;
 }
 
 export interface CreateKnowledgeChunkInput {

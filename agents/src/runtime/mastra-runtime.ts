@@ -30,6 +30,21 @@ export function createMastraRuntime(): IAgentRuntime {
       const events: AgentEvent[] = [];
       const startTime = new Date();
 
+      if (request.signal?.aborted) {
+        const errorMessage = "Agent execution aborted before start";
+        events.push({
+          type: "error",
+          timestamp: startTime.toISOString(),
+          payload: { error: errorMessage },
+        });
+        return {
+          success: false,
+          output: {},
+          events,
+          error: errorMessage,
+        };
+      }
+
       // Validate agent exists
       const agent = mastraAgents[request.agentId];
       if (!agent) {
@@ -58,6 +73,10 @@ export function createMastraRuntime(): IAgentRuntime {
             ? request.input["prompt"]
             : JSON.stringify(request.input);
 
+        if (request.signal?.aborted) {
+          throw new Error("Agent execution aborted");
+        }
+
         // Create timeout promise
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => {
@@ -74,6 +93,10 @@ export function createMastraRuntime(): IAgentRuntime {
         ]);
 
         const result = await Promise.race([executionPromise, timeoutPromise]);
+
+        if (request.signal?.aborted) {
+          throw new Error("Agent execution aborted");
+        }
 
         // Extract text from result
         const outputText = result.text ?? "";

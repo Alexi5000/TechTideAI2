@@ -1,18 +1,17 @@
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyReply } from "fastify";
 import { z } from "zod";
 import { agentRegistry, getAgentById, createMastraRuntime } from "@techtide/agents";
+import { env } from "../config/env.js";
 import { createRunRepository } from "../repositories/index.js";
 import { createRunService } from "../services/run-service.js";
 import { createAgentExecutionService, createAgentLookup } from "../services/index.js";
 import { supabase } from "../services/supabase.js";
 import { AgentNotFoundError, PersistenceUnavailableError } from "../domain/index.js";
-
-// Default org ID for MVP (matches seed.sql)
-const DEFAULT_ORG_ID = "00000000-0000-0000-0000-000000000001";
+import { safeParse, handleValidationError } from "../utils/validation.js";
 
 const runAgentSchema = z.object({
   input: z.record(z.unknown()).default({}),
-  orgId: z.string().uuid().default(DEFAULT_ORG_ID),
+  orgId: z.string().uuid().default(env.DEFAULT_ORG_ID),
 });
 
 export async function registerAgentRoutes(app: FastifyInstance) {
@@ -46,6 +45,24 @@ export async function registerAgentRoutes(app: FastifyInstance) {
     return agent;
   });
 
+  const handleError = (error: unknown, reply: FastifyReply) => {
+    // Check for validation errors first (returns 400)
+    const validationResult = handleValidationError(error, reply);
+    if (validationResult) return validationResult;
+
+    // Domain errors
+    if (error instanceof AgentNotFoundError) {
+      return reply.status(404).send({ error: "Agent not found" });
+    }
+    if (error instanceof PersistenceUnavailableError) {
+      return reply.status(503).send({
+        error: "Service Unavailable",
+        message: "Database not configured. Please set up Supabase.",
+      });
+    }
+    throw error;
+  };
+
   // POST /api/agents/:id/run - Execute an agent
   app.post<{ Params: { id: string } }>(
     "/api/agents/:id/run",
@@ -53,7 +70,7 @@ export async function registerAgentRoutes(app: FastifyInstance) {
       const { id: agentId } = request.params;
 
       try {
-        const payload = runAgentSchema.parse(request.body);
+        const payload = safeParse(runAgentSchema, request.body);
 
         // Delegate to execution service (business logic lives there)
         const run = await executionService.executeAgent(
@@ -68,17 +85,7 @@ export async function registerAgentRoutes(app: FastifyInstance) {
           message: "Run created. Poll GET /api/runs/:id for status updates.",
         });
       } catch (error) {
-        // Map domain errors to HTTP responses
-        if (error instanceof AgentNotFoundError) {
-          return reply.status(404).send({ error: "Agent not found" });
-        }
-        if (error instanceof PersistenceUnavailableError) {
-          return reply.status(503).send({
-            error: "Service Unavailable",
-            message: "Database not configured. Please set up Supabase.",
-          });
-        }
-        throw error;
+        return handleError(error, reply);
       }
     },
   );

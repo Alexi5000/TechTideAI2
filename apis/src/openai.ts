@@ -6,6 +6,7 @@ import type {
   EmbeddingRequest,
   EmbeddingResponse,
 } from "./types.js";
+import { withRetry, type RetryConfig } from "./retry.js";
 
 export type OpenAIRequest = Omit<LlmRequest, "provider"> & { provider?: "openai" };
 export type OpenAIEmbeddingRequest = EmbeddingRequest;
@@ -17,6 +18,7 @@ export function createOpenAIClient(apiKey?: string) {
 export async function generateOpenAIText(
   request: OpenAIRequest,
   client = createOpenAIClient(),
+  retryConfig?: RetryConfig,
 ): Promise<LlmResponse> {
   const { model, input, system, temperature, maxTokens } = request;
 
@@ -29,7 +31,11 @@ export async function generateOpenAIText(
   if (temperature !== undefined) options.temperature = temperature;
   if (maxTokens !== undefined) options.max_output_tokens = maxTokens;
 
-  const response = await client.responses.create(options);
+  const response = await withRetry(
+    () => client.responses.create(options),
+    "openai",
+    retryConfig,
+  );
 
   return {
     provider: "openai",
@@ -42,12 +48,18 @@ export async function generateOpenAIText(
 export async function generateOpenAIEmbeddings(
   request: OpenAIEmbeddingRequest,
   client = createOpenAIClient(),
+  retryConfig?: RetryConfig,
 ): Promise<EmbeddingResponse> {
-  const response = await client.embeddings.create({
-    model: request.model,
-    input: request.input,
-    ...(request.dimensions ? { dimensions: request.dimensions } : {}),
-  });
+  const response = await withRetry(
+    () =>
+      client.embeddings.create({
+        model: request.model,
+        input: request.input,
+        ...(request.dimensions ? { dimensions: request.dimensions } : {}),
+      }),
+    "openai",
+    retryConfig,
+  );
 
   return {
     model: response.model,

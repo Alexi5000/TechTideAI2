@@ -12,7 +12,7 @@ import { IconLoader } from "@/components/icons/index.js";
 const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-all",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]",
     "disabled:pointer-events-none disabled:opacity-60",
   ].join(" "),
   {

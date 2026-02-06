@@ -51,6 +51,9 @@ export function DashboardShell() {
 
       {/* Mobile Slide-out Menu */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
         className={cn(
           "fixed inset-y-0 left-0 z-[var(--z-modal)] w-[280px] bg-[var(--surface-2)] border-r border-[var(--stroke)]",
           "transform transition-transform duration-[var(--duration-normal)] ease-[var(--ease-out)]",

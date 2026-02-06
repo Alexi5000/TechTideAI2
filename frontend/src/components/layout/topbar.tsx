@@ -74,7 +74,11 @@ export function Topbar({ title, breadcrumbs, actions, onMobileMenuToggle }: Topb
               <ol className="flex items-center gap-1 text-xs text-[var(--muted)]">
                 {crumbs.map((crumb, index) => (
                   <React.Fragment key={crumb.label + index}>
-                    {index > 0 && <IconChevronRight size={12} className="text-[var(--stroke)]" />}
+                    {index > 0 && (
+                      <li aria-hidden="true" className="flex items-center">
+                        <IconChevronRight size={12} className="text-[var(--stroke)]" />
+                      </li>
+                    )}
                     <li>
                       {crumb.href ? (
                         <Link
@@ -84,7 +88,9 @@ export function Topbar({ title, breadcrumbs, actions, onMobileMenuToggle }: Topb
                           {crumb.label}
                         </Link>
                       ) : (
-                        <span className="text-[var(--muted-strong)]">{crumb.label}</span>
+                        <span className="text-[var(--muted-strong)]" aria-current="page">
+                          {crumb.label}
+                        </span>
                       )}
                     </li>
                   </React.Fragment>

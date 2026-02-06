@@ -1,13 +1,14 @@
 # Tool: market-intel
 
-**Description**: Captures competitive and market research insights with citations.
+**Description**: Summarizes market/competitive intelligence using knowledge-base evidence.
 
 **Inputs (JSON)**
 ```json
 {
   "query": "string",
-  "scope": "competitors | industry | macro",
-  "recencyDays": 90
+  "provider": "openai | anthropic (optional)",
+  "model": "string (optional)",
+  "collections": ["market-intel"]
 }
 ```
 
@@ -15,6 +16,13 @@
 ```json
 {
   "summary": "string",
-  "citations": ["string"]
+  "sources": [
+    { "title": "string", "source": "string", "documentId": "string", "chunkId": "string" }
+  ],
+  "matches": [
+    { "content": "string", "documentId": "string", "chunkId": "string" }
+  ],
+  "provider": "string",
+  "model": "string"
 }
 ```

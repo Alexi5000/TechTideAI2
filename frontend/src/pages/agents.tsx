@@ -24,7 +24,10 @@ function AgentCard({ agent }: { agent: Agent }) {
         <Badge>{agent.tier}</Badge>
       </div>
       <p className="text-sm text-[var(--muted-strong)] mb-3">{agent.domain}</p>
-      <p className="text-sm text-[var(--muted)] flex-grow mb-4">
+      <p
+        className="text-sm text-[var(--muted)] flex-grow mb-4"
+        title={agent.mission.length > 150 ? agent.mission : undefined}
+      >
         {agent.mission.length > 150
           ? `${agent.mission.substring(0, 150)}...`
           : agent.mission}
