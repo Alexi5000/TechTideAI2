@@ -1,4 +1,5 @@
 import type { AgentDefinition } from "./types.js";
+import { isToolId } from "./tool-catalog.js";
 
 const ceoAgent: AgentDefinition = {
   id: "ceo",
@@ -809,11 +810,25 @@ const workers: AgentDefinition[] = [
   },
 ];
 
+function assertToolsKnown(agent: AgentDefinition): void {
+  const unknown = agent.tools.filter((tool) => !isToolId(tool));
+  if (unknown.length > 0) {
+    throw new Error(
+      `Agent ${agent.id} references unknown tools: ${unknown.join(", ")}`,
+    );
+  }
+}
+
+const registryAll = [ceoAgent, ...orchestrators, ...workers];
+for (const agent of registryAll) {
+  assertToolsKnown(agent);
+}
+
 export const agentRegistry = {
   ceo: ceoAgent,
   orchestrators,
   workers,
-  all: [ceoAgent, ...orchestrators, ...workers],
+  all: registryAll,
 };
 
 export function getAgentById(id: string) {

@@ -1,21 +1,30 @@
 # Tool: org-kpi-dashboard
 
-**Description**: Reads current company KPIs and historical trends.
+**Description**: Returns execution KPIs for the organization over a rolling window.
 
 **Inputs (JSON)**
 ```json
 {
-  "metricGroup": "growth | product | engineering | finance | people",
-  "windowDays": 30
+  "days": 30
 }
 ```
 
 **Outputs (JSON)**
 ```json
 {
-  "metricGroup": "string",
-  "metrics": [
-    { "name": "string", "value": "number", "delta": "number" }
-  ]
+  "orgId": "string",
+  "range": { "from": "string", "to": "string" },
+  "totals": {
+    "runsTotal": 0,
+    "running": 0,
+    "queued": 0,
+    "succeeded": 0,
+    "failed": 0,
+    "canceled": 0
+  },
+  "successRate": 0,
+  "avgDurationMs": 0,
+  "lastRunAt": "string",
+  "topAgents": [{ "agentId": "string", "runCount": 0, "successRate": 0 }]
 }
 ```

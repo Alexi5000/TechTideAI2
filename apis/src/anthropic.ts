@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { LlmRequest, LlmResponse } from "./types.js";
+import { withRetry, type RetryConfig } from "./retry.js";
 
 export type AnthropicRequest = Omit<LlmRequest, "provider"> & { provider?: "anthropic" };
 
@@ -10,6 +11,7 @@ export function createAnthropicClient(apiKey?: string) {
 export async function generateAnthropicText(
   request: AnthropicRequest,
   client = createAnthropicClient(),
+  retryConfig?: RetryConfig,
 ): Promise<LlmResponse> {
   const { model, input, system, temperature, maxTokens } = request;
 
@@ -21,7 +23,11 @@ export async function generateAnthropicText(
   if (system) options.system = system;
   if (temperature !== undefined) options.temperature = temperature;
 
-  const message = await client.messages.create(options);
+  const message = await withRetry(
+    () => client.messages.create(options),
+    "anthropic",
+    retryConfig,
+  );
 
   const text = message.content
     .filter((block) => block.type === "text")

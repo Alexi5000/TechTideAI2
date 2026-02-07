@@ -5,4 +5,4 @@ export const mastra = new Mastra({
   agents: mastraAgents,
 });
 
-export { mastraAgents } from "./agents.js";
+export { mastraAgents, createMastraAgents } from "./agents.js";

@@ -2,6 +2,8 @@
 
 TechTideAI is a company-scale AI agent platform: a CEO agent, ten orchestrators (including Agent 0), and fifty worker agents operating on a shared execution fabric.
 
+The in-memory agent registry is the source of truth for agent identity. The database `agents` table stores org-scoped configuration and enablement, not canonical identity.
+
 ## Stack
 - Frontend: React + Vite + Tailwind (shadcn-lite patterns)
 - Backend: Fastify + TypeScript orchestration APIs

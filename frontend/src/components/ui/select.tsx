@@ -11,8 +11,8 @@ import { IconChevronDown } from "@/components/icons/index.js";
 
 const selectVariants = cva(
   [
-    "w-full appearance-none rounded-[var(--radius-lg)] border bg-white px-4 pr-10 font-medium transition-all",
-    "focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent",
+    "w-full appearance-none rounded-[var(--radius-lg)] border bg-black/50 px-4 pr-10 font-medium transition-all",
+    "focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)]",
     "disabled:cursor-not-allowed disabled:bg-[var(--surface-1)] disabled:opacity-60",
   ].join(" "),
   {

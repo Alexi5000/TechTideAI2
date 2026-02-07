@@ -57,3 +57,30 @@ export class EmbeddingProviderUnavailableError extends DomainError {
     this.name = "EmbeddingProviderUnavailableError";
   }
 }
+
+export class LlmProviderUnavailableError extends DomainError {
+  constructor(
+    public readonly provider: "openai" | "anthropic",
+    message?: string,
+  ) {
+    super(message ?? `LLM provider unavailable: ${provider}`);
+    this.name = "LlmProviderUnavailableError";
+  }
+}
+
+export class LlmApiKeyMissingError extends LlmProviderUnavailableError {
+  constructor(provider: "openai" | "anthropic") {
+    super(provider, `API key not configured for ${provider.toUpperCase()}`);
+    this.name = "LlmApiKeyMissingError";
+  }
+}
+
+export class RepositoryOperationError extends PersistenceUnavailableError {
+  constructor(
+    public readonly operation: string,
+    public readonly reason?: string,
+  ) {
+    super(`Repository operation failed: ${operation}${reason ? ` - ${reason}` : ""}`);
+    this.name = "RepositoryOperationError";
+  }
+}

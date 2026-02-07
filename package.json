@@ -17,9 +17,11 @@
     "dev:agents": "pnpm -C agents dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "clean": "node scripts/clean-artifacts.js"
   },
   "devDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.57.1",
     "prettier": "^3.2.5"
   }
 }

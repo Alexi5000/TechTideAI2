@@ -1,48 +1,36 @@
 import { Agent } from "@mastra/core/agent";
 import type { MastraModelConfig } from "@mastra/core/llm";
-import type { AgentDefinition } from "../core/types.js";
 import { agentRegistry } from "../core/registry.js";
-import {
-  systemStatusTool,
-  llmRouterTool,
-  knowledgeBaseTool,
-  workflowRunnerTool,
-} from "./tools/index.js";
+import { renderPrompt, type ToolPolicy } from "../core/prompts/index.js";
+import { sharedTools, selectToolsForAgent } from "./tool-registry.js";
 
-const defaultModel = (process.env["MASTRA_MODEL"] ?? "openai/gpt-5.1") as MastraModelConfig;
-const sharedTools = {
-  "system-status": systemStatusTool,
-  "llm-router": llmRouterTool,
-  "knowledge-base": knowledgeBaseTool,
-  "workflow-runner": workflowRunnerTool,
-};
+const defaultModel = (process.env["MASTRA_MODEL"] ?? "openai/gpt-4o") as MastraModelConfig;
+const defaultToolPolicy = resolveToolPolicy(process.env["MASTRA_TOOL_POLICY"]);
 
-const buildInstructions = (agent: AgentDefinition) => {
-  const lines = [
-    `You are ${agent.name}, leading ${agent.domain}.`,
-    agent.mission,
-    `Responsibilities: ${agent.responsibilities.join("; ")}.`,
-    `Outputs you must maintain: ${agent.outputs.join("; ")}.`,
-    `Metrics you are accountable for: ${agent.metrics.join("; ")}.`,
-    `Available tools: ${Object.keys(sharedTools).join(", ")}.`,
-  ];
-  if (agent.reportsTo) {
-    const lead = agentRegistry.all.find((candidate) => candidate.id === agent.reportsTo);
-    lines.splice(2, 0, `Reports to: ${lead?.name ?? agent.reportsTo}.`);
-  }
-  return lines.join(" ");
-};
+export type { ToolPolicy } from "../core/prompts/index.js";
 
-export const mastraAgents = Object.fromEntries(
-  agentRegistry.all.map((agent) => [
-    agent.id,
-    new Agent({
-      id: agent.id,
-      name: agent.name,
-      description: agent.domain,
-      instructions: buildInstructions(agent),
-      model: defaultModel,
-      tools: sharedTools,
-    }),
-  ]),
-);
+function resolveToolPolicy(value?: string): ToolPolicy {
+  return value === "strict" ? "strict" : "shared";
+}
+
+export function createMastraAgents(
+  options: { toolPolicy?: ToolPolicy } = {},
+): Record<string, Agent> {
+  const toolPolicy = resolveToolPolicy(options.toolPolicy ?? defaultToolPolicy);
+
+  return Object.fromEntries(
+    agentRegistry.all.map((agent) => [
+      agent.id,
+      new Agent({
+        id: agent.id,
+        name: agent.name,
+        description: agent.domain,
+        instructions: renderPrompt(agent, toolPolicy),
+        model: defaultModel,
+        tools: toolPolicy === "strict" ? selectToolsForAgent(agent) : sharedTools,
+      }),
+    ]),
+  );
+}
+
+export const mastraAgents = createMastraAgents();

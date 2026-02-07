@@ -28,6 +28,9 @@ export {
   PersistenceUnavailableError,
   VectorStoreUnavailableError,
   EmbeddingProviderUnavailableError,
+  LlmProviderUnavailableError,
+  LlmApiKeyMissingError,
+  RepositoryOperationError,
 } from "./exceptions/index.js";
 
 // Policies

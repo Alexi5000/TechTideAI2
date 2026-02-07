@@ -15,6 +15,11 @@ const envSchema = z.object({
   HOST: z.string().default("0.0.0.0"),
   PORT: z.coerce.number().int().min(1).max(65535).default(4050),
   CORS_ORIGIN: z.string().default("http://localhost:5180"),
+  API_KEY: optionalString,
+  DEFAULT_ORG_ID: z
+    .string()
+    .uuid()
+    .default("00000000-0000-0000-0000-000000000001"),
   DEFAULT_LLM_PROVIDER: z.enum(["openai", "anthropic"]).default("openai"),
   OPENAI_API_KEY: optionalString,
   ANTHROPIC_API_KEY: optionalString,

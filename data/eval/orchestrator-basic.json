@@ -1,0 +1,42 @@
+{
+  "id": "orchestrator-basic-v1",
+  "name": "Orchestrator Agents Basic Evaluation",
+  "cases": [
+    {
+      "id": "orch-veronica-1",
+      "agentId": "orch-veronica",
+      "input": { "prompt": "Synthesize this week's cross-domain priority updates for the CEO." },
+      "expectedOutput": { "text": "priority" },
+      "tags": ["orchestration", "synthesis"]
+    },
+    {
+      "id": "orch-ava-1",
+      "agentId": "orch-ava",
+      "input": { "prompt": "Review current SOP compliance and identify process drift." },
+      "expectedOutput": { "text": "process" },
+      "tags": ["operations", "compliance"]
+    },
+    {
+      "id": "orch-marcus-1",
+      "agentId": "orch-marcus",
+      "input": { "prompt": "Analyze our product roadmap and identify key technical risks." },
+      "expectedOutput": { "text": "product" },
+      "tags": ["product", "roadmap"]
+    },
+    {
+      "id": "orch-elena-1",
+      "agentId": "orch-elena",
+      "input": { "prompt": "Evaluate current marketing campaign performance and ROI." },
+      "expectedOutput": { "text": "marketing" },
+      "tags": ["marketing", "performance"]
+    },
+    {
+      "id": "orch-james-1",
+      "agentId": "orch-james",
+      "input": { "prompt": "Review the engineering sprint velocity and quality metrics." },
+      "expectedOutput": { "text": "engineering" },
+      "tags": ["engineering", "metrics"]
+    }
+  ],
+  "createdAt": "2026-02-06T00:00:00.000Z"
+}

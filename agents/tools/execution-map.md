@@ -1,21 +1,35 @@
 # Tool: execution-map
 
-**Description**: Stores and retrieves dependency graphs for ongoing initiatives.
+**Description**: Returns the current execution topology with run statistics.
 
 **Inputs (JSON)**
 ```json
 {
-  "action": "get | update",
-  "initiativeId": "string",
-  "payload": {}
+  "days": 30
 }
 ```
 
 **Outputs (JSON)**
 ```json
 {
-  "initiativeId": "string",
-  "dependencies": [],
-  "updatedAt": "string"
+  "nodes": [
+    {
+      "id": "string",
+      "name": "string",
+      "tier": "string",
+      "reportsTo": "string",
+      "runStats": {
+        "runsTotal": 0,
+        "running": 0,
+        "queued": 0,
+        "succeeded": 0,
+        "failed": 0,
+        "canceled": 0,
+        "successRate": 0,
+        "lastRunAt": "string"
+      }
+    }
+  ],
+  "edges": [{ "from": "string", "to": "string" }]
 }
 ```

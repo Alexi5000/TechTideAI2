@@ -5,4 +5,9 @@ export default defineConfig({
     environment: "node",
     include: ["src/**/*.test.ts"],
   },
+  resolve: {
+    alias: {
+      "@techtide/agents": new URL("./src", import.meta.url).pathname,
+    },
+  },
 });

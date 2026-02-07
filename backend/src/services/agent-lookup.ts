@@ -14,7 +14,7 @@ import type { AgentLookup } from "./agent-execution-service.js";
 export function createAgentLookup(): AgentLookup {
   return {
     exists(agentId: string): boolean {
-      return getAgentById(agentId) !== undefined;
+      return getAgentById(agentId) !== null;
     },
   };
 }

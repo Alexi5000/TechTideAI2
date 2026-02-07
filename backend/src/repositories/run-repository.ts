@@ -6,7 +6,7 @@
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { PersistenceUnavailableError } from "../domain/index.js";
+import { PersistenceUnavailableError, RepositoryOperationError } from "../domain/index.js";
 import type {
   IRunRepository,
   Run,
@@ -83,7 +83,7 @@ export function createRunRepository(
         .single();
 
       if (error) {
-        throw new Error(`Failed to create run: ${error.message}`);
+        throw new RepositoryOperationError("create run", error.message);
       }
 
       return mapDbRunToRun(data as DbRun);
@@ -103,7 +103,7 @@ export function createRunRepository(
           // Row not found
           return null;
         }
-        throw new Error(`Failed to find run: ${error.message}`);
+        throw new RepositoryOperationError("find run by id", error.message);
       }
 
       return mapDbRunToRun(data as DbRun);
@@ -120,7 +120,7 @@ export function createRunRepository(
         .limit(limit);
 
       if (error) {
-        throw new Error(`Failed to list runs: ${error.message}`);
+        throw new RepositoryOperationError("list runs", error.message);
       }
 
       return (data as DbRun[]).map(mapDbRunToRun);
@@ -154,7 +154,7 @@ export function createRunRepository(
         .single();
 
       if (error) {
-        throw new Error(`Failed to update run status: ${error.message}`);
+        throw new RepositoryOperationError("update run status", error.message);
       }
 
       return mapDbRunToRun(data as DbRun);
@@ -180,10 +180,26 @@ export function createRunRepository(
         .single();
 
       if (error) {
-        throw new Error(`Failed to add run event: ${error.message}`);
+        throw new RepositoryOperationError("add run event", error.message);
       }
 
       return mapDbRunEventToRunEvent(data as DbRunEvent);
+    },
+
+    async listEvents(runId: string): Promise<RunEvent[]> {
+      const client = requireSupabase();
+
+      const { data, error } = await client
+        .from("run_events")
+        .select()
+        .eq("run_id", runId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        throw new RepositoryOperationError("list run events", error.message);
+      }
+
+      return (data as DbRunEvent[]).map(mapDbRunEventToRunEvent);
     },
   };
 }

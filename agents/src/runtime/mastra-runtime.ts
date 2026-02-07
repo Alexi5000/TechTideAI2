@@ -2,7 +2,7 @@
  * Mastra Runtime Implementation
  *
  * Infrastructure layer: implements IAgentRuntime using Mastra framework.
- * Wraps Mastra agents with error handling and structured output.
+ * Wraps Mastra agents with error handling, structured output, and optional tracing.
  */
 
 import type {
@@ -11,9 +11,14 @@ import type {
   AgentRunResult,
   AgentEvent,
 } from "./types.js";
+import type { ITracer } from "../monitoring/types.js";
 import { mastraAgents } from "../mastra/agents.js";
 
 const EXECUTION_TIMEOUT_MS = 30_000; // 30 second timeout
+
+export interface MastraRuntimeOptions {
+  tracer?: ITracer | undefined;
+}
 
 /**
  * Creates a Mastra-based agent runtime.
@@ -23,16 +28,37 @@ const EXECUTION_TIMEOUT_MS = 30_000; // 30 second timeout
  * - Timeout protection
  * - Error capture and reporting
  * - Event tracking
+ * - Optional execution tracing
  */
-export function createMastraRuntime(): IAgentRuntime {
+export function createMastraRuntime(options: MastraRuntimeOptions = {}): IAgentRuntime {
+  const { tracer } = options;
+
   return {
     async execute(request: AgentRunRequest): Promise<AgentRunResult> {
       const events: AgentEvent[] = [];
       const startTime = new Date();
+      const span = tracer?.startSpan("agent.execute", { agentId: request.agentId });
+
+      if (request.signal?.aborted) {
+        const errorMessage = "Agent execution aborted before start";
+        events.push({
+          type: "error",
+          timestamp: startTime.toISOString(),
+          payload: { error: errorMessage },
+        });
+        if (span) tracer?.endSpan(span, "error");
+        return {
+          success: false,
+          output: {},
+          events,
+          error: errorMessage,
+        };
+      }
 
       // Validate agent exists
       const agent = mastraAgents[request.agentId];
       if (!agent) {
+        if (span) tracer?.endSpan(span, "error");
         return {
           success: false,
           output: {},
@@ -58,6 +84,10 @@ export function createMastraRuntime(): IAgentRuntime {
             ? request.input["prompt"]
             : JSON.stringify(request.input);
 
+        if (request.signal?.aborted) {
+          throw new Error("Agent execution aborted");
+        }
+
         // Create timeout promise
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => {
@@ -75,12 +105,25 @@ export function createMastraRuntime(): IAgentRuntime {
 
         const result = await Promise.race([executionPromise, timeoutPromise]);
 
+        if (request.signal?.aborted) {
+          throw new Error("Agent execution aborted");
+        }
+
         // Extract text from result
         const outputText = result.text ?? "";
         const toolResults = result.toolResults ?? [];
 
         // Record tool events
         for (const toolResult of toolResults) {
+          if (span) {
+            tracer?.addEvent(span, {
+              name: "tool_result",
+              timestamp: Date.now(),
+              attributes: {
+                toolName: toolResult.payload.toolName,
+              },
+            });
+          }
           events.push({
             type: "tool_result",
             timestamp: new Date().toISOString(),
@@ -99,6 +142,8 @@ export function createMastraRuntime(): IAgentRuntime {
             durationMs: Date.now() - startTime.getTime(),
           },
         });
+
+        if (span) tracer?.endSpan(span, "ok");
 
         return {
           success: true,
@@ -120,6 +165,8 @@ export function createMastraRuntime(): IAgentRuntime {
             durationMs: Date.now() - startTime.getTime(),
           },
         });
+
+        if (span) tracer?.endSpan(span, "error");
 
         return {
           success: false,

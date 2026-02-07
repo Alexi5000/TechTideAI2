@@ -14,7 +14,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-[var(--stroke)] bg-[var(--surface-1)] text-[var(--muted)]",
+          "border-[var(--accent)]/20 bg-[var(--accent)]/10 text-[var(--accent)]",
         success:
           "border-[var(--success)]/20 bg-[var(--success-light)] text-[var(--success)]",
         warning:

@@ -6,7 +6,7 @@
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { PersistenceUnavailableError } from "../domain/index.js";
+import { PersistenceUnavailableError, RepositoryOperationError } from "../domain/index.js";
 import type {
   IKnowledgeRepository,
   KnowledgeDocument,
@@ -74,7 +74,7 @@ export function createKnowledgeRepository(
         .single();
 
       if (error) {
-        throw new Error(`Failed to create knowledge document: ${error.message}`);
+        throw new RepositoryOperationError("create knowledge document", error.message);
       }
 
       return mapDbDocumentToDocument(data as DbKnowledgeDocument);
@@ -93,7 +93,7 @@ export function createKnowledgeRepository(
         if (error.code === "PGRST116") {
           return null;
         }
-        throw new Error(`Failed to get knowledge document: ${error.message}`);
+        throw new RepositoryOperationError("get knowledge document", error.message);
       }
 
       return mapDbDocumentToDocument(data as DbKnowledgeDocument);
@@ -123,7 +123,7 @@ export function createKnowledgeRepository(
         .select();
 
       if (error) {
-        throw new Error(`Failed to create knowledge chunks: ${error.message}`);
+        throw new RepositoryOperationError("create knowledge chunks", error.message);
       }
 
       return (data as DbKnowledgeChunk[]).map(mapDbChunkToChunk);
@@ -139,7 +139,7 @@ export function createKnowledgeRepository(
         .order("chunk_index", { ascending: true });
 
       if (error) {
-        throw new Error(`Failed to list knowledge chunks: ${error.message}`);
+        throw new RepositoryOperationError("list knowledge chunks", error.message);
       }
 
       return (data as DbKnowledgeChunk[]).map(mapDbChunkToChunk);
@@ -154,7 +154,7 @@ export function createKnowledgeRepository(
         .eq("id", documentId);
 
       if (error) {
-        throw new Error(`Failed to update knowledge index timestamp: ${error.message}`);
+        throw new RepositoryOperationError("update knowledge index timestamp", error.message);
       }
     },
   };

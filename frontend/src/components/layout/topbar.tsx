@@ -2,12 +2,12 @@
  * Topbar Component
  *
  * Page header with title, breadcrumbs, and action slot.
- * Includes mobile menu toggle.
+ * Matrix dark theme with glass effect.
  */
 
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { IconMenu, IconChevronRight, IconUser, IconSettings, IconExternalLink } from "@/components/icons/index.js";
+import { IconMenu, IconChevronRight, IconUser, IconExternalLink } from "@/components/icons/index.js";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -54,13 +54,13 @@ export function Topbar({ title, breadcrumbs, actions, onMobileMenuToggle }: Topb
   const crumbs = breadcrumbs ?? generateBreadcrumbs(location.pathname);
 
   return (
-    <header className="h-[var(--header-height)] flex items-center justify-between px-6 border-b border-[var(--stroke)] bg-[var(--surface-2)]/80 backdrop-blur-sm sticky top-0 z-[var(--z-sticky)]">
+    <header className="h-[var(--header-height)] flex items-center justify-between px-6 border-b border-[var(--stroke)] bg-black/70 backdrop-blur-md sticky top-0 z-[var(--z-sticky)]">
       <div className="flex items-center gap-4">
         {/* Mobile menu toggle */}
         {onMobileMenuToggle && (
           <button
             onClick={onMobileMenuToggle}
-            className="lg:hidden p-2 -ml-2 rounded-lg text-[var(--muted-strong)] hover:bg-[var(--surface-1)] transition-colors"
+            className="lg:hidden p-2 -ml-2 rounded-lg text-[var(--muted)] hover:bg-[var(--accent)]/5 hover:text-[var(--accent)] transition-colors"
             aria-label="Open menu"
           >
             <IconMenu size={20} />
@@ -74,17 +74,23 @@ export function Topbar({ title, breadcrumbs, actions, onMobileMenuToggle }: Topb
               <ol className="flex items-center gap-1 text-xs text-[var(--muted)]">
                 {crumbs.map((crumb, index) => (
                   <React.Fragment key={crumb.label + index}>
-                    {index > 0 && <IconChevronRight size={12} className="text-[var(--stroke)]" />}
+                    {index > 0 && (
+                      <li aria-hidden="true" className="flex items-center">
+                        <IconChevronRight size={12} className="text-[var(--stroke)]" />
+                      </li>
+                    )}
                     <li>
                       {crumb.href ? (
                         <Link
                           to={crumb.href}
-                          className="hover:text-[var(--muted-strong)] transition-colors"
+                          className="hover:text-[var(--accent)] transition-colors"
                         >
                           {crumb.label}
                         </Link>
                       ) : (
-                        <span className="text-[var(--muted-strong)]">{crumb.label}</span>
+                        <span className="text-[var(--accent)]" aria-current="page">
+                          {crumb.label}
+                        </span>
                       )}
                     </li>
                   </React.Fragment>
@@ -114,12 +120,8 @@ export function Topbar({ title, breadcrumbs, actions, onMobileMenuToggle }: Topb
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <IconSettings size={16} />
-              <span>Settings</span>
-            </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => window.open("https://docs.techtide.ai", "_blank")}
+              onClick={() => window.open("https://github.com/Alexi5000/TechTideAI", "_blank")}
             >
               <IconExternalLink size={16} />
               <span>Documentation</span>

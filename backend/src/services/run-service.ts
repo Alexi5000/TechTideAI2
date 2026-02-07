@@ -28,6 +28,7 @@ export interface IRunService {
     eventType: string,
     payload: Record<string, unknown>,
   ): Promise<RunEvent>;
+  listRunEvents(runId: string): Promise<RunEvent[]>;
 }
 
 export interface RunServiceOptions {
@@ -121,6 +122,14 @@ export function createRunService(
       payload: Record<string, unknown>,
     ): Promise<RunEvent> {
       return repository.addEvent(runId, orgId, eventType, payload);
+    },
+
+    async listRunEvents(runId: string): Promise<RunEvent[]> {
+      const run = await repository.findById(runId);
+      if (!run) {
+        throw new RunNotFoundError(runId);
+      }
+      return repository.listEvents(runId);
     },
   };
 }

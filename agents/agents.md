@@ -8,6 +8,10 @@ This document defines the canonical TechTideAI agent roster, roles, and behavior
 - Separate strategy, orchestration, and execution responsibilities.
 - Always report risks, assumptions, and confidence levels.
 
+## Tool Access Policy
+- Core tools are shared across agents by default; per-agent tool lists are preferred guidance.
+- Strict tool enforcement is available via `MASTRA_TOOL_POLICY=strict`.
+
 ## Executive / Core Agents
 **Brian Cozy — CEO Agent**
 - Purpose: Strategic decision support, executive summaries, KPI review, prioritization, long-range planning.

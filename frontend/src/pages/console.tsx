@@ -8,7 +8,7 @@
 import { useState } from "react";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useAgent } from "@/hooks/use-agents.js";
-import { useAgentRun, useRunPolling } from "@/hooks/use-runs.js";
+import { useAgentRun, useRunEvents, useRunPolling } from "@/hooks/use-runs.js";
 import { useToastContext } from "@/contexts/toast-context.js";
 import { Topbar } from "@/components/layout/index.js";
 import { PageTransition } from "@/components/page-transition.js";
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button.js";
 import { Badge } from "@/components/ui/badge.js";
 import { StatusBadge } from "@/components/status-badge.js";
 import { IconLoader, IconPlay, IconRefresh } from "@/components/icons/index.js";
+import { apiClient } from "@/lib/api-client.js";
 import type { DashboardContextType } from "@/components/layout/index.js";
 
 function ConsoleSkeleton() {
@@ -45,17 +46,28 @@ export function ConsolePage() {
   const { agent, loading: agentLoading, notFound } = useAgent(agentId);
   const { run, loading: runLoading, startRun, reset } = useAgentRun();
   const { run: polledRun, isPolling } = useRunPolling(run?.id ?? null);
+  const { events, loading: eventsLoading, error: eventsError } = useRunEvents(
+    polledRun?.id ?? run?.id ?? null,
+    polledRun?.status ?? run?.status ?? null,
+  );
   const { success, error: toastError } = useToastContext();
 
   const [prompt, setPrompt] = useState("");
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   const currentRun = polledRun ?? run;
+  const isTerminal =
+    currentRun?.status === "succeeded" ||
+    currentRun?.status === "failed" ||
+    currentRun?.status === "canceled";
 
   const handleRun = async () => {
-    if (!agentId || !prompt.trim()) return;
+    // Guard: don't submit if agent not loaded or invalid
+    if (!agentId || !agent || agentLoading || notFound) return;
+    if (!prompt.trim()) return;
     try {
       await startRun(agentId, { prompt: prompt.trim() });
-      success("Run started", `Agent ${agent?.name ?? agentId} is processing your request.`);
+      success("Run started", `Agent ${agent.name} is processing your request.`);
     } catch (err) {
       toastError("Run failed", err instanceof Error ? err.message : "Could not start agent run.");
     }
@@ -64,6 +76,32 @@ export function ConsolePage() {
   const handleNewRun = () => {
     reset();
     setPrompt("");
+  };
+
+  const handleCancel = async () => {
+    if (!currentRun || isTerminal) return;
+    setCancelLoading(true);
+    try {
+      await apiClient.cancelRun(currentRun.id);
+      success("Run canceled", "Cancellation request sent.");
+    } catch (err) {
+      toastError(
+        "Cancel failed",
+        err instanceof Error ? err.message : "Unable to cancel run.",
+      );
+    } finally {
+      setCancelLoading(false);
+    }
+  };
+
+  const formatEventLabel = (value: string) =>
+    value
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  const formatPayload = (payload: Record<string, unknown>) => {
+    const text = JSON.stringify(payload);
+    return text.length > 160 ? `${text.slice(0, 160)}...` : text;
   };
 
   if (notFound) {
@@ -111,18 +149,21 @@ export function ConsolePage() {
 
             {/* Input Card */}
             <Card className="mb-6">
-              <h3 className="text-lg font-semibold mb-4">Run Agent</h3>
+              <label htmlFor="agent-prompt" className="text-lg font-semibold mb-4 block">
+                Run Agent
+              </label>
               <textarea
+                id="agent-prompt"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Enter your prompt or instructions for the agent..."
                 disabled={runLoading || isPolling}
-                className="w-full h-32 p-3 border border-[var(--stroke)] rounded-lg mb-4 bg-white resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent disabled:bg-[var(--surface-1)] disabled:cursor-not-allowed transition-shadow"
+                className="w-full h-32 p-3 border border-[var(--stroke)] rounded-lg mb-4 bg-black/50 text-[var(--ink)] font-mono resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] disabled:bg-[var(--surface-1)] disabled:cursor-not-allowed transition-shadow placeholder:text-[var(--muted)]"
               />
               <div className="flex gap-3">
                 <Button
                   onClick={handleRun}
-                  disabled={runLoading || isPolling || !prompt.trim()}
+                  disabled={runLoading || isPolling || !prompt.trim() || agentLoading || !agent}
                   className="flex items-center gap-2"
                 >
                   {runLoading ? (
@@ -142,6 +183,11 @@ export function ConsolePage() {
                     </>
                   )}
                 </Button>
+                {currentRun && !isTerminal && (
+                  <Button variant="secondary" onClick={handleCancel} disabled={cancelLoading}>
+                    {cancelLoading ? "Canceling..." : "Cancel Run"}
+                  </Button>
+                )}
                 {currentRun && (
                   <Button variant="secondary" onClick={handleNewRun}>
                     <IconRefresh size={16} className="mr-2" />
@@ -197,6 +243,41 @@ export function ConsolePage() {
                     </div>
                   )}
                 </div>
+              </Card>
+            )}
+
+            {currentRun && (
+              <Card className="mt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">Execution Timeline</h3>
+                  <span className="text-xs text-[var(--muted)]">
+                    {eventsLoading ? "Updating..." : `${events.length} events`}
+                  </span>
+                </div>
+                {eventsError && (
+                  <p className="text-sm text-[var(--error)] mb-3">{eventsError.message}</p>
+                )}
+                {events.length === 0 ? (
+                  <p className="text-sm text-[var(--muted)]">No events recorded yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {events.map((event) => (
+                      <div key={event.id} className="text-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-[var(--ink)]">
+                            {formatEventLabel(event.eventType)}
+                          </span>
+                          <span className="text-xs text-[var(--muted)]">
+                            {new Date(event.createdAt).toLocaleString()}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[var(--muted-strong)] mt-1">
+                          {formatPayload(event.payload)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </Card>
             )}
 

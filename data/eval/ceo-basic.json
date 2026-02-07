@@ -1,0 +1,42 @@
+{
+  "id": "ceo-basic-v1",
+  "name": "CEO Agent Basic Evaluation",
+  "cases": [
+    {
+      "id": "ceo-strategy-1",
+      "agentId": "ceo",
+      "input": { "prompt": "Provide a strategic overview of our Q1 priorities and key objectives." },
+      "expectedOutput": { "text": "strategic" },
+      "tags": ["strategy", "quarterly"]
+    },
+    {
+      "id": "ceo-kpi-1",
+      "agentId": "ceo",
+      "input": { "prompt": "Review our current KPIs and identify areas of concern." },
+      "expectedOutput": { "text": "KPI" },
+      "tags": ["kpi", "review"]
+    },
+    {
+      "id": "ceo-risk-1",
+      "agentId": "ceo",
+      "input": { "prompt": "What are the top 3 risks to our operating posture this quarter?" },
+      "expectedOutput": { "text": "risk" },
+      "tags": ["risk", "assessment"]
+    },
+    {
+      "id": "ceo-decision-1",
+      "agentId": "ceo",
+      "input": { "prompt": "Draft an executive decision log entry for the new product launch." },
+      "expectedOutput": { "text": "decision" },
+      "tags": ["decision", "executive"]
+    },
+    {
+      "id": "ceo-allocation-1",
+      "agentId": "ceo",
+      "input": { "prompt": "Recommend resource allocation priorities for the engineering team." },
+      "expectedOutput": { "text": "resource" },
+      "tags": ["allocation", "prioritization"]
+    }
+  ],
+  "createdAt": "2026-02-06T00:00:00.000Z"
+}
