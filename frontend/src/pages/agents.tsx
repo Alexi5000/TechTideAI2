@@ -109,7 +109,8 @@ export function AgentsPage() {
 
       <div className="p-6 max-w-[var(--content-max-width)] mx-auto">
         <p className="text-[var(--muted-strong)] mb-8">
-          Browse and run AI agents across the organization hierarchy.
+          Browse and run AI agents across the organization hierarchy. Tool badges
+          show preferred tools; core tools are shared across all agents by default.
         </p>
 
         {loading ? (

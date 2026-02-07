@@ -106,10 +106,10 @@ export default function App() {
             </a>
           </nav>
           <div className="hidden items-center gap-3 md:flex">
-            <Link to="/agents">
+            <Link to="/dashboard/agents">
               <Button variant="ghost">View Agents</Button>
             </Link>
-            <Link to="/console/ceo">
+            <Link to="/dashboard/console/ceo">
               <Button>Launch Console</Button>
             </Link>
           </div>
@@ -128,7 +128,7 @@ export default function App() {
                 in real time.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link to="/agents">
+                <Link to="/dashboard/agents">
                   <Button size="lg">Get the platform</Button>
                 </Link>
                 <a href="#architecture">
@@ -246,10 +246,10 @@ export default function App() {
                 Spin up the CEO agent, link your data, and let the orchestrators keep the company on pace.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link to="/console/ceo">
+                <Link to="/dashboard/console/ceo">
                   <Button size="lg">Try the CEO Agent</Button>
                 </Link>
-                <Link to="/agents">
+                <Link to="/dashboard/agents">
                   <Button variant="secondary" size="lg">
                     View All Agents
                   </Button>

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { agentRegistry, getAgentById } from "./registry.js";
+import { isToolId } from "./tool-catalog.js";
 import type { AgentDefinition } from "./types.js";
 
 describe("agent registry", () => {
@@ -49,17 +50,12 @@ describe("agent registry", () => {
     expect(getAgentById("nonexistent")).toBeNull();
   });
 
-  it("tools are filtered to implemented set only", () => {
-    const implementedTools = new Set([
-      "system-status", "llm-router", "knowledge-base",
-      "workflow-runner", "org-kpi-dashboard", "execution-map", "market-intel",
-    ]);
-
+  it("all tools are part of the known tool catalog", () => {
     for (const agent of agentRegistry.all) {
       for (const tool of agent.tools) {
         expect(
-          implementedTools.has(tool),
-          `${agent.id} has unimplemented tool: ${tool}`,
+          isToolId(tool),
+          `${agent.id} has unknown tool: ${tool}`,
         ).toBe(true);
       }
     }

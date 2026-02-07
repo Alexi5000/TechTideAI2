@@ -42,23 +42,6 @@ function createStubTool(id: string, description: string) {
   });
 }
 
-// Organization & Operations Tools
-export const orgKpiDashboardTool = createStubTool(
-  "org-kpi-dashboard",
-  "Access organization KPI metrics, trends, and performance dashboards."
-);
-
-export const executionMapTool = createStubTool(
-  "execution-map",
-  "Track execution status, dependency graphs, and workflow progress."
-);
-
-// Market & Research Tools
-export const marketIntelTool = createStubTool(
-  "market-intel",
-  "Retrieve competitive research, market data, and industry insights."
-);
-
 // HR & Talent Tools
 export const talentHubTool = createStubTool(
   "talent-hub",

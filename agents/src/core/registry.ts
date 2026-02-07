@@ -1,4 +1,5 @@
 import type { AgentDefinition } from "./types.js";
+import { isToolId } from "./tool-catalog.js";
 
 const ceoAgent: AgentDefinition = {
   id: "ceo",
@@ -809,32 +810,25 @@ const workers: AgentDefinition[] = [
   },
 ];
 
-const IMPLEMENTED_TOOLS = new Set([
-  "system-status",
-  "llm-router",
-  "knowledge-base",
-  "workflow-runner",
-  "org-kpi-dashboard",
-  "execution-map",
-  "market-intel",
-]);
-
-function withImplementedTools(agent: AgentDefinition): AgentDefinition {
-  return {
-    ...agent,
-    tools: agent.tools.filter((tool) => IMPLEMENTED_TOOLS.has(tool)),
-  };
+function assertToolsKnown(agent: AgentDefinition): void {
+  const unknown = agent.tools.filter((tool) => !isToolId(tool));
+  if (unknown.length > 0) {
+    throw new Error(
+      `Agent ${agent.id} references unknown tools: ${unknown.join(", ")}`,
+    );
+  }
 }
 
-const registryCeo = withImplementedTools(ceoAgent);
-const registryOrchestrators = orchestrators.map(withImplementedTools);
-const registryWorkers = workers.map(withImplementedTools);
+const registryAll = [ceoAgent, ...orchestrators, ...workers];
+for (const agent of registryAll) {
+  assertToolsKnown(agent);
+}
 
 export const agentRegistry = {
-  ceo: registryCeo,
-  orchestrators: registryOrchestrators,
-  workers: registryWorkers,
-  all: [registryCeo, ...registryOrchestrators, ...registryWorkers],
+  ceo: ceoAgent,
+  orchestrators,
+  workers,
+  all: registryAll,
 };
 
 export function getAgentById(id: string) {

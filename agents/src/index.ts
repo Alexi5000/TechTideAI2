@@ -1,5 +1,5 @@
 export * from "./core/index.js";
-export { mastra, mastraAgents } from "./mastra/index.js";
+export { mastra, mastraAgents, createMastraAgents } from "./mastra/index.js";
 export { loadClaudeAgentSdk } from "./claude/sdk.js";
 export { createMastraRuntime } from "./runtime/index.js";
 export type {

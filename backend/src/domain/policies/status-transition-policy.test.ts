@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { StatusTransitionPolicy, defaultStatusTransitionPolicy } from "./status-transition-policy.js";
+import { defaultStatusTransitionPolicy } from "./status-transition-policy.js";
 
 describe("StatusTransitionPolicy", () => {
   it("allows queued → running", () => {
