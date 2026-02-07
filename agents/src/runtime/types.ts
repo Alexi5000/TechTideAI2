@@ -9,6 +9,7 @@ export interface AgentRunRequest {
   agentId: string;
   input: Record<string, unknown>;
   context?: Record<string, unknown>;
+  sessionId?: string;
   signal?: AbortSignal;
 }
 

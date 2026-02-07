@@ -6,6 +6,8 @@ export const CORE_TOOL_IDS = [
   "org-kpi-dashboard",
   "execution-map",
   "market-intel",
+  "memory-recall",
+  "memory-store",
 ] as const;
 
 export const PLANNED_TOOL_IDS = [

@@ -158,7 +158,7 @@ export function ConsolePage() {
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Enter your prompt or instructions for the agent..."
                 disabled={runLoading || isPolling}
-                className="w-full h-32 p-3 border border-[var(--stroke)] rounded-lg mb-4 bg-white resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent disabled:bg-[var(--surface-1)] disabled:cursor-not-allowed transition-shadow"
+                className="w-full h-32 p-3 border border-[var(--stroke)] rounded-lg mb-4 bg-black/50 text-[var(--ink)] font-mono resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] disabled:bg-[var(--surface-1)] disabled:cursor-not-allowed transition-shadow placeholder:text-[var(--muted)]"
               />
               <div className="flex gap-3">
                 <Button

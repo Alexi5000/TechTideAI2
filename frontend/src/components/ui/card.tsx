@@ -9,20 +9,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils.js";
 
 const cardVariants = cva(
-  "rounded-[var(--radius-2xl)] border border-[var(--stroke)] bg-[var(--surface-1)]",
+  "rounded-[var(--radius-2xl)] border border-[var(--stroke)] bg-black/60 backdrop-blur-sm",
   {
     variants: {
       variant: {
-        default: "shadow-[0_20px_60px_rgba(15,23,42,0.08)]",
+        default: "shadow-[var(--shadow-sm)]",
         elevated: "shadow-[var(--shadow-lg)]",
         outline: "shadow-none",
         ghost: "border-transparent bg-transparent shadow-none",
+        glow: "border-[var(--accent)]/40 shadow-[0_0_15px_rgba(0,255,65,0.2)]",
       },
       interactive: {
         true: [
           "cursor-pointer",
           "transition-all duration-[var(--duration-normal)] ease-[var(--ease-out)]",
-          "hover:shadow-[var(--shadow-lg)] hover:border-[var(--accent)]/20 hover:-translate-y-0.5",
+          "hover:shadow-[0_0_20px_rgba(0,255,65,0.25)] hover:border-[var(--accent)]/30 hover:-translate-y-0.5",
         ].join(" "),
         false: "",
       },

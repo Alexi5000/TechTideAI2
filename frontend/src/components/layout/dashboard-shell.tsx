@@ -9,6 +9,7 @@ import * as React from "react";
 import { Outlet } from "react-router-dom";
 import { cn } from "@/lib/utils.js";
 import { Sidebar } from "./sidebar.js";
+import { MatrixRain } from "@/components/matrix-rain.js";
 import { IconX, IconHome, IconAgents, IconTerminal, IconHistory } from "@/components/icons/index.js";
 import { NavLink } from "react-router-dom";
 
@@ -36,14 +37,17 @@ export function DashboardShell() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--bg)]">
+    <div className="min-h-screen bg-black">
+      {/* Matrix Rain Background */}
+      <MatrixRain opacity={0.04} />
+
       {/* Desktop Sidebar */}
       <Sidebar collapsed={sidebarCollapsed} onToggleCollapse={toggleSidebar} />
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[var(--z-overlay)] bg-black/50 lg:hidden"
+          className="fixed inset-0 z-[var(--z-overlay)] bg-black/70 lg:hidden"
           onClick={closeMobileMenu}
           aria-hidden="true"
         />
@@ -55,18 +59,18 @@ export function DashboardShell() {
         aria-modal="true"
         aria-label="Navigation menu"
         className={cn(
-          "fixed inset-y-0 left-0 z-[var(--z-modal)] w-[280px] bg-[var(--surface-2)] border-r border-[var(--stroke)]",
+          "fixed inset-y-0 left-0 z-[var(--z-modal)] w-[280px] bg-black/95 backdrop-blur-md border-r border-[var(--stroke)]",
           "transform transition-transform duration-[var(--duration-normal)] ease-[var(--ease-out)]",
           "lg:hidden",
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="h-[var(--header-height)] flex items-center justify-between px-4 border-b border-[var(--stroke)]">
-          <span className="font-semibold text-[var(--ink)]">TechTideAI</span>
+          <span className="font-semibold text-[var(--accent)] matrix-text-glow">TechTideAI</span>
           <button
             type="button"
             onClick={closeMobileMenu}
-            className="p-2 -mr-2 rounded-lg text-[var(--muted-strong)] hover:bg-[var(--surface-1)]"
+            className="p-2 -mr-2 rounded-lg text-[var(--muted)] hover:bg-[var(--surface-1)] hover:text-[var(--accent)]"
             aria-label="Close menu"
           >
             <IconX size={20} />
@@ -83,7 +87,7 @@ export function DashboardShell() {
                   className={({ isActive }) =>
                     cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                      "hover:bg-[var(--surface-1)]",
+                      "hover:bg-[var(--accent)]/5",
                       isActive
                         ? "bg-[var(--accent)]/10 text-[var(--accent)]"
                         : "text-[var(--muted-strong)]",
@@ -102,13 +106,11 @@ export function DashboardShell() {
       {/* Main Content Area */}
       <main
         className={cn(
-          "min-h-screen transition-[margin] duration-[var(--duration-normal)] ease-[var(--ease-out)]",
+          "relative z-10 min-h-screen transition-[margin] duration-[var(--duration-normal)] ease-[var(--ease-out)]",
           "lg:ml-[var(--sidebar-width)]",
           sidebarCollapsed && "lg:ml-[var(--sidebar-collapsed)]",
         )}
       >
-        {/* Outlet renders nested route content */}
-        {/* Pages should include their own Topbar for page-specific titles/actions */}
         <Outlet context={{ onMobileMenuToggle: toggleMobileMenu }} />
       </main>
     </div>

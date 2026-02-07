@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import App from "./App.js";
 
 describe("App", () => {
-  it("renders the hero headline and primary CTAs", () => {
+  it("renders the hero headline and enter dashboard CTA", () => {
     render(
       <MemoryRouter>
         <App />
@@ -13,15 +13,12 @@ describe("App", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: /run an entire company with an ai org chart/i,
+        name: /run an entire company with 61 ai agents/i,
       }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("button", { name: /get the platform/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /see architecture/i }),
+      screen.getByRole("button", { name: /enter dashboard/i }),
     ).toBeInTheDocument();
   });
 });

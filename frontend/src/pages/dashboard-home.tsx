@@ -1,10 +1,10 @@
 /**
  * Dashboard Home Page
  *
- * Executive cockpit with KPI rollups, execution map, and market intel.
+ * Executive cockpit with KPI stats, agent hierarchy tree, and market intel.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import { Topbar } from "@/components/layout/index.js";
 import { PageTransition } from "@/components/page-transition.js";
@@ -14,15 +14,9 @@ import { EmptyState } from "@/components/ui/empty-state.js";
 import { Input } from "@/components/ui/input.js";
 import { Textarea } from "@/components/ui/textarea.js";
 import { Select } from "@/components/ui/select.js";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table.js";
+import { AgentTree } from "@/components/agent-tree.js";
 import { useAgents } from "@/hooks/use-agents.js";
+import { useAgentToggles } from "@/hooks/use-agent-toggles.js";
 import { useToastContext } from "@/contexts/toast-context.js";
 import {
   IconActivity,
@@ -45,13 +39,13 @@ function StatCard({
   value: string | number;
 }) {
   return (
-    <Card className="p-6">
+    <Card className="p-5">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-[var(--muted)] mb-1">{label}</p>
           <p className="text-3xl font-semibold text-[var(--ink)]">{value}</p>
         </div>
-        <div className="p-3 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
+        <div className="p-2.5 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
           {icon}
         </div>
       </div>
@@ -59,19 +53,10 @@ function StatCard({
   );
 }
 
-function formatDuration(ms: number | null) {
-  if (!ms) return "—";
-  const seconds = Math.floor(ms / 1000);
-  if (seconds < 60) return `${seconds}s`;
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m`;
-  const hours = Math.floor(minutes / 60);
-  return `${hours}h`;
-}
-
 export function DashboardHome() {
   const { onMobileMenuToggle } = useOutletContext<DashboardContextType>();
   const { registry } = useAgents();
+  const { isEnabled, setToggle, toggleAll } = useAgentToggles();
   const { success, error: toastError } = useToastContext();
 
   const [kpis, setKpis] = useState<KpiSummary | null>(null);
@@ -90,7 +75,7 @@ export function DashboardHome() {
   const [docContent, setDocContent] = useState("");
   const [docSubmitting, setDocSubmitting] = useState(false);
 
-  async function loadInsights() {
+  const loadInsights = useCallback(async () => {
     setInsightsLoading(true);
     setInsightsError(null);
     try {
@@ -105,10 +90,23 @@ export function DashboardHome() {
     } finally {
       setInsightsLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     loadInsights();
+  }, [loadInsights]);
+
+  // Poll execution map every 10 seconds for real-time status
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const mapData = await apiClient.getExecutionMap();
+        setExecutionMap(mapData);
+      } catch {
+        // Silently fail — stale data is fine
+      }
+    }, 10_000);
+    return () => clearInterval(interval);
   }, []);
 
   async function handleIntelSearch() {
@@ -160,6 +158,10 @@ export function DashboardHome() {
     ? 1 + registry.orchestrators.length + registry.workers.length
     : 0;
 
+  const allAgentIds = registry
+    ? [registry.ceo.id, ...registry.orchestrators.map((o) => o.id), ...registry.workers.map((w) => w.id)]
+    : [];
+
   const kpiTotals = kpis?.totals;
 
   return (
@@ -174,7 +176,8 @@ export function DashboardHome() {
         }
       />
 
-      <div className="p-6 max-w-[var(--content-max-width)] mx-auto space-y-10">
+      <div className="p-6 max-w-[var(--content-max-width)] mx-auto space-y-8">
+        {/* KPI Stats */}
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             icon={<IconAgents size={24} />}
@@ -204,102 +207,62 @@ export function DashboardHome() {
           </div>
         )}
 
-        <section className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        {/* Agent Hierarchy Tree */}
+        <section>
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-lg font-semibold text-[var(--ink)]">Execution Map</h2>
+                <h2 className="text-lg font-semibold text-[var(--ink)]">Agent Hierarchy</h2>
                 <p className="text-sm text-[var(--muted)]">
-                  Recent run activity by agent.
+                  Real-time org chart — toggle agents on/off with one click.
                 </p>
               </div>
-              <Link to="/dashboard/runs">
-                <Button variant="secondary" size="sm">
-                  View Runs
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleAll(true, allAgentIds)}
+                >
+                  All On
                 </Button>
-              </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleAll(false, allAgentIds)}
+                >
+                  All Off
+                </Button>
+                <Link to="/dashboard/agents">
+                  <Button variant="secondary" size="sm">
+                    View All
+                  </Button>
+                </Link>
+              </div>
             </div>
-            {insightsLoading ? (
-              <p className="text-[var(--muted)]">Loading execution map...</p>
-            ) : executionMap?.nodes.length ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Agent</TableHead>
-                    <TableHead>Tier</TableHead>
-                    <TableHead>Runs</TableHead>
-                    <TableHead>Success</TableHead>
-                    <TableHead>Last Run</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {executionMap.nodes.slice(0, 8).map((node) => (
-                    <TableRow key={node.id}>
-                      <TableCell className="font-medium">{node.name}</TableCell>
-                      <TableCell className="text-[var(--muted-strong)]">{node.tier}</TableCell>
-                      <TableCell>{node.runStats.runsTotal}</TableCell>
-                      <TableCell>{node.runStats.successRate}%</TableCell>
-                      <TableCell className="text-[var(--muted)]">
-                        {node.runStats.lastRunAt
-                          ? new Date(node.runStats.lastRunAt).toLocaleString()
-                          : "—"}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+
+            {insightsLoading && !executionMap ? (
+              <p className="text-[var(--muted)] py-8 text-center">Loading agent hierarchy...</p>
+            ) : registry ? (
+              <AgentTree
+                ceo={registry.ceo}
+                orchestrators={registry.orchestrators}
+                workers={registry.workers}
+                executionNodes={executionMap?.nodes ?? []}
+                isEnabled={isEnabled}
+                onToggle={setToggle}
+              />
             ) : (
               <EmptyState
-                icon={<IconHistory size={48} />}
-                title="No execution data yet"
-                description="Run an agent to populate the execution map."
-                action={
-                  registry?.ceo ? (
-                    <Link to={`/dashboard/console/${registry.ceo.id}`}>
-                      <Button size="sm">Run CEO Agent</Button>
-                    </Link>
-                  ) : undefined
-                }
+                icon={<IconAgents size={48} />}
+                title="No agents loaded"
+                description="Unable to load agent registry."
+                action={<Button size="sm" onClick={loadInsights}>Retry</Button>}
               />
             )}
           </Card>
-
-          <Card className="p-6 space-y-4">
-            <div>
-              <h2 className="text-lg font-semibold text-[var(--ink)]">KPI Notes</h2>
-              <p className="text-sm text-[var(--muted)]">
-                Snapshot for the last 30 days.
-              </p>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-[var(--muted)]">Avg Duration</span>
-                <span className="font-medium">
-                  {kpis ? formatDuration(kpis.avgDurationMs) : "—"}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-[var(--muted)]">Queued</span>
-                <span className="font-medium">{kpis ? kpiTotals?.queued ?? 0 : "—"}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-[var(--muted)]">Failed</span>
-                <span className="font-medium">{kpis ? kpiTotals?.failed ?? 0 : "—"}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-[var(--muted)]">Canceled</span>
-                <span className="font-medium">{kpis ? kpiTotals?.canceled ?? 0 : "—"}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-[var(--muted)]">Last Run</span>
-                <span className="font-medium">
-                  {kpis?.lastRunAt ? new Date(kpis.lastRunAt).toLocaleString() : "—"}
-                </span>
-              </div>
-            </div>
-          </Card>
         </section>
 
+        {/* Market Intel + Knowledge Ingest */}
         <section className="grid gap-6 lg:grid-cols-2">
           <Card className="p-6 space-y-4">
             <div>

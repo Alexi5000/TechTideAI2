@@ -9,6 +9,8 @@ import {
   orgKpiDashboardTool,
   executionMapTool,
   marketIntelTool,
+  memoryRecallTool,
+  memoryStoreTool,
   talentHubTool,
   financeLedgerTool,
   crmInsightsTool,
@@ -27,6 +29,8 @@ export const sharedTools: ToolsInput = {
   "org-kpi-dashboard": orgKpiDashboardTool,
   "execution-map": executionMapTool,
   "market-intel": marketIntelTool,
+  "memory-recall": memoryRecallTool,
+  "memory-store": memoryStoreTool,
 };
 
 export const toolRegistry: ToolsInput = {

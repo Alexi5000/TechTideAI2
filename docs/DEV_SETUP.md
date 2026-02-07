@@ -7,6 +7,7 @@ Windows local development setup.
 - pnpm 9.x+
 - Python 3.11+
 - Supabase CLI (for local DB)
+- Docker (optional, for containerized deployment)
 
 **Install pnpm**
 - `npm install -g pnpm`
@@ -20,6 +21,7 @@ Windows local development setup.
 - Agents (Mastra dev server): `pnpm -C agents dev`
 
 **Environment**
+- Root env template: `.env.example` (consolidated)
 - Backend env template: `backend/.env.example`
 - Frontend env template: `frontend/.env.example`
 - Agents env template: `agents/.env.example`
@@ -44,4 +46,51 @@ python -m venv .venv
 . .venv/Scripts/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
 pip install -e .[dev]
 python -m techtide_agents.graph
+```
+
+**Docker**
+```bash
+# Build container
+docker build -t techtideai .
+
+# Run with env file
+docker run --env-file .env -p 4050:4050 techtideai
+
+# Or use Make
+make docker-build
+make docker-run
+```
+
+**CLI Scripts**
+```bash
+# Run an agent
+npx tsx scripts/run-agent.ts --agent ceo --prompt "What are our priorities?"
+
+# Evaluate agents
+npx tsx scripts/evaluate-agent.ts --dataset data/eval/ceo-basic.json
+
+# Generate evaluation dataset
+npx tsx scripts/generate-eval-dataset.ts --agent ceo --output data/eval/ceo-generated.json
+
+# Memory operations
+npx tsx scripts/populate-memory.ts --file data/memory-entries.json
+npx tsx scripts/delete-memory.ts --agent ceo
+```
+
+**Notebooks**
+```bash
+pip install jupyter requests
+jupyter notebook notebooks/
+```
+
+**Makefile**
+
+Common operations are available via `make`:
+```bash
+make install    # pnpm install
+make build      # Build all packages
+make test       # Run all tests
+make lint       # Lint all packages
+make dev        # Start backend + frontend
+make clean      # Remove dist/ directories
 ```

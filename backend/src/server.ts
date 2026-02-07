@@ -12,6 +12,7 @@ import { registerRunRoutes } from "./routes/runs.js";
 import { registerKnowledgeRoutes } from "./routes/knowledge.js";
 import { registerRunEventRoutes } from "./routes/run-events.js";
 import { registerInsightsRoutes } from "./routes/insights.js";
+import { registerMonitoringRoutes } from "./routes/monitoring.js";
 
 export async function buildServer() {
   const app = Fastify({
@@ -62,6 +63,7 @@ export async function buildServer() {
   await registerRunEventRoutes(app);
   await registerKnowledgeRoutes(app);
   await registerInsightsRoutes(app);
+  await registerMonitoringRoutes(app);
 
   return app;
 }

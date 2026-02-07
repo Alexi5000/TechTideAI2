@@ -1,31 +1,33 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  /* Base Colors */
-  --bg: #f6f3ee;
-  --ink: #101726;
-  --muted: #6b6f78;
-  --muted-strong: #3b4454;
-  --accent: #f75a35;
-  --accent-ink: #1b0d08;
-  --surface-1: rgba(255, 255, 255, 0.76);
-  --surface-2: rgba(255, 255, 255, 0.92);
-  --stroke: rgba(15, 23, 42, 0.12);
+  /* ── Base Colors ── Matrix Dark Theme ── */
+  --bg: #000000;
+  --ink: #ffffff;
+  --muted: #9ca3af;
+  --muted-strong: #d1d5db;
+  --accent: #00ff41;
+  --accent-ink: #000000;
+  --accent-dark: #003b00;
+  --accent-mid: #0d4b0d;
+  --surface-1: rgba(0, 255, 65, 0.04);
+  --surface-2: rgba(10, 14, 10, 0.92);
+  --stroke: rgba(0, 255, 65, 0.15);
 
-  /* Semantic Colors */
-  --success: #10b981;
-  --success-light: #d1fae5;
-  --warning: #f59e0b;
-  --warning-light: #fef3c7;
-  --error: #ef4444;
-  --error-light: #fee2e2;
-  --info: #3b82f6;
-  --info-light: #dbeafe;
+  /* ── Semantic Colors ── */
+  --success: #00ff41;
+  --success-light: rgba(0, 255, 65, 0.12);
+  --warning: #fbbf24;
+  --warning-light: rgba(251, 191, 36, 0.12);
+  --error: #ff3333;
+  --error-light: rgba(255, 51, 51, 0.12);
+  --info: #22d3ee;
+  --info-light: rgba(34, 211, 238, 0.12);
 
-  /* Spacing (4px base grid) */
+  /* ── Spacing (4px base grid) ── */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -37,13 +39,15 @@
   --space-12: 3rem;
   --space-16: 4rem;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  /* ── Shadows — Green Glow ── */
+  --shadow-sm: 0 1px 3px rgba(0, 255, 65, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 255, 65, 0.12), 0 2px 4px -2px rgba(0, 255, 65, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 255, 65, 0.15), 0 4px 6px -4px rgba(0, 255, 65, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 255, 65, 0.2), 0 8px 10px -6px rgba(0, 255, 65, 0.12);
+  --shadow-glow: 0 0 20px rgba(0, 255, 65, 0.4);
+  --shadow-glow-strong: 0 0 30px rgba(0, 255, 65, 0.6), 0 0 60px rgba(0, 255, 65, 0.2);
 
-  /* Border Radius */
+  /* ── Border Radius ── */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -51,20 +55,20 @@
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Layout */
+  /* ── Layout ── */
   --sidebar-width: 240px;
   --sidebar-collapsed: 72px;
   --header-height: 64px;
   --content-max-width: 1200px;
 
-  /* Transitions */
+  /* ── Transitions ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --duration-fast: 150ms;
   --duration-normal: 200ms;
   --duration-slow: 300ms;
 
-  /* Z-Index Scale */
+  /* ── Z-Index Scale ── */
   --z-base: 0;
   --z-dropdown: 100;
   --z-sticky: 200;
@@ -72,9 +76,10 @@
   --z-modal: 400;
   --z-toast: 500;
 
-  /* Typography Scale */
-  --font-sans: "Space Grotesk", "Segoe UI", sans-serif;
+  /* ── Typography Scale ── */
+  --font-sans: "Space Grotesk", "JetBrains Mono", "Segoe UI", sans-serif;
   --font-display: "Fraunces", "Space Grotesk", serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -92,58 +97,14 @@
   --tracking-wide: 0.025em;
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-
-    /* Base Colors - Dark Theme */
-    --bg: #0f1117;
-    --ink: #f3f4f6;
-    --muted: #9ca3af;
-    --muted-strong: #d1d5db;
-    --accent: #f97316;
-    --accent-ink: #fff7ed;
-    --surface-1: rgba(30, 32, 40, 0.76);
-    --surface-2: rgba(30, 32, 40, 0.92);
-    --stroke: rgba(255, 255, 255, 0.12);
-
-    /* Semantic Colors - Dark Theme (adjusted for dark backgrounds) */
-    --success: #22c55e;
-    --success-light: rgba(34, 197, 94, 0.15);
-    --warning: #fbbf24;
-    --warning-light: rgba(251, 191, 36, 0.15);
-    --error: #f87171;
-    --error-light: rgba(248, 113, 113, 0.15);
-    --info: #60a5fa;
-    --info-light: rgba(96, 165, 250, 0.15);
-
-    /* Shadows - Dark Theme (more subtle) */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
-  }
-
-  body {
-    background:
-      radial-gradient(circle at top left, rgba(249, 115, 22, 0.1), transparent 45%),
-      radial-gradient(circle at top right, rgba(14, 165, 164, 0.08), transparent 45%),
-      var(--bg);
-  }
-}
-
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(247, 90, 53, 0.08), transparent 45%),
-    radial-gradient(circle at top right, rgba(14, 165, 164, 0.1), transparent 45%),
-    var(--bg);
+  font-family: "Space Grotesk", "JetBrains Mono", "Segoe UI", sans-serif;
+  background: #000000;
   color: var(--ink);
   min-height: 100vh;
 }
@@ -152,91 +113,73 @@ body {
   font-family: "Fraunces", "Space Grotesk", serif;
 }
 
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* ── Matrix Keyframe Animations ── */
+
 @keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(18px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(18px); }
+}
+
+@keyframes matrix-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 65, 0.3), 0 0 10px rgba(0, 255, 65, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(0, 255, 65, 0.6), 0 0 40px rgba(0, 255, 65, 0.2); }
+}
+
+@keyframes matrix-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.6; }
 }
 
 @keyframes progress-indeterminate {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(400%);
-  }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
 }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-in-from-bottom {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-in-from-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Animation Utility Classes ── */
 
 .animate-progress-indeterminate {
   animation: progress-indeterminate 1.5s ease-in-out infinite;
 }
 
-/* Additional Animation Keyframes */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes scale-in {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in-from-bottom {
-  from {
-    transform: translateY(8px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in-from-right {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Animation Utility Classes */
 .animate-fade-in {
   animation: fade-in var(--duration-normal) var(--ease-out);
 }
@@ -260,15 +203,35 @@ body {
 .animate-shimmer {
   background: linear-gradient(
     90deg,
-    var(--stroke) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    var(--stroke) 100%
+    rgba(0, 255, 65, 0.03) 0%,
+    rgba(0, 255, 65, 0.08) 50%,
+    rgba(0, 255, 65, 0.03) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-/* Smooth Scroll */
+.animate-matrix-glow {
+  animation: matrix-glow 2s ease-in-out infinite;
+}
+
+.animate-matrix-pulse {
+  animation: matrix-pulse 2s ease-in-out infinite;
+}
+
+/* ── Matrix Utility Classes ── */
+
+.matrix-text-glow {
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.4);
+}
+
+.matrix-border-glow {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3), inset 0 0 10px rgba(0, 255, 65, 0.05);
+}
+
+/* ── Smooth Scroll ── */
+
 html {
   scroll-behavior: smooth;
 }

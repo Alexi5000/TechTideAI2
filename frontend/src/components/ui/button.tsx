@@ -19,10 +19,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-[var(--accent)] text-[var(--accent-ink)] shadow-[0_10px_30px_rgba(247,90,53,0.35)] hover:translate-y-[-1px] hover:shadow-[0_14px_40px_rgba(247,90,53,0.4)]",
+          "bg-[var(--accent)] text-black shadow-[0_0_20px_rgba(0,255,65,0.4)] hover:translate-y-[-1px] hover:shadow-[0_0_30px_rgba(0,255,65,0.6)]",
         secondary:
-          "bg-[var(--surface-2)] text-[var(--ink)] border border-[var(--stroke)] hover:bg-white hover:shadow-[var(--shadow-md)]",
-        ghost: "bg-transparent text-[var(--ink)] hover:bg-[var(--surface-2)]",
+          "bg-[var(--surface-2)] text-[var(--ink)] border border-[var(--stroke)] hover:border-[var(--accent)]/40 hover:shadow-[var(--shadow-md)]",
+        ghost: "bg-transparent text-[var(--ink)] hover:bg-[var(--surface-1)] hover:text-[var(--accent)]",
         destructive:
           "bg-[var(--error)] text-white hover:bg-[var(--error)]/90",
       },

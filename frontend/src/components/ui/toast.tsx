@@ -21,7 +21,7 @@ const toastVariants = cva(
     variants: {
       variant: {
         default:
-          "border-[var(--stroke)] bg-white text-[var(--ink)]",
+          "border-[var(--stroke)] bg-[var(--surface-2)] text-[var(--ink)]",
         success:
           "border-[var(--success)]/20 bg-[var(--success-light)] text-[var(--success)]",
         error:

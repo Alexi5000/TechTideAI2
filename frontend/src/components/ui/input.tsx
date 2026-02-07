@@ -10,9 +10,9 @@ import { cn } from "@/lib/utils.js";
 
 const inputVariants = cva(
   [
-    "w-full rounded-[var(--radius-lg)] border bg-white px-4 font-medium transition-all",
+    "w-full rounded-[var(--radius-lg)] border bg-black/50 px-4 font-medium transition-all",
     "placeholder:text-[var(--muted)]",
-    "focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent",
+    "focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)]",
     "disabled:cursor-not-allowed disabled:bg-[var(--surface-1)] disabled:opacity-60",
   ].join(" "),
   {
