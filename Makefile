@@ -18,7 +18,7 @@ dev:
 	pnpm -C backend dev & pnpm -C frontend dev
 
 clean:
-	pnpm -r exec -- rm -rf dist
+	node scripts/clean-artifacts.js
 
 # ─── Agent Operations ────────────────────────────────────
 

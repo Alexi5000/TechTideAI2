@@ -7,6 +7,7 @@ import { ToastProvider } from "./contexts/toast-context.js";
 import { DashboardShell } from "./components/layout/index.js";
 import { PageSkeleton } from "./components/page-skeleton.js";
 import { NotFoundPage } from "./pages/not-found.js";
+import { RouteErrorBoundary } from "./components/route-error-boundary.js";
 import "./index.css";
 
 // Lazy load dashboard pages for code splitting
@@ -27,7 +28,11 @@ const RunsPage = React.lazy(() =>
 );
 
 function LazyRoute({ children }: { children: React.ReactNode }) {
-  return <Suspense fallback={<PageSkeleton />}>{children}</Suspense>;
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <RouteErrorBoundary>{children}</RouteErrorBoundary>
+    </Suspense>
+  );
 }
 
 function ConsoleRedirect() {

@@ -2,10 +2,13 @@
  * Memory Store Tool
  *
  * Allows agents to persist information to long-term memory.
+ * Shares the InMemoryLongTermMemory singleton with memory-recall.
  */
 
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import { randomUUID } from "node:crypto";
+import { longTermMemory } from "./memory-recall.js";
 
 const inputSchema = z.object({
   content: z.string().describe("Content to store in long-term memory"),
@@ -25,12 +28,27 @@ export const memoryStoreTool = createTool({
   inputSchema,
   outputSchema,
   execute: async (params) => {
-    // Memory integration point — when a long-term memory instance is wired in,
-    // this tool will delegate to it. For now, returns not_configured.
-    return {
-      status: "not_configured" as const,
-      entryId: null,
-      content: params.content,
-    };
+    try {
+      const entryId = randomUUID();
+      await longTermMemory.store([{
+        id: entryId,
+        agentId: params.agentId ?? "unknown",
+        content: params.content,
+        metadata: params.metadata ?? {},
+        timestamp: new Date().toISOString(),
+      }]);
+      return {
+        status: "stored" as const,
+        entryId,
+        content: params.content,
+      };
+    } catch (error) {
+      console.error("memory-store failed:", error);
+      return {
+        status: "not_configured" as const,
+        entryId: null,
+        content: params.content,
+      };
+    }
   },
 });

@@ -6,6 +6,7 @@ import { createRunRepository } from "../repositories/index.js";
 import { createRunService } from "../services/run-service.js";
 import { createAgentExecutionService, createAgentLookup } from "../services/index.js";
 import { supabase } from "../services/supabase.js";
+import { tracer } from "../services/monitoring.js";
 import { AgentNotFoundError, PersistenceUnavailableError } from "../domain/index.js";
 import { safeParse, handleValidationError } from "../utils/validation.js";
 
@@ -18,7 +19,7 @@ export async function registerAgentRoutes(app: FastifyInstance) {
   // Assemble dependencies (could move to DI container)
   const repository = createRunRepository(supabase);
   const runService = createRunService(repository);
-  const agentRuntime = createMastraRuntime();
+  const agentRuntime = createMastraRuntime({ tracer });
   const agentLookup = createAgentLookup();
 
   const executionService = createAgentExecutionService({

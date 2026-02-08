@@ -30,11 +30,13 @@ export const AGENT_SYSTEM_V1: PromptTemplate = {
     "name",
     "domain",
     "mission",
+    "reportsTo",
     "responsibilities",
     "outputs",
     "metrics",
     "preferredTools",
     "sharedTools",
+    "plannedTools",
     "toolPolicyLine",
   ],
   metadata: {

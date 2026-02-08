@@ -99,10 +99,14 @@ export function ToastContainer({
   onDismiss,
   position = "bottom-right",
 }: ToastContainerProps) {
-  if (toasts.length === 0) return null;
-
+  // Always render the wrapper so aria-live region exists in the DOM
+  // before content appears — screen readers only announce additions
+  // to regions that are already mounted.
   return (
     <div
+      role="status"
+      aria-live="polite"
+      aria-relevant="additions removals"
       className={cn(
         "fixed z-[var(--z-toast)] flex flex-col gap-2 w-full max-w-sm pointer-events-none",
         positionClasses[position],

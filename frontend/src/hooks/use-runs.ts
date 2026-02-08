@@ -4,7 +4,7 @@
  * React hooks for managing agent runs with polling support.
  */
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { apiClient, type Run, type RunEvent, type RunStatus } from "../lib/api-client";
 
 interface UseAgentRunResult {
@@ -23,30 +23,27 @@ export function useAgentRun(): UseAgentRunResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const startRun = useCallback(
-    async (agentId: string, input: Record<string, unknown>): Promise<Run | null> => {
-      setLoading(true);
-      setError(null);
-      try {
-        const newRun = await apiClient.runAgent(agentId, input);
-        setRun(newRun);
-        return newRun;
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error("Failed to start run");
-        setError(error);
-        return null;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-  );
+  async function startRun(agentId: string, input: Record<string, unknown>): Promise<Run | null> {
+    setLoading(true);
+    setError(null);
+    try {
+      const newRun = await apiClient.runAgent(agentId, input);
+      setRun(newRun);
+      return newRun;
+    } catch (err) {
+      const runError = err instanceof Error ? err : new Error("Failed to start run");
+      setError(runError);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const reset = useCallback(() => {
+  function reset() {
     setRun(null);
     setError(null);
     setLoading(false);
-  }, []);
+  }
 
   return { run, loading, error, startRun, reset };
 }

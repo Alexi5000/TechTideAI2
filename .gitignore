@@ -24,9 +24,18 @@ apis/src/**/*.map
 agents/src/**/*.js
 agents/src/**/*.d.ts
 agents/src/**/*.map
-agents/dist/
+
+# Claude Code temp files
+tmpclaude-*
 
 # OS
 .DS_Store
 Thumbs.db
 nul
+
+# IDE
+.vscode/
+.idea/
+
+# Qodo
+.qodo/

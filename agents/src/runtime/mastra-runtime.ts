@@ -77,6 +77,7 @@ export function createMastraRuntime(options: MastraRuntimeOptions = {}): IAgentR
         },
       });
 
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
       try {
         // Convert input to message format expected by Mastra
         const prompt =
@@ -90,7 +91,7 @@ export function createMastraRuntime(options: MastraRuntimeOptions = {}): IAgentR
 
         // Create timeout promise
         const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => {
+          timeoutId = setTimeout(() => {
             reject(new Error(`Agent execution timed out after ${EXECUTION_TIMEOUT_MS}ms`));
           }, EXECUTION_TIMEOUT_MS);
         });
@@ -174,6 +175,10 @@ export function createMastraRuntime(options: MastraRuntimeOptions = {}): IAgentR
           events,
           error: errorMessage,
         };
+      } finally {
+        if (timeoutId !== undefined) {
+          clearTimeout(timeoutId);
+        }
       }
     },
   };

@@ -6,7 +6,10 @@ This repository is a mono-repo for TechTideAI with a single `src` convention and
 - `backend/` Node/TypeScript API + orchestration services
 - `database/` local DB tooling, migrations, and schema docs
 - `apis/` external API adapters
-- `agents/` agent specs, skills, tools, and runtime wrappers
+- `agents/` agent specs, skills, tools, runtime, evaluation, memory, monitoring
+- `scripts/` CLI entrypoints for agent operations (run, evaluate, memory, datasets)
+- `data/` evaluation datasets and sample inputs
+- `notebooks/` Jupyter notebooks for interactive experimentation
 
 ## Code Agent SDK Guidance
 
@@ -20,6 +23,12 @@ We use both:
 - Prefer TypeScript for backend orchestration, Python for specialized tools.
 - Avoid mixing runtime responsibilities: adapters in `apis/`, business logic in `backend/`.
 - Keep docs in `docs/` and update them when structures change.
+
+### Agent Subsystems
+- Prompt templates: `agents/src/core/prompts/` (template registry + `renderPrompt()`)
+- Evaluation: `agents/src/evaluation/` (EvalRunner, scorers, datasets in `data/eval/`)
+- Memory: `agents/src/memory/` (short-term in-memory + long-term vector-backed)
+- Monitoring: `agents/src/monitoring/` (InMemoryTracer, InMemoryMetrics, swappable for OTel)
 
 ### Defaults
 - Node: 20.x

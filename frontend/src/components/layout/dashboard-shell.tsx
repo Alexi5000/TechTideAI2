@@ -24,17 +24,29 @@ export function DashboardShell() {
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  const toggleSidebar = React.useCallback(() => {
+  function toggleSidebar() {
     setSidebarCollapsed((prev) => !prev);
-  }, []);
+  }
 
-  const toggleMobileMenu = React.useCallback(() => {
+  function toggleMobileMenu() {
     setMobileMenuOpen((prev) => !prev);
-  }, []);
+  }
 
-  const closeMobileMenu = React.useCallback(() => {
+  function closeMobileMenu() {
     setMobileMenuOpen(false);
-  }, []);
+  }
+
+  // Close mobile menu on Escape key
+  React.useEffect(() => {
+    if (!mobileMenuOpen) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen]);
 
   return (
     <div className="min-h-screen bg-black">

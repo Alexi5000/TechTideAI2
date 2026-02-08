@@ -4,7 +4,7 @@
 
 pnpm monorepo with four TS workspaces (`frontend`, `backend`, `apis`, `agents`) and one Python sub-package (`agents/python`). Node ≥ 20, TypeScript strict mode, ESM everywhere (use `.js` extensions in TS imports).
 
-- **`agents/`** — Agent catalog, Mastra runtime, Claude SDK loader, tool implementations. Published as `@techtide/agents`. The 15-agent hierarchy (CEO → 9 orchestrators → 5 workers) is defined statically in `agents/src/core/registry.ts`, not in the database. Agent IDs follow `{tier}-{name}` convention (`ceo-chief`, `orch-strategy`, `worker-research`).
+- **`agents/`** — Agent catalog, Mastra runtime, Claude SDK loader, tool implementations. Published as `@techtide/agents`. The 61-agent hierarchy (1 CEO → 10 orchestrators → 50 workers, five per orchestrator) is defined statically in `agents/src/core/registry.ts`, not in the database. Agent IDs follow `{tier}-{name}` convention (`ceo-chief`, `orch-strategy`, `worker-research`).
 - **`apis/`** — Provider-agnostic LLM adapters (`@techtide/apis`). OpenAI uses the **Responses API** (`client.responses.create`), not Chat Completions. Anthropic uses Messages API.
 - **`backend/`** — Fastify API with DDD layers: `domain/` (pure types, exceptions, policies) → `repositories/` (Supabase persistence) → `services/` (orchestration) → `routes/` (HTTP). The domain layer must never import infrastructure code.
 - **`frontend/`** — React 18 + Vite + Tailwind v4 + React Router v6. Uses CSS variables for theming (`--bg`, `--ink`, `--accent`, etc.) and `class-variance-authority` (cva) for component variants. Path alias `@/` → `src/`.
@@ -28,7 +28,7 @@ pnpm monorepo with four TS workspaces (`frontend`, `backend`, `apis`, `agents`) 
 
 ```
 pnpm install                  # install all workspaces
-pnpm -C backend dev           # backend on :4000 (tsx watch)
+pnpm -C backend dev           # backend on :4050 (tsx watch)
 pnpm -C frontend dev          # frontend on :5180 (vite)
 pnpm -C agents dev            # Mastra dev server
 pnpm -r test                  # run all Vitest suites

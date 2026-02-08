@@ -166,6 +166,27 @@ export class ApiError extends Error {
   }
 }
 
+const DEFAULT_TIMEOUT_MS = 30_000;
+
+async function fetchWithTimeout(
+  url: string,
+  init?: RequestInit,
+  timeoutMs: number = DEFAULT_TIMEOUT_MS,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw new ApiError(0, `Request timed out after ${timeoutMs}ms`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Unknown error" }));
@@ -179,7 +200,7 @@ export const apiClient = {
    * Get all agents from the registry
    */
   async getAgents(): Promise<AgentRegistry> {
-    const response = await fetch(`${API_BASE}/api/agents`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/agents`, {
       headers: buildHeaders(),
     });
     return handleResponse<AgentRegistry>(response);
@@ -189,7 +210,7 @@ export const apiClient = {
    * Get a specific agent by ID
    */
   async getAgent(id: string): Promise<Agent> {
-    const response = await fetch(`${API_BASE}/api/agents/${id}`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/agents/${id}`, {
       headers: buildHeaders(),
     });
     return handleResponse<Agent>(response);
@@ -202,7 +223,7 @@ export const apiClient = {
     agentId: string,
     input: Record<string, unknown>,
   ): Promise<Run> {
-    const response = await fetch(`${API_BASE}/api/agents/${agentId}/run`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/agents/${agentId}/run`, {
       method: "POST",
       headers: buildHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify({ input }),
@@ -222,7 +243,7 @@ export const apiClient = {
       params.set("limit", String(limit));
     }
     const query = params.toString();
-    const response = await fetch(`${API_BASE}/api/runs${query ? `?${query}` : ""}`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/runs${query ? `?${query}` : ""}`, {
       headers: buildHeaders(),
     });
     return handleResponse<Run[]>(response);
@@ -232,7 +253,7 @@ export const apiClient = {
    * Get a specific run by ID
    */
   async getRun(id: string): Promise<Run> {
-    const response = await fetch(`${API_BASE}/api/runs/${id}`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/runs/${id}`, {
       headers: buildHeaders(),
     });
     return handleResponse<Run>(response);
@@ -242,7 +263,7 @@ export const apiClient = {
    * Cancel a run
    */
   async cancelRun(id: string): Promise<Run> {
-    const response = await fetch(`${API_BASE}/api/runs/${id}/cancel`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/runs/${id}/cancel`, {
       method: "POST",
       headers: buildHeaders(),
     });
@@ -250,7 +271,7 @@ export const apiClient = {
   },
 
   async getRunEvents(id: string): Promise<{ events: RunEvent[] }> {
-    const response = await fetch(`${API_BASE}/api/runs/${id}/events`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/runs/${id}/events`, {
       headers: buildHeaders(),
     });
     return handleResponse<{ events: RunEvent[] }>(response);
@@ -267,7 +288,7 @@ export const apiClient = {
     content: string;
     metadata?: Record<string, unknown>;
   }): Promise<KnowledgeIndexResult> {
-    const response = await fetch(`${API_BASE}/api/knowledge/documents`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/knowledge/documents`, {
       method: "POST",
       headers: buildHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify(input),
@@ -284,7 +305,7 @@ export const apiClient = {
     limit?: number;
     collections?: string[];
   }): Promise<{ results: KnowledgeSearchResult[] }> {
-    const response = await fetch(`${API_BASE}/api/knowledge/search`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/knowledge/search`, {
       method: "POST",
       headers: buildHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify(input),
@@ -297,7 +318,7 @@ export const apiClient = {
     if (days) params.set("days", String(days));
     if (orgId) params.set("orgId", orgId);
     const query = params.toString();
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${API_BASE}/api/insights/kpis${query ? `?${query}` : ""}`,
       { headers: buildHeaders() },
     );
@@ -309,7 +330,7 @@ export const apiClient = {
     if (days) params.set("days", String(days));
     if (orgId) params.set("orgId", orgId);
     const query = params.toString();
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${API_BASE}/api/insights/execution-map${query ? `?${query}` : ""}`,
       { headers: buildHeaders() },
     );
@@ -323,7 +344,7 @@ export const apiClient = {
     collections?: string[];
     orgId?: string;
   }): Promise<MarketIntelResponse> {
-    const response = await fetch(`${API_BASE}/api/insights/market-intel`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/insights/market-intel`, {
       method: "POST",
       headers: buildHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify(input),

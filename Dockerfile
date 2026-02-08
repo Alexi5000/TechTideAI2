@@ -12,7 +12,7 @@ WORKDIR /app
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json tsconfig.base.json ./
 COPY apis/package.json apis/tsconfig.json apis/
 COPY agents/package.json agents/tsconfig.json agents/tsconfig.build.json agents/
-COPY backend/package.json backend/tsconfig.json backend/
+COPY backend/package.json backend/tsconfig.json backend/tsconfig.build.json backend/
 
 # Install all dependencies
 RUN pnpm install --frozen-lockfile
@@ -55,6 +55,9 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=4050
 EXPOSE 4050
+
+# Run as non-root
+USER node
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \

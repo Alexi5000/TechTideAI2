@@ -7,6 +7,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { PersistenceUnavailableError, RepositoryOperationError } from "../domain/index.js";
+import { POSTGREST_ROW_NOT_FOUND } from "./supabase-error-codes.js";
 import type {
   IRunRepository,
   Run,
@@ -99,8 +100,7 @@ export function createRunRepository(
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") {
-          // Row not found
+        if (error.code === POSTGREST_ROW_NOT_FOUND) {
           return null;
         }
         throw new RepositoryOperationError("find run by id", error.message);

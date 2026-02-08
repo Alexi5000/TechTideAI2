@@ -4,7 +4,7 @@
  * Manages agent enabled/disabled state persisted in localStorage.
  */
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 const STORAGE_KEY = "agent-toggles";
 
@@ -28,20 +28,19 @@ function saveToggles(state: AgentToggleState) {
 export function useAgentToggles() {
   const [toggles, setToggles] = useState<AgentToggleState>(loadToggles);
 
-  const isEnabled = useCallback(
-    (agentId: string) => toggles[agentId] ?? true,
-    [toggles],
-  );
+  function isEnabled(agentId: string): boolean {
+    return toggles[agentId] ?? true;
+  }
 
-  const setToggle = useCallback((agentId: string, enabled: boolean) => {
+  function setToggle(agentId: string, enabled: boolean) {
     setToggles((prev) => {
       const next = { ...prev, [agentId]: enabled };
       saveToggles(next);
       return next;
     });
-  }, []);
+  }
 
-  const toggleAll = useCallback((enabled: boolean, agentIds: string[]) => {
+  function toggleAll(enabled: boolean, agentIds: string[]) {
     setToggles((prev) => {
       const next = { ...prev };
       for (const id of agentIds) {
@@ -50,7 +49,7 @@ export function useAgentToggles() {
       saveToggles(next);
       return next;
     });
-  }, []);
+  }
 
   return { isEnabled, setToggle, toggleAll, toggles };
 }

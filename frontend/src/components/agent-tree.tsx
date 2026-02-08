@@ -85,13 +85,14 @@ export function AgentTree({
   }, []);
 
   useEffect(() => {
-    computeLines();
+    // Use rAF to ensure DOM has settled after render
+    const rafId = requestAnimationFrame(() => {
+      computeLines();
+    });
     window.addEventListener("resize", computeLines);
-    // Recompute after fonts load and images settle
-    const timer = setTimeout(computeLines, 500);
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener("resize", computeLines);
-      clearTimeout(timer);
     };
   }, [computeLines, orchestrators.length, workers.length]);
 

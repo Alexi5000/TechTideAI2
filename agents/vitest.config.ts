@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -7,7 +8,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@techtide/agents": new URL("./src", import.meta.url).pathname,
+      "@techtide/agents": path.resolve(__dirname, "./src"),
+      "@techtide/apis": path.resolve(__dirname, "../apis/src/index.ts"),
     },
   },
 });

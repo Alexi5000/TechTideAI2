@@ -109,7 +109,15 @@ export function AgentsPage() {
   if (error) {
     return (
       <PageTransition>
-        <Topbar title="Agent Registry" onMobileMenuToggle={onMobileMenuToggle} />
+        <Topbar
+          title="Agent Registry"
+          onMobileMenuToggle={onMobileMenuToggle}
+          actions={
+            <Button variant="ghost" onClick={refetch} aria-label="Refresh agents">
+              <IconRefresh size={18} />
+            </Button>
+          }
+        />
         <div className="p-6 flex items-center justify-center min-h-[50vh]">
           <div className="text-center">
             <p className="text-[var(--error)] mb-4">Error: {error.message}</p>

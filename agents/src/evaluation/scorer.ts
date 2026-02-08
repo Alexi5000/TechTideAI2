@@ -58,12 +58,13 @@ export const jsonSchemaScorer: Scorer = {
  * Latency scorer — Scores based on execution duration.
  * 1.0 for instant, decreasing linearly to 0.0 at the threshold (default 30s).
  */
-export function createLatencyScorer(thresholdMs: number = 30_000): Scorer {
+export function createLatencyScorer(_thresholdMs: number = 30_000): Scorer {
   return {
     id: "latency",
     score(_result: AgentRunResult, _evalCase: EvalCase): number {
-      // Latency is scored by the runner which has access to durationMs
-      // This scorer returns 1.0 as a fallback — actual scoring happens in the runner
+      // Duration is not available in the Scorer interface, so latency scoring
+      // is performed by EvalRunner.runCase() which has access to durationMs.
+      // This returns 1.0 as a no-op placeholder for the scoring loop.
       return 1.0;
     },
   };

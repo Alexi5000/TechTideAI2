@@ -33,7 +33,9 @@ export class EvalRunner {
         scores[scorer.id] = scorer.score(result, evalCase);
       }
 
-      // Override latency score with actual duration-based scoring
+      // Latency scoring is handled here because only the runner has access to
+      // actual execution duration. The latency scorer stub returns 1.0 as a
+      // no-op (see createLatencyScorer in scorer.ts). This is intentional.
       if (scores["latency"] !== undefined) {
         scores["latency"] = Math.max(0, 1 - durationMs / 30_000);
       }

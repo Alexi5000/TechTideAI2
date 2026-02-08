@@ -32,10 +32,28 @@ const daysQuerySchema = z.object({
   orgId: z.string().uuid().optional().default(env.DEFAULT_ORG_ID),
 });
 
+const KNOWN_MODELS = [
+  // OpenAI
+  "gpt-4.1",
+  "gpt-4.1-mini",
+  "gpt-4.1-nano",
+  "gpt-4o",
+  "gpt-4o-mini",
+  "gpt-4-turbo",
+  "gpt-3.5-turbo",
+  // Anthropic
+  "claude-opus-4-6",
+  "claude-sonnet-4-5-20250929",
+  "claude-3-5-sonnet-20241022",
+  "claude-3-opus-20240229",
+  "claude-3-sonnet-20240229",
+  "claude-3-haiku-20240307",
+] as const;
+
 const marketIntelSchema = z.object({
   query: z.string().min(3),
   provider: z.enum(["openai", "anthropic"]).optional().default(env.DEFAULT_LLM_PROVIDER),
-  model: z.string().optional(),
+  model: z.enum(KNOWN_MODELS).optional(),
   collections: z.array(z.string().min(1)).optional(),
   orgId: z.string().uuid().optional().default(env.DEFAULT_ORG_ID),
 });

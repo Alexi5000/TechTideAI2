@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import type { FastifyInstance } from "fastify";
 import { env } from "../config/env.js";
 import { HttpError } from "../utils/http-errors.js";
@@ -28,6 +29,17 @@ function extractApiKey(
   return null;
 }
 
+/** Constant-time string comparison to prevent timing side-channel attacks. */
+function constantTimeEqual(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) {
+    timingSafeEqual(bufA, bufA);
+    return false;
+  }
+  return timingSafeEqual(bufA, bufB);
+}
+
 export async function registerAuth(app: FastifyInstance) {
   app.addHook("preHandler", async (request) => {
     const url = request.raw.url ?? request.url;
@@ -47,7 +59,7 @@ export async function registerAuth(app: FastifyInstance) {
       request.headers["x-api-key"],
     );
 
-    if (!token || token !== env.API_KEY) {
+    if (!token || !constantTimeEqual(token, env.API_KEY)) {
       throw new HttpError(401, "Unauthorized");
     }
   });

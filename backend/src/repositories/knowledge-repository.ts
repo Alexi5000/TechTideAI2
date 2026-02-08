@@ -7,6 +7,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { PersistenceUnavailableError, RepositoryOperationError } from "../domain/index.js";
+import { POSTGREST_ROW_NOT_FOUND } from "./supabase-error-codes.js";
 import type {
   IKnowledgeRepository,
   KnowledgeDocument,
@@ -90,7 +91,7 @@ export function createKnowledgeRepository(
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") {
+        if (error.code === POSTGREST_ROW_NOT_FOUND) {
           return null;
         }
         throw new RepositoryOperationError("get knowledge document", error.message);

@@ -2,31 +2,29 @@
  * Monitoring Routes
  *
  * Exposes observability data: metrics and execution traces.
+ * Data sources are bound at startup via setMetricsSource / setTracerSource.
  */
 
 import type { FastifyInstance } from "fastify";
+import type { ITracer, IMetrics } from "@techtide/agents";
 
-/**
- * In-memory stores for metrics and traces.
- * These are populated by the monitoring module in the agents package.
- * For now, they return empty data — the integration point is ready.
- */
-let metricsStore: Array<{ name: string; value: number; labels: Record<string, string>; timestamp: number }> = [];
-let tracesStore: Array<Record<string, unknown>> = [];
+let metricsSource: IMetrics | null = null;
+let tracerSource: ITracer | null = null;
 
-export function setMetricsStore(metrics: typeof metricsStore): void {
-  metricsStore = metrics;
+export function setMetricsSource(source: IMetrics): void {
+  metricsSource = source;
 }
 
-export function setTracesStore(traces: typeof tracesStore): void {
-  tracesStore = traces;
+export function setTracerSource(source: ITracer): void {
+  tracerSource = source;
 }
 
 export async function registerMonitoringRoutes(app: FastifyInstance): Promise<void> {
   app.get("/api/monitoring/metrics", async (_request, reply) => {
+    const metrics = metricsSource?.getMetrics() ?? [];
     return reply.send({
-      metrics: metricsStore,
-      count: metricsStore.length,
+      metrics,
+      count: metrics.length,
       timestamp: new Date().toISOString(),
     });
   });
@@ -34,8 +32,9 @@ export async function registerMonitoringRoutes(app: FastifyInstance): Promise<vo
   app.get<{
     Querystring: { limit?: string };
   }>("/api/monitoring/traces", async (request, reply) => {
-    const limit = request.query.limit ? parseInt(request.query.limit, 10) : 100;
-    const traces = tracesStore.slice(-limit);
+    const rawLimit = request.query.limit ? parseInt(request.query.limit, 10) : 100;
+    const limit = Number.isFinite(rawLimit) ? Math.max(1, Math.min(rawLimit, 1000)) : 100;
+    const traces = tracerSource?.getTraces(limit) ?? [];
 
     return reply.send({
       traces,
