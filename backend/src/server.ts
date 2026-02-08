@@ -14,6 +14,7 @@ import { registerKnowledgeRoutes } from "./routes/knowledge.js";
 import { registerRunEventRoutes } from "./routes/run-events.js";
 import { registerInsightsRoutes } from "./routes/insights.js";
 import { registerMonitoringRoutes, setMetricsSource, setTracerSource } from "./routes/monitoring.js";
+import { registerPipelineRoutes } from "./routes/pipelines.js";
 import { tracer, metrics } from "./services/monitoring.js";
 
 export async function buildServer() {
@@ -71,6 +72,7 @@ export async function buildServer() {
   await registerRunEventRoutes(app);
   await registerKnowledgeRoutes(app);
   await registerInsightsRoutes(app);
+  await registerPipelineRoutes(app);
 
   setMetricsSource(metrics);
   setTracerSource(tracer);

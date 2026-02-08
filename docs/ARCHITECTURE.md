@@ -12,9 +12,10 @@
 - Core tool access is shared across agents by default; strict mode limits execution to per-agent preferred tools (`MASTRA_TOOL_POLICY`).
 
 ## Tool system
-- **17 tools registered** in `agents/src/core/tool-catalog.ts`
-- **9 core tools** (shared across all agents): system-status, llm-router, knowledge-base, workflow-runner, org-kpi-dashboard, execution-map, market-intel, memory-recall, memory-store
-- **8 stubs** (return `{status: "not_implemented"}` for future implementation): talent-hub, finance-ledger, crm-insights, content-lab, support-hub, user-insights, data-lake, runbook
+- **18 tools registered** in `agents/src/core/tool-catalog.ts`
+- **10 core tools** (shared across all agents): system-status, llm-router, knowledge-base, workflow-runner, org-kpi-dashboard, execution-map, market-intel, memory-recall, memory-store, invoke-agent
+- **8 planned stubs** (return `{status: "not_implemented"}` for future implementation): talent-hub, finance-ledger, crm-insights, content-lab, support-hub, user-insights, data-lake, runbook
+- **invoke-agent** — Factory-scoped tool for orchestrator-worker delegation. CEO invokes orchestrators; orchestrators invoke their workers; workers have no access. Implemented via `createInvokeAgentTool(allowedTargetIds)`.
 - **Per-agent tool filtering** via `selectToolsForAgent()` ensures agents only receive their declared tools
 - **Module-level validation** throws on tool ID mismatches between the registry and tool implementations
 
@@ -44,6 +45,17 @@
 - API: `GET /api/monitoring/metrics`, `GET /api/monitoring/traces`
 - Swappable for OpenTelemetry in production
 
+## Orchestration pipelines
+- Located in `agents/src/orchestration/`
+- Composable pipeline primitives for multi-agent workflows:
+  - `chain(steps)` — Execute steps sequentially, piping each output to the next
+  - `parallel(steps)` — Execute steps concurrently and collect results
+  - `route(classifier, branches)` — Classify input, then route to a matching branch
+  - `evalLoop(body, evaluator, maxIterations)` — Re-run a step until quality threshold is met
+- Pipeline registry: `registerPipeline()`, `getPipeline()`, `listPipelines()`
+- API: `GET /api/pipelines`, `POST /api/pipelines/:id/run`
+- Backend service: `createPipelineExecutionService()` in `backend/src/services/`
+
 ## Evidence plane
 - All decisions are tied to citations, KPIs, run artifacts, and vector-searchable evidence in Weaviate.
 - Observability is enforced through run events and tooling logs.
@@ -58,7 +70,7 @@ Located in `scripts/`:
 
 ## Code boundaries
 - `apis/`: provider adapters and SDK wrappers
-- `agents/`: agent definitions, skills, tools, evaluation, memory, monitoring, and Mastra runtime
+- `agents/`: agent definitions, skills, tools, evaluation, memory, monitoring, orchestration, and Mastra runtime
 - `backend/`: orchestration API and runtime services (API gateway for agent runs)
 - `database/`: Supabase schema, policies, and seed data
 - `frontend/`: operator UI

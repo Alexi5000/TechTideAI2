@@ -92,5 +92,5 @@ make build      # Build all packages
 make test       # Run all tests
 make lint       # Lint all packages
 make dev        # Start backend + frontend
-make clean      # Remove dist/ directories
+make clean      # Remove dist/, .tsbuildinfo, compiled artifacts, and temp files
 ```

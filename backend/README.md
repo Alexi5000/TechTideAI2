@@ -26,6 +26,7 @@ src/
 - **Domain error hierarchy** — Custom errors extend `AppError`. Route handlers map them to HTTP codes (`AgentNotFoundError` → 404, `InvalidStatusTransitionError` → 409, `InfrastructureError` → 503).
 - **Status transitions** — `RunStatusTransitionPolicy` defines the state machine (`pending → running → completed|failed|cancelled`). Use `defaultPolicy` singleton.
 - **Async agent execution** — `POST /api/agents/:id/run` returns 202 immediately. Execution happens asynchronously. Frontend polls `GET /api/runs/:id` until terminal status.
+- **Pipeline execution** — `POST /api/pipelines/:id/run` executes registered orchestration pipelines (chain, parallel, route, eval-loop). `GET /api/pipelines` lists available pipelines.
 
 ## Commands
 

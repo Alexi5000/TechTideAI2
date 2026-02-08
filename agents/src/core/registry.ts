@@ -20,7 +20,7 @@ const ceoAgent: AgentDefinition = {
     "KPI review cadence",
     "Executive decision log",
   ],
-  tools: ["llm-router", "org-kpi-dashboard", "market-intel", "execution-map"],
+  tools: ["llm-router", "org-kpi-dashboard", "market-intel", "execution-map", "invoke-agent"],
   metrics: ["Strategic alignment score", "Objective hit rate", "Risk exposure trend"],
 };
 
@@ -44,7 +44,7 @@ const orchestrators: AgentDefinition[] = [
       "Priority stack",
       "Escalation log",
     ],
-    tools: ["execution-map", "org-kpi-dashboard", "llm-router"],
+    tools: ["execution-map", "org-kpi-dashboard", "llm-router", "invoke-agent"],
     metrics: ["Decision latency", "Cross-domain alignment", "Escalation resolution time"],
   },
   {
@@ -65,7 +65,7 @@ const orchestrators: AgentDefinition[] = [
       "Operational cadence report",
       "Process hygiene audits",
     ],
-    tools: ["workflow-runner", "execution-map", "org-kpi-dashboard"],
+    tools: ["workflow-runner", "execution-map", "org-kpi-dashboard", "invoke-agent"],
     metrics: ["Cycle time", "SOP adherence", "Process drift rate"],
   },
   {
@@ -81,7 +81,7 @@ const orchestrators: AgentDefinition[] = [
       "Track culture health and internal support requests",
     ],
     outputs: ["Hiring pipeline report", "Onboarding plans", "Policy updates", "Culture pulse"],
-    tools: ["talent-hub", "knowledge-base", "workflow-runner"],
+    tools: ["talent-hub", "knowledge-base", "workflow-runner", "invoke-agent"],
     metrics: ["Time-to-hire", "Onboarding completion", "Internal satisfaction"],
   },
   {
@@ -97,7 +97,7 @@ const orchestrators: AgentDefinition[] = [
       "Identify cost optimization opportunities",
     ],
     outputs: ["Forecast model", "Margin analysis", "Cost optimization plan", "Finance dashboard"],
-    tools: ["finance-ledger", "org-kpi-dashboard", "knowledge-base"],
+    tools: ["finance-ledger", "org-kpi-dashboard", "knowledge-base", "invoke-agent"],
     metrics: ["Forecast accuracy", "Spend variance", "Margin trend"],
   },
   {
@@ -113,7 +113,7 @@ const orchestrators: AgentDefinition[] = [
       "Report pipeline health and deal risk",
     ],
     outputs: ["Lead scoring model", "Outbound playbooks", "Pipeline summary", "CRM hygiene report"],
-    tools: ["crm-insights", "workflow-runner", "llm-router"],
+    tools: ["crm-insights", "workflow-runner", "llm-router", "invoke-agent"],
     metrics: ["Qualified lead rate", "Pipeline coverage", "Conversion rate"],
   },
   {
@@ -129,7 +129,7 @@ const orchestrators: AgentDefinition[] = [
       "Measure campaign performance and ROI",
     ],
     outputs: ["Campaign briefs", "Content calendar", "Audience insights", "Distribution plan"],
-    tools: ["content-lab", "market-intel", "workflow-runner"],
+    tools: ["content-lab", "market-intel", "workflow-runner", "invoke-agent"],
     metrics: ["Engagement rate", "Campaign ROI", "Channel growth"],
   },
   {
@@ -146,7 +146,7 @@ const orchestrators: AgentDefinition[] = [
       "Escalate client risks and service issues",
     ],
     outputs: ["Intake scripts", "Scheduling workflows", "FAQ knowledge base", "Client status reports"],
-    tools: ["support-hub", "knowledge-base", "workflow-runner"],
+    tools: ["support-hub", "knowledge-base", "workflow-runner", "invoke-agent"],
     metrics: ["Response time", "CSAT", "Resolution rate"],
   },
   {
@@ -162,7 +162,7 @@ const orchestrators: AgentDefinition[] = [
       "Ensure compliance with client requirements",
     ],
     outputs: ["Client orchestration plans", "Tenant runbooks", "Escalation playbooks", "Client health reports"],
-    tools: ["workflow-runner", "knowledge-base", "llm-router"],
+    tools: ["workflow-runner", "knowledge-base", "llm-router", "invoke-agent"],
     metrics: ["Client SLA adherence", "Tenant success rate", "Escalation turnaround"],
   },
   {
@@ -178,7 +178,7 @@ const orchestrators: AgentDefinition[] = [
       "Validate audit readiness and evidence",
     ],
     outputs: ["Audit reports", "ROI opportunity list", "Remediation plans", "Audit readiness checklist"],
-    tools: ["knowledge-base", "org-kpi-dashboard", "system-status"],
+    tools: ["knowledge-base", "org-kpi-dashboard", "system-status", "invoke-agent"],
     metrics: ["Savings identified", "Remediation adoption", "Audit cycle time"],
   },
   {
@@ -194,7 +194,7 @@ const orchestrators: AgentDefinition[] = [
       "Measure content performance and impact",
     ],
     outputs: ["Case studies", "Playbooks", "Content briefs", "Metrics narratives"],
-    tools: ["content-lab", "knowledge-base", "workflow-runner"],
+    tools: ["content-lab", "knowledge-base", "workflow-runner", "invoke-agent"],
     metrics: ["Content reuse rate", "Publish cadence", "Audience growth"],
   },
 ];

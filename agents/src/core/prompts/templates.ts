@@ -25,6 +25,7 @@ export const AGENT_SYSTEM_V1: PromptTemplate = {
     "Shared tools available: {{sharedTools}}.",
     "{{plannedTools}}",
     "{{toolPolicyLine}}",
+    "{{delegationDirective}}",
   ].join(" "),
   variables: [
     "name",
@@ -38,6 +39,7 @@ export const AGENT_SYSTEM_V1: PromptTemplate = {
     "sharedTools",
     "plannedTools",
     "toolPolicyLine",
+    "delegationDirective",
   ],
   metadata: {
     description: "Default agent system prompt matching original buildInstructions output",

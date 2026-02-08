@@ -51,6 +51,22 @@ export function buildVariables(
       ? "Tool policy: strict (preferred tools only)."
       : "Tool policy: shared (core tools enabled for all agents).";
 
+  // Delegation directive: tell orchestrators/CEO which agents they can invoke
+  let delegationDirective: string | undefined;
+  if (agent.tier === "ceo") {
+    const targets = agentRegistry.orchestrators;
+    if (targets.length > 0) {
+      delegationDirective = `You can delegate tasks using the invoke-agent tool to: ${targets.map((t) => `${t.id} (${t.domain})`).join(", ")}.`;
+    }
+  } else if (agent.tier === "orchestrator") {
+    const targets = agentRegistry.all.filter(
+      (w) => w.tier === "worker" && w.reportsTo === agent.id,
+    );
+    if (targets.length > 0) {
+      delegationDirective = `You can delegate tasks using the invoke-agent tool to: ${targets.map((t) => `${t.id} (${t.domain})`).join(", ")}.`;
+    }
+  }
+
   return {
     name: agent.name,
     domain: agent.domain,
@@ -66,6 +82,7 @@ export function buildVariables(
         : undefined,
     reportsTo,
     toolPolicyLine,
+    delegationDirective,
   };
 }
 

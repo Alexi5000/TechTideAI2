@@ -8,6 +8,7 @@ export const CORE_TOOL_IDS = [
   "market-intel",
   "memory-recall",
   "memory-store",
+  "invoke-agent",
 ] as const;
 
 export const PLANNED_TOOL_IDS = [

@@ -24,5 +24,10 @@ export { createKnowledgeService } from "./knowledge-service.js";
 export { createKpiService } from "./kpi-service.js";
 export { createExecutionMapService } from "./execution-map-service.js";
 export { createMarketIntelService } from "./market-intel-service.js";
+export {
+  createPipelineExecutionService,
+  type IPipelineExecutionService,
+  type PipelineExecutionServiceDeps,
+} from "./pipeline-execution-service.js";
 
 export { supabase } from "./supabase.js";

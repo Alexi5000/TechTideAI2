@@ -27,4 +27,5 @@ export interface PromptVariables {
   plannedTools?: string | undefined;
   reportsTo?: string | undefined;
   toolPolicyLine: string;
+  delegationDirective?: string | undefined;
 }

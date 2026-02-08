@@ -11,6 +11,7 @@ import {
   marketIntelTool,
   memoryRecallTool,
   memoryStoreTool,
+  invokeAgentTool,
   talentHubTool,
   financeLedgerTool,
   crmInsightsTool,
@@ -31,6 +32,7 @@ export const sharedTools: ToolsInput = {
   "market-intel": marketIntelTool,
   "memory-recall": memoryRecallTool,
   "memory-store": memoryStoreTool,
+  "invoke-agent": invokeAgentTool,
 };
 
 export const toolRegistry: ToolsInput = {

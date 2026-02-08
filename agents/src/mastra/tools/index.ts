@@ -1,8 +1,8 @@
 /**
  * TechTideAI Agent Tools
  *
- * ## Tool Registry (17)
- * Core tools (9) are shared across agents by default; planned tools are stubs.
+ * ## Tool Registry (18)
+ * Core tools (10) are shared across agents by default; planned tools are stubs.
  * - system-status: Check system health and uptime
  * - llm-router: Route LLM calls to OpenAI/Anthropic
  * - knowledge-base: Query vector-embedded knowledge
@@ -12,6 +12,7 @@
  * - execution-map: Execution tracking and dependency graphs
  * - memory-recall: Search long-term memory for relevant context
  * - memory-store: Persist information to long-term memory
+ * - invoke-agent: Delegate tasks to other agents (hierarchy-enforced)
  * - talent-hub: HR and hiring pipeline data (stub)
  * - finance-ledger: Financial records and budgeting data (stub)
  * - crm-insights: CRM and sales analytics (stub)
@@ -41,3 +42,4 @@ export {
 } from "./stubs.js";
 export { memoryRecallTool } from "./memory-recall.js";
 export { memoryStoreTool } from "./memory-store.js";
+export { invokeAgentTool, createInvokeAgentTool } from "./invoke-agent.js";

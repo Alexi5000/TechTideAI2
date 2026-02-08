@@ -4,6 +4,7 @@ const path = require("node:path");
 const targets = [
   { dir: "frontend/src", exts: new Set([".js", ".map"]) },
   { dir: "apis/src", exts: new Set([".js", ".map"]) },
+  { dir: "agents/src", exts: new Set([".js", ".map"]) },
 ];
 
 function removeFile(filePath) {
@@ -67,5 +68,10 @@ walkAndRemoveByPattern(".", (name) => name.endsWith(".tsbuildinfo"));
 
 // 4. Remove tmpclaude-* temp files (skip node_modules)
 walkAndRemoveByPattern(".", (name) => name.startsWith("tmpclaude-"));
+
+// 5. Remove orphaned 'nul' file from root (Windows artifact)
+if (fs.existsSync("nul")) {
+  removeFile("nul");
+}
 
 process.stdout.write("Clean complete.\n");

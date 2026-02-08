@@ -1,6 +1,6 @@
 # @techtide/agents
 
-Agent catalog, runtime, tools, evaluation, memory, and monitoring for TechTideAI.
+Agent catalog, runtime, tools, evaluation, memory, monitoring, and orchestration for TechTideAI.
 
 ## Agent Hierarchy
 
@@ -19,16 +19,18 @@ src/
 ├── evaluation/     EvalRunner, scorers, dataset management
 ├── memory/         Short-term (in-memory) + long-term (vector store)
 ├── monitoring/     InMemoryTracer + InMemoryMetrics
+├── orchestration/  Pipeline primitives (chain, parallel, route, eval-loop)
 ├── mastra/         Mastra runtime integration + tool implementations
-│   └── tools/      17 tool implementations (9 core + 8 stubs)
+│   └── tools/      18 tool implementations (10 core + 8 stubs)
 ├── runtime/        IAgentRuntime interface + MastraRuntime
 └── claude/         Claude Agent SDK wrapper
 ```
 
 ## Tool System
 
-- **9 core tools** (shared across all agents): system-status, llm-router, knowledge-base, workflow-runner, org-kpi-dashboard, execution-map, market-intel, memory-recall, memory-store
-- **8 stubs** (return `not_implemented`): talent-hub, finance-ledger, crm-insights, content-lab, support-hub, user-insights, data-lake, runbook
+- **10 core tools** (shared across all agents): system-status, llm-router, knowledge-base, workflow-runner, org-kpi-dashboard, execution-map, market-intel, memory-recall, memory-store, invoke-agent
+- **8 planned stubs** (return `not_implemented`): talent-hub, finance-ledger, crm-insights, content-lab, support-hub, user-insights, data-lake, runbook
+- **invoke-agent** — Hierarchy-scoped delegation tool (CEO invokes orchestrators; orchestrators invoke workers)
 - Per-agent tool filtering via `selectToolsForAgent()`
 - Tool policy: `shared` (all core tools) or `strict` (declared tools only) via `MASTRA_TOOL_POLICY`
 

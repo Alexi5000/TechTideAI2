@@ -13,7 +13,7 @@ The in-memory agent registry is the source of truth for agent identity. The data
 |-------|---------------|
 | **Control** | CEO + orchestrators define objectives, risks, and resource allocations |
 | **Execution** | Worker agents execute scoped tasks in five-worker pods per orchestrator |
-| **Tool** | 17 registered tools (9 core + 8 stubs) with per-agent filtering |
+| **Tool** | 18 registered tools (10 core + 8 planned stubs) with per-agent filtering |
 | **Memory** | Short-term in-memory buffer + long-term vector-backed (Weaviate) |
 | **Monitoring** | Execution tracing, counters, histograms (swappable for OpenTelemetry) |
 | **Evidence** | All decisions tied to citations, KPIs, run artifacts, and vector-searchable evidence |
@@ -42,6 +42,7 @@ techtideai/
 │   ├── src/evaluation/ EvalRunner + scorers
 │   ├── src/memory/     Short-term + long-term memory
 │   ├── src/monitoring/ Tracing + metrics
+│   ├── src/orchestration/ Pipeline primitives (chain, parallel, route, eval-loop)
 │   ├── src/mastra/     Mastra runtime + tool implementations
 │   ├── python/         LangGraph / LangChain agents
 │   ├── skills/         Agent skill specs (*.md)

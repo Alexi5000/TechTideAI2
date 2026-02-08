@@ -20,3 +20,6 @@ export * from "./memory/index.js";
 
 // Monitoring & observability
 export * from "./monitoring/index.js";
+
+// Orchestration primitives
+export * from "./orchestration/index.js";
