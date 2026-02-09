@@ -21,11 +21,11 @@
     "openai": "^4.57.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.6.0",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^20.11.30",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.6.0",
+    "eslint": "^10.0.0",
     "globals": "^15.5.0",
     "typescript": "^5.5.4",
     "vitest": "^2.0.5"
