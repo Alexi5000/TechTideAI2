@@ -67,8 +67,26 @@ techtideai/
    ```
 4. `pnpm -C backend dev` — backend on http://localhost:4050
 5. `pnpm -C frontend dev` — frontend on http://localhost:5180
+6. Build, test, and lint:
+   ```bash
+   pnpm run build    # Build all packages
+   pnpm run test     # Run all tests (144 across 4 packages)
+   pnpm run lint     # Lint all packages
+   pnpm run clean    # Remove build artifacts and temp files
+   ```
+
+Common operations are also available via `make` (see [Makefile](Makefile)).
 
 See [`docs/DEV_SETUP.md`](docs/DEV_SETUP.md) for full details including Docker, Python agents, CLI scripts, and Jupyter notebooks.
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | System design, architectural planes, tool catalog, orchestration patterns |
+| [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md) | Complete REST API endpoint catalog (21 endpoints) |
+| [`docs/DEV_SETUP.md`](docs/DEV_SETUP.md) | Local development setup, Docker, CLI scripts, troubleshooting |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branching model, commit conventions, code review |
 
 ## Contributing
 

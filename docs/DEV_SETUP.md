@@ -94,3 +94,32 @@ make lint       # Lint all packages
 make dev        # Start backend + frontend
 make clean      # Remove dist/, .tsbuildinfo, compiled artifacts, and temp files
 ```
+
+## Troubleshooting
+
+**pnpm ghost packages on Windows**
+Platform-specific packages (e.g. `linux-x64`) sometimes linger from prior installs and cause EACCES errors. Fix with a clean install:
+```bash
+rm -rf node_modules
+pnpm install
+```
+
+**Stale `.js` files shadowing TypeScript sources**
+If tests or builds pick up wrong files, compiled `.js` artifacts may be shadowing `.ts` sources. Run the clean script:
+```bash
+pnpm run clean
+```
+
+**Port conflicts (4050 / 5180)**
+If `dev` commands fail with EADDRINUSE, kill existing processes:
+```bash
+# Windows
+netstat -ano | findstr :4050
+taskkill /PID <pid> /F
+```
+
+**503 errors without Supabase configured**
+The backend starts without `SUPABASE_URL` / `SUPABASE_ANON_KEY`. Endpoints that require persistence return `503 Service Unavailable` until Supabase is configured. This is expected in local dev without a database.
+
+**LLM endpoints return 503**
+LLM clients are lazily initialized. The server starts without `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`, but LLM and market-intel endpoints return `503` until at least one provider key is set in `backend/.env`.

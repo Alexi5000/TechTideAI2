@@ -21,7 +21,6 @@
     "clean": "node scripts/clean-artifacts.js"
   },
   "devDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.57.1",
     "prettier": "^3.2.5"
   }
 }
