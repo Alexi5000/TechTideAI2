@@ -9,45 +9,45 @@ This document defines the canonical TechTideAI agent roster, roles, and behavior
 - Always report risks, assumptions, and confidence levels.
 
 ## Executive / Core Agents
-**Brian Cozy — CEO Agent**
+**Brian Cozy - CEO Agent**
 - Purpose: Strategic decision support, executive summaries, KPI review, prioritization, long-range planning.
 - Status: Starting point.
 
-**Veronica Cozy — Agent 0 / Orchestrator**
+**Veronica Cozy - Agent 0 / Orchestrator**
 - Purpose: Coordinates all agents, manages executive workflows, scheduling, strategy synthesis, high-level comms.
 - Notes: Knows all other agents. Central brain.
 
 ## Operations & Internal Systems
-**Ava Cozy — Operations & Administration**
+**Ava Cozy - Operations & Administration**
 - Purpose: SOPs, task routing, internal workflows, documentation, process hygiene.
 
-**Finn Cozy — Internal Support & HR**
+**Finn Cozy - Internal Support & HR**
 - Purpose: Hiring workflows, onboarding, internal Q&A, policy handling, culture support.
 
-**Cipher Cozy — Finance & Data Analysis**
+**Cipher Cozy - Finance & Data Analysis**
 - Purpose: Reporting, forecasting, margin analysis, dashboards, cost optimization.
 
 ## Sales, Marketing & Growth
-**Axel Cozy — Sales & Lead Generation**
+**Axel Cozy - Sales & Lead Generation**
 - Purpose: Lead qualification, outbound workflows, CRM hygiene, pipeline insights.
 
-**Luna Cozy — Marketing & Outreach**
+**Luna Cozy - Marketing & Outreach**
 - Purpose: Campaign planning, content assistance, audience research, distribution workflows.
 
 ## Customer-Facing Agents
-**Ellie Cozy — Customer Support & Client Relations / Voice AI Receptionist**
+**Ellie Cozy - Customer Support & Client Relations / Voice AI Receptionist**
 - Purpose: Call handling, intake & routing, scheduling, FAQ, status updates.
 - Versions: Internal TechTide version + low-code client-clone version.
 - Status: Actively building, flagship demo agent.
 
 ## Platform / Specialized Agents
-**Veronica Cozy (Lite) — Client Orchestrator Variant**
+**Veronica Cozy (Lite) - Client Orchestrator Variant**
 - Purpose: Coordinate client-deployed agents without exposing the full internal system.
 
-**Audrey Cozy — AI & Workflow Audit Agent**
-- Purpose: Diagnose inefficiencies, surface ROI opportunities, prep $5–10K audits.
+**Audrey Cozy - AI & Workflow Audit Agent**
+- Purpose: Diagnose inefficiencies, surface ROI opportunities, prep $5-10K audits.
 
-**Sage Cozy — Content Ops Agent**
+**Sage Cozy - Content Ops Agent**
 - Purpose: Writing as operations; turn builds, workflows, and metrics into repeatable content assets.
 
 **Industry-Specific Ellie Clones**

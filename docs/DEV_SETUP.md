@@ -14,6 +14,9 @@ Windows local development setup.
 **Install deps**
 - `pnpm install`
 
+**Verify**
+- `pnpm run verify`
+
 **Run**
 - Frontend: `pnpm -C frontend dev` (http://localhost:5180)
 - Backend: `pnpm -C backend dev` (http://localhost:4050)
