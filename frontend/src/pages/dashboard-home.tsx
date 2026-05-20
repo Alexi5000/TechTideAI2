@@ -81,25 +81,25 @@ export function DashboardHome() {
           <StatCard
             icon={<IconAgents size={24} />}
             label="Total Agents"
-            value={agentsLoading ? "—" : totalAgents}
+            value={agentsLoading ? "-" : totalAgents}
             href="/dashboard/agents"
           />
           <StatCard
             icon={<IconActivity size={24} />}
             label="Active Runs"
-            value={runsLoading ? "—" : runningCount}
+            value={runsLoading ? "-" : runningCount}
             href="/dashboard/runs"
           />
           <StatCard
             icon={<IconHistory size={24} />}
             label="Total Runs"
-            value={runsLoading ? "—" : runs.length}
+            value={runsLoading ? "-" : runs.length}
             href="/dashboard/runs"
           />
           <StatCard
             icon={<IconZap size={24} />}
             label="Success Rate"
-            value={runsLoading ? "—" : `${successRate}%`}
+            value={runsLoading ? "-" : `${successRate}%`}
           />
         </div>
 
