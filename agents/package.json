@@ -15,7 +15,7 @@
     "dev": "mastra dev",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "latest",
