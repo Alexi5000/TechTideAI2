@@ -28,7 +28,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+          # No pnpm cache: this workflow doesn't install pnpm packages, and
+          # the cache step would otherwise emit a Path Validation Error
+          # because the pnpm store directory doesn't exist.
 
       - uses: actions/setup-python@v6
         with:
