@@ -33,24 +33,28 @@ RUN pnpm -C apis build
 RUN pnpm -C agents build
 RUN pnpm -C backend build
 
+# Bundle node_modules into a tarball that preserves symlinks. We untar
+# this in the runtime stage instead of doing a direct COPY, because
+# Docker COPY dereferences symlinks by default and would corrupt pnpm's
+# .pnpm/ virtual-store layout.
+RUN tar --exclude="**/node_modules/.cache" -cf node_modules.tar node_modules
+
 # ---- Stage 2: runtime ----
 FROM node:20-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=4050
 RUN addgroup -S app && adduser -S app -G app
-# Install production-only deps from the backend's own manifest. We don't
-# copy the builder's monorepo node_modules because pnpm's hoisted layout
-# (with .pnpm/ symlinks) is not what Node ESM resolves against at runtime.
+
+# Tar the monorepo node_modules in the builder stage (preserving symlinks)
+# and untar it in the runtime stage. This avoids Docker COPY dereferencing
+# pnpm's .pnpm/ virtual-store symlinks, which was breaking the backend
+# at boot with: Cannot find package 'fastify' imported from /app/dist/server.js
 COPY --from=builder /repo/backend/dist              /app/dist
 COPY --from=builder /repo/backend/package.json      /app/package.json
-COPY pnpm-workspace.yaml pnpm-lock.yaml package.json /app/
-COPY --from=builder /repo/agents/package.json      /app/node_modules/@techtide/agents/package.json
-COPY --from=builder /repo/apis/package.json        /app/node_modules/@techtide/apis/package.json
-COPY --from=builder /repo/agents/dist               /app/node_modules/@techtide/agents/dist
-COPY --from=builder /repo/apis/dist                 /app/node_modules/@techtide/apis/dist
-RUN corepack enable && corepack prepare pnpm@9 --activate \
-    && cd /app && pnpm install --prod --frozen-lockfile --ignore-scripts
+COPY --from=builder --chown=root:root /repo/node_modules.tar /tmp/
+RUN tar -xf /tmp/node_modules.tar -C /app/
+
 USER app
 EXPOSE 4050
 HEALTHCHECK --interval=15s --timeout=3s --start-period=20s --retries=3 \
