@@ -25,3 +25,24 @@ stable
 as $$
   select null::uuid;
 $$;
+
+-- Supabase pre-defines three roles that the RLS policies reference:
+-- `anon` (unauthenticated), `authenticated` (logged-in user),
+-- `service_role` (server-side trusted). On plain Postgres these
+-- don't exist, so the GRANT statements in 0001_init.sql fail with
+-- 'role "authenticated" does not exist'. Create them here. They're
+-- NOLOGIN BYPASSRLS where Supabase would have configured them with
+-- specific privileges; for the local dev stack the simpler defaults
+-- are enough.
+do $$
+begin
+  if not exists (select 1 from pg_roles where rolname = 'anon') then
+    create role anon nologin;
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'authenticated') then
+    create role authenticated nologin;
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'service_role') then
+    create role service_role nologin bypassrls;
+  end if;
+end$$;
