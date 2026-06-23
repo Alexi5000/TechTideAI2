@@ -46,6 +46,11 @@ export interface UpdateRunStatusInput {
  * Abstracts database access for run management. Implementation may use
  * Supabase, PostgreSQL directly, or in-memory storage for testing.
  */
+export interface AddRunEventInput {
+  correlationId?: string;
+  severity?: "debug" | "info" | "warn" | "error" | "critical";
+}
+
 export interface IRunRepository {
   create(input: CreateRunInput): Promise<Run>;
   findById(id: string): Promise<Run | null>;
@@ -56,7 +61,10 @@ export interface IRunRepository {
     orgId: string,
     eventType: string,
     payload: Record<string, unknown>,
+    meta?: AddRunEventInput,
   ): Promise<RunEvent>;
+  /** Phase 2.1 — read events back for the trace view. */
+  findEventsByRunId(runId: string): Promise<RunEvent[]>;
 }
 
 export interface CreateKnowledgeChunkInput {
@@ -127,6 +135,9 @@ export interface DbRunEvent {
   event_type: string;
   payload: Record<string, unknown>;
   created_at: string;
+  correlation_id?: string | null;
+  severity?: "debug" | "info" | "warn" | "error" | "critical";
+  occurred_at?: string;
 }
 
 export interface DbKnowledgeDocument {

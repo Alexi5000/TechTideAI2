@@ -8,6 +8,9 @@ import { registerAgentRoutes } from "./routes/agents.js";
 import { registerLlmRoutes } from "./routes/llm.js";
 import { registerRunRoutes } from "./routes/runs.js";
 import { registerKnowledgeRoutes } from "./routes/knowledge.js";
+import { registerEvalRoutes } from "./routes/evals.js";
+import { registerApprovalRoutes } from "./routes/approvals.js";
+import { registerSprintRoutes } from "./routes/sprints.js";
 
 export async function buildServer() {
   const app = Fastify({
@@ -33,6 +36,9 @@ export async function buildServer() {
   await registerLlmRoutes(app);
   await registerRunRoutes(app);
   await registerKnowledgeRoutes(app);
+  await registerEvalRoutes(app);
+  await registerApprovalRoutes(app);
+  await registerSprintRoutes(app);
 
   return app;
 }

@@ -27,6 +27,17 @@ const envSchema = z.object({
   KNOWLEDGE_CHUNK_WORDS: z.coerce.number().int().min(50).max(1000).default(200),
   KNOWLEDGE_CHUNK_OVERLAP_WORDS: z.coerce.number().int().min(0).max(500).default(40),
   KNOWLEDGE_EMBED_BATCH_SIZE: z.coerce.number().int().min(1).max(200).default(50),
+  // Eval harness
+  EVAL_REGRESSION_THRESHOLD_PCT: z.coerce.number().int().min(0).max(100).default(5),
+  EVAL_DEFAULT_JUDGE_MODEL: z.string().default("gpt-4o"),
+  // LangGraph sidecar (Phase 4)
+  LANGGRAPH_SIDECAR_URL: optionalUrl,
+  // Approval gate (Phase 3)
+  APPROVAL_REQUIRED_TIERS: z.string().default("external,destructive,billing"),
+  APPROVAL_TTL_SECONDS: z.coerce.number().int().min(60).max(60 * 60 * 24 * 30).default(86400),
+  // OpenTelemetry (Phase 2)
+  OTEL_EXPORTER_OTLP_ENDPOINT: optionalUrl,
+  OTEL_SERVICE_NAME: z.string().default("techtideai-backend"),
 });
 
 export const env = envSchema.parse(process.env);

@@ -1,0 +1,50 @@
+name: Eval Result Report
+description: Report a discrepancy between your local eval run and the published baseline.
+title: "[eval] "
+labels: ["evals"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when running the eval suite locally produces numbers that disagree with
+        `docs/EVALS/latest.json`. Don't file a "bug" — this is the dedicated channel for eval
+        regressions.
+
+  - type: input
+    id: command
+    attributes:
+      label: Command you ran
+      description: Full command, including flags.
+      placeholder: "pnpm -C backend evals --suite golden-tasks.v1"
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Eval CLI stdout
+      description: Paste the full output (summary table + per-task scores).
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Model versions
+      description: OpenAI / Anthropic model versions used.
+      placeholder: "openai/gpt-4o-2024-08-06, anthropic/claude-3-5-sonnet-20241022"
+
+  - type: input
+    id: baseline
+    attributes:
+      label: Baseline you compared against
+      description: The SHA or version of `docs/EVALS/latest.json` you compared against.
+    validations:
+      required: true
+
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Hypothesis
+      description: Your best guess for why the numbers diverged — prompt change, model update, scorer bug, etc.

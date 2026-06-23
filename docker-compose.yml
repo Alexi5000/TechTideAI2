@@ -1,0 +1,128 @@
+# TechTideAI local stack (Phase 8.8).
+# Brings up postgres, weaviate, backend, frontend, and the optional Python sidecar.
+# Healthchecks gate dependencies; `depends_on: condition: service_healthy` waits
+# for them before starting dependents.
+#
+# Usage:
+#   docker compose up --build
+#   docker compose ps
+#   docker compose logs -f backend
+#   docker compose down -v
+#
+# Production caveat: this file is for local dev. The deploy workflow
+# (`.github/workflows/deploy.yml`) targets Railway + Vercel; production auth,
+# TLS, and observability are not handled here.
+
+name: techtideai
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: techtideai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/supabase/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  weaviate:
+    image: cr.weaviate.io/semitechnologies/weaviate:1.35.6
+    restart: unless-stopped
+    environment:
+      DEFAULT_VECTORIZER_MODULE: "none"
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/v1/.well-known/ready | grep true"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      weaviate:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "4050"
+      HOST: 0.0.0.0
+      CORS_ORIGIN: "http://localhost:5180"
+      DEFAULT_LLM_PROVIDER: ${DEFAULT_LLM_PROVIDER:-openai}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      SUPABASE_URL: http://postgres:5432
+      SUPABASE_DB_URL: postgresql://postgres:postgres@postgres:5432/techtideai
+      WEAVIATE_URL: http://weaviate:8080
+      LANGGRAPH_SIDECAR_URL: http://agents-python:4051
+      EVAL_REGRESSION_THRESHOLD_PCT: "5"
+    ports:
+      - "4050:4050"
+    volumes:
+      - ./evals:/app/../evals:ro
+      - ./docs/EVALS:/app/../docs/EVALS
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:4050/health || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "5180:5180"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5180/healthz || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+
+  agents-python:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      SIDECAR_PORT: "4051"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      SUPABASE_URL: http://postgres:5432
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      WEAVIATE_URL: http://weaviate:8080
+      WEAVIATE_API_KEY: ${WEAVIATE_API_KEY:-}
+      OPENAI_EMBEDDING_MODEL: "text-embedding-3-small"
+    ports:
+      - "4051:4051"
+    profiles: ["full"] # opt-in; comment out for the default minimal stack
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:4051/healthz', timeout=2).read()\""]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres-data:

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://techtide.ai/contracts/agent-runtime.json",
+  "title": "TechTideAI Agent Runtime Contract",
+  "description": "Single source of truth for the agent runtime interface, mirrored in TypeScript (agents/src/runtime/types.ts) and Python (agents/python/src/techtide_agents/contracts/). Drift is checked by scripts/check-contracts.ts.",
+  "version": "1.1.0",
+  "definitions": {
+    "LlmProvider": {
+      "type": "string",
+      "enum": ["openai", "anthropic"]
+    },
+    "AgentEventType": {
+      "type": "string",
+      "enum": ["tool_call", "tool_result", "message", "error", "approval_requested", "approval_granted", "approval_denied"]
+    },
+    "AgentRunRequest": {
+      "type": "object",
+      "required": ["agentId", "input"],
+      "properties": {
+        "agentId": { "type": "string", "minLength": 1 },
+        "input": { "type": "object", "additionalProperties": true },
+        "context": { "type": "object", "additionalProperties": true },
+        "orgId": { "type": "string", "format": "uuid" },
+        "threadId": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "AgentEvent": {
+      "type": "object",
+      "required": ["type", "timestamp", "payload"],
+      "properties": {
+        "type": { "$ref": "#/definitions/AgentEventType" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "payload": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "AgentRunResult": {
+      "type": "object",
+      "required": ["success", "output", "events"],
+      "properties": {
+        "success": { "type": "boolean" },
+        "output": { "type": "object", "additionalProperties": true },
+        "events": { "type": "array", "items": { "$ref": "#/definitions/AgentEvent" } },
+        "error": { "type": ["string", "null"] },
+        "approvalId": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "LlmRequest": {
+      "type": "object",
+      "required": ["provider", "model", "input"],
+      "properties": {
+        "provider": { "$ref": "#/definitions/LlmProvider" },
+        "model": { "type": "string" },
+        "input": { "type": "string" },
+        "system": { "type": "string" },
+        "temperature": { "type": "number" },
+        "maxTokens": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "LlmResponse": {
+      "type": "object",
+      "required": ["provider", "model", "text"],
+      "properties": {
+        "provider": { "$ref": "#/definitions/LlmProvider" },
+        "model": { "type": "string" },
+        "text": { "type": "string" },
+        "usage": { "$ref": "#/definitions/LlmUsage" }
+      },
+      "additionalProperties": false
+    },
+    "LlmUsage": {
+      "type": "object",
+      "properties": {
+        "inputTokens": { "type": "integer", "minimum": 0 },
+        "outputTokens": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

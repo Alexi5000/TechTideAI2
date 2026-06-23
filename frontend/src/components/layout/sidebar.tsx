@@ -14,6 +14,9 @@ import {
   IconHistory,
   IconChevronLeft,
   IconChevronRight,
+  IconChecklist,
+  IconShield,
+  IconBolt,
 } from "@/components/icons/index.js";
 
 interface NavItem {
@@ -27,6 +30,9 @@ const navItems: NavItem[] = [
   { label: "Agents", href: "/dashboard/agents", icon: <IconAgents size={20} /> },
   { label: "Console", href: "/dashboard/console", icon: <IconTerminal size={20} /> },
   { label: "Runs", href: "/dashboard/runs", icon: <IconHistory size={20} /> },
+  { label: "Evals", href: "/dashboard/evals", icon: <IconChecklist size={20} /> },
+  { label: "Sprints", href: "/dashboard/sprints", icon: <IconBolt size={20} /> },
+  { label: "Approvals", href: "/dashboard/approvals", icon: <IconShield size={20} /> },
 ];
 
 interface SidebarProps {

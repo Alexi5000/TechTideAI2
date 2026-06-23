@@ -22,6 +22,9 @@ apis/src/**/*.d.ts
 apis/src/**/*.map
 agents/dist/
 
+# Python build artifacts
+agents/python/src/techtide_agents.egg-info/
+
 # OS
 .DS_Store
 Thumbs.db

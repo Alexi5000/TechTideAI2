@@ -3,7 +3,8 @@ import { z } from "zod";
 import { agentRegistry, getAgentById, createMastraRuntime } from "@techtide/agents";
 import { createRunRepository } from "../repositories/index.js";
 import { createRunService } from "../services/run-service.js";
-import { createAgentExecutionService, createAgentLookup } from "../services/index.js";
+import { createAgentExecutionService, createAgentLookup, ApprovalService } from "../services/index.js";
+import { createInMemoryApprovalRepository } from "../repositories/approval-repository.js";
 import { supabase } from "../services/supabase.js";
 import { AgentNotFoundError, PersistenceUnavailableError } from "../domain/index.js";
 
@@ -21,9 +22,13 @@ export async function registerAgentRoutes(app: FastifyInstance) {
   const runService = createRunService(repository);
   const agentRuntime = createMastraRuntime();
   const agentLookup = createAgentLookup();
+  const approvalRepository = createInMemoryApprovalRepository();
+  const approvalService = new ApprovalService({ repository: approvalRepository });
 
   const executionService = createAgentExecutionService({
     runService,
+    approvalService,
+    approvalRepository,
     agentRuntime,
     agentLookup,
     logger: {

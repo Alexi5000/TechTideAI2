@@ -31,6 +31,9 @@ jobs:
       apis: ${{ steps.filter.outputs.apis }}
       python: ${{ steps.filter.outputs.python }}
       database: ${{ steps.filter.outputs.database }}
+      contracts: ${{ steps.filter.outputs.contracts }}
+      docs: ${{ steps.filter.outputs.docs }}
+      docker: ${{ steps.filter.outputs.docker }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -54,6 +57,19 @@ jobs:
               - 'agents/python/**'
             database:
               - 'database/**'
+            contracts:
+              - 'contracts/**'
+              - 'scripts/sync-contracts.ts'
+            docs:
+              - 'docs/adr/**'
+              - 'docs/posts/**'
+              - 'evals/fixtures/**'
+            docker:
+              - 'Dockerfile*'
+              - 'docker-compose*.yml'
+              - '.dockerignore'
+              - 'frontend/nginx.conf'
+              - 'scripts/smoke-stack.sh'
 
   # ──────────────────────────────────────────────
   # TypeScript: lint + test + build (all workspaces)
@@ -194,23 +210,83 @@ jobs:
           echo "✅ All migration files validated"
 
   # ──────────────────────────────────────────────
+  # Contract drift — TS ↔ Python shared schema
+  # ──────────────────────────────────────────────
+  contracts-drift:
+    name: Contract drift check
+    needs: changes
+    if: needs.changes.outputs.contracts == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Re-run sync-contracts and check for diff
+        run: |
+          set -e
+          pnpm tsx scripts/sync-contracts.ts
+          if [[ -n "$(git status --porcelain -- agents/src/runtime/contract-types.generated.ts agents/python/src/techtide_agents/contracts/generated.py)" ]]; then
+            echo "❌ Drift detected: regenerated contract files differ from those in the PR."
+            git --no-pager diff -- agents/src/runtime/contract-types.generated.ts agents/python/src/techtide_agents/contracts/generated.py
+            exit 1
+          fi
+          echo "✅ Contract files are in sync with contracts/schema.json"
+
+  # ──────────────────────────────────────────────
+  # Docker — build images and smoke-test the stack
+  # ──────────────────────────────────────────────
+  docker:
+    name: Docker smoke
+    needs: changes
+    if: needs.changes.outputs.docker == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -f Dockerfile.backend -t techtideai-backend:ci .
+
+      - name: Build frontend image
+        run: docker build -f Dockerfile.frontend -t techtideai-frontend:ci .
+
+      - name: Smoke-test the stack
+        env:
+          OPENAI_API_KEY: sk-stub-for-ci
+          ANTHROPIC_API_KEY: sk-ant-stub-for-ci
+        run: bash scripts/smoke-stack.sh
+
+  # ──────────────────────────────────────────────
   # Gate — all checks must pass before merge
   # ──────────────────────────────────────────────
   ci-gate:
     name: CI Gate
     if: always()
-    needs: [typescript, python, database]
+    needs: [typescript, python, database, contracts-drift, docker]
     runs-on: ubuntu-latest
     steps:
       - name: Check results
         run: |
-          echo "TS:       ${{ needs.typescript.result }}"
-          echo "Python:   ${{ needs.python.result }}"
-          echo "Database: ${{ needs.database.result }}"
+          echo "TS:              ${{ needs.typescript.result }}"
+          echo "Python:          ${{ needs.python.result }}"
+          echo "Database:        ${{ needs.database.result }}"
+          echo "Contracts drift: ${{ needs.contracts-drift.result }}"
+          echo "Docker:          ${{ needs.docker.result }}"
 
           # Fail if any required job failed (skipped is OK — means no changes)
           if [[ "${{ needs.typescript.result }}" == "failure" ]]; then exit 1; fi
           if [[ "${{ needs.python.result }}" == "failure" ]]; then exit 1; fi
           if [[ "${{ needs.database.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.contracts-drift.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.docker.result }}" == "failure" ]]; then exit 1; fi
 
           echo "✅ All checks passed or were skipped"

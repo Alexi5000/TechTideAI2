@@ -8,8 +8,9 @@ import {
   knowledgeBaseTool,
   workflowRunnerTool,
 } from "./tools/index.js";
+import { loadSkillPromptSections, defaultSkillRegistry } from "../skills/index.js";
 
-const defaultModel = (process.env["MASTRA_MODEL"] ?? "openai/gpt-5.1") as MastraModelConfig;
+const defaultModel = (process.env["MASTRA_MODEL"] ?? "openai/gpt-4o") as MastraModelConfig;
 const sharedTools = {
   "system-status": systemStatusTool,
   "llm-router": llmRouterTool,
@@ -17,7 +18,9 @@ const sharedTools = {
   "workflow-runner": workflowRunnerTool,
 };
 
-const buildInstructions = (agent: AgentDefinition) => {
+const skillRegistry = defaultSkillRegistry();
+
+const buildInstructions = (agent: AgentDefinition): string => {
   const lines = [
     `You are ${agent.name}, leading ${agent.domain}.`,
     agent.mission,
@@ -30,7 +33,13 @@ const buildInstructions = (agent: AgentDefinition) => {
     const lead = agentRegistry.all.find((candidate) => candidate.id === agent.reportsTo);
     lines.splice(2, 0, `Reports to: ${lead?.name ?? agent.reportsTo}.`);
   }
-  return lines.join(" ");
+  // Skills augment the prompt with reasoning patterns. They are additional
+  // context, not replacements. See docs/adr/0007-skills-vs-tools.md.
+  const skillSections = loadSkillPromptSections(agent, skillRegistry);
+  if (skillSections.length > 0) {
+    lines.push("", "# Skills", "", ...skillSections);
+  }
+  return lines.join("\n");
 };
 
 export const mastraAgents = Object.fromEntries(

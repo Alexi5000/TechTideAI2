@@ -1,0 +1,795 @@
+{
+  "id": "golden-tasks",
+  "name": "Golden Tasks v1",
+  "version": "v1.0.0",
+  "description": "Initial coverage of all 10 orchestrators and the CEO agent. Mix of deterministic, LLM-judge, and rubric-weighted scorers. See evals/fixtures/README.md.",
+  "publishedAt": "2026-06-22T00:00:00.000Z",
+  "scorers": [
+    { "kind": "json-schema", "weight": 0.3, "passThreshold": 0.7, "options": {} },
+    { "kind": "llm-judge", "weight": 0.7, "passThreshold": 0.7, "options": { "judgeModel": "gpt-4o" } }
+  ],
+  "tasks": [
+    {
+      "id": "ceo-quarterly-objective",
+      "agentId": "ceo",
+      "tier": "ceo",
+      "category": "multi-step",
+      "difficulty": 3,
+      "input": {
+        "prompt": "Translate this company mission into exactly three quarterly objectives and one risk: 'Help small professional-services firms adopt AI agents safely.'",
+        "format": "object"
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["objectives", "risk"],
+          "properties": {
+            "objectives": { "type": "array", "items": { "type": "string" }, "minimum": 3 },
+            "risk": { "type": "string" }
+          }
+        },
+        "rubric": "Output must include exactly three quarterly objectives and one risk. Objectives should be measurable, time-bounded, and aligned to safe AI adoption for small firms.",
+        "assertions": [
+          "Exactly 3 objectives are listed",
+          "Each objective is measurable and time-bounded",
+          "Each objective explicitly relates to safe AI adoption",
+          "Risk is concrete (named failure mode, not 'general concerns')"
+        ]
+      },
+      "rubric": "Three measurable objectives + one named risk; all four outputs aligned to safe AI adoption for small firms.",
+      "tags": ["ceo", "strategy", "rubric"],
+      "timeoutMs": 30000
+    },
+    {
+      "id": "ceo-prioritization-trace",
+      "agentId": "ceo",
+      "tier": "ceo",
+      "category": "format-compliance",
+      "difficulty": 2,
+      "input": {
+        "items": ["Ship eval harness", "Ship approval gate", "Ship LangGraph runtime", "Write blog post"],
+        "deadlineDays": 14
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["ranking", "reasoning"],
+          "properties": {
+            "ranking": { "type": "array", "items": { "type": "string" } },
+            "reasoning": { "type": "string" }
+          }
+        },
+        "rubric": "Ranking must include all four items, in priority order, with a short reasoning paragraph."
+      },
+      "rubric": "All four items ranked, reasoning justified, ordering defensible.",
+      "tags": ["ceo", "prioritization", "schema"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "ceo-decision-log",
+      "agentId": "ceo",
+      "tier": "ceo",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": { "decision": "Reject a partner deal that would add 30% revenue but require permanent exclusivity." },
+      "expected": {
+        "rubric": "Decision log should weigh revenue vs strategic optionality; should be specific about the upside and downside; should mention reversibility.",
+        "assertions": [
+          "Mentions the 30% revenue upside",
+          "Identifies the strategic cost (loss of optionality)",
+          "Discusses reversibility / exit cost",
+          "States the decision explicitly"
+        ]
+      },
+      "rubric": "Balanced tradeoff, reversibility called out, decision stated.",
+      "tags": ["ceo", "decision-log"],
+      "timeoutMs": 25000
+    },
+    {
+      "id": "veronica-escalation-routing",
+      "agentId": "orch-veronica",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "scenario": "A worker reports a customer-facing outage. The CEO is asleep. Two orchestrators are reachable.",
+        "reachable": ["orch-cipher", "orch-ava"]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["primary", "secondary", "rationale"],
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "rationale": { "type": "string" }
+          }
+        },
+        "rubric": "Pick the most appropriate reachable orchestrator (operations or finance, depending on severity framing) and explain why."
+      },
+      "rubric": "Plausible escalation routing with explicit rationale referencing incident severity.",
+      "tags": ["orchestration", "routing"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "veronica-priority-stack",
+      "agentId": "orch-veronica",
+      "tier": "orchestrator",
+      "category": "format-compliance",
+      "difficulty": 1,
+      "input": {
+        "items": [
+          "Respond to inbound lead",
+          "Resolve billing dispute",
+          "Refresh Q3 forecast",
+          "Approve blog post",
+          "Schedule board update"
+        ]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["stack"],
+          "properties": {
+            "stack": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "rubric": "Returns a JSON object with a `stack` array containing exactly the input items in some defensible priority order.",
+      "tags": ["orchestration", "format"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "veronica-strategy-brief",
+      "agentId": "orch-veronica",
+      "tier": "orchestrator",
+      "category": "multi-step",
+      "difficulty": 3,
+      "input": {
+        "ceoMemo": "Q3 focus: ship the eval harness, close two design partners, hire one engineer.",
+        "audience": "engineering leads"
+      },
+      "expected": {
+        "rubric": "Synthesizes the CEO memo into a weekly brief for engineering leads with concrete deliverables, owners, and a risk callout.",
+        "assertions": [
+          "References the eval harness",
+          "Names at least one design partner deliverable",
+          "Names the engineering hire",
+          "Calls out one risk"
+        ]
+      },
+      "rubric": "All three CEO priorities translated into engineering-team deliverables with owners and a risk.",
+      "tags": ["orchestration", "synthesis"],
+      "timeoutMs": 30000
+    },
+    {
+      "id": "ava-sop-format",
+      "agentId": "orch-ava",
+      "tier": "orchestrator",
+      "category": "format-compliance",
+      "difficulty": 1,
+      "input": {
+        "processName": "Customer onboarding",
+        "steps": [
+          "Send welcome email within 1 hour",
+          "Schedule kickoff call within 24 hours",
+          "Verify integration credentials",
+          "Hand off to success manager"
+        ]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["name", "steps"],
+          "properties": {
+            "name": { "type": "string" },
+            "steps": { "type": "array", "items": { "type": "object" } }
+          }
+        }
+      },
+      "rubric": "SOP returns the process name and an array of step objects (each with at least an `order` and `description`).",
+      "tags": ["operations", "sop"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "ava-process-drift-detection",
+      "agentId": "orch-ava",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "sop": "Step 1: Verify credentials. Step 2: Schedule kickoff. Step 3: Hand off to success manager.",
+        "observedRun": [
+          "Verified credentials",
+          "Verified credentials again (unnecessary)",
+          "Skipped kickoff",
+          "Handed off to success manager"
+        ]
+      },
+      "expected": {
+        "rubric": "Identify the duplicated step and the skipped step, and recommend a remediation.",
+        "assertions": [
+          "Mentions the duplicated credentials check",
+          "Mentions the skipped kickoff",
+          "Recommends a concrete remediation"
+        ]
+      },
+      "rubric": "Drift detection identifies both the duplication and the omission, with a remediation.",
+      "tags": ["operations", "drift"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "ava-task-routing",
+      "agentId": "orch-ava",
+      "tier": "orchestrator",
+      "category": "tool-use",
+      "difficulty": 2,
+      "input": {
+        "task": "Renew the annual SOC 2 report",
+        "availableAgents": ["orch-cipher", "orch-audit", "orch-finn"]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["assignedTo"],
+          "properties": {
+            "assignedTo": { "type": "string" },
+            "rationale": { "type": "string" }
+          }
+        }
+      },
+      "rubric": "Routes the SOC 2 renewal to the audit orchestrator (or another defensible pick) with rationale.",
+      "tags": ["operations", "routing"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "finn-hiring-pipeline-status",
+      "agentId": "orch-finn",
+      "tier": "orchestrator",
+      "category": "format-compliance",
+      "difficulty": 1,
+      "input": {
+        "stages": ["applied", "phone screen", "tech interview", "onsite", "offer"],
+        "counts": [120, 35, 12, 4, 1]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["conversionRates", "bottleneck"],
+          "properties": {
+            "conversionRates": { "type": "array", "items": { "type": "number" } },
+            "bottleneck": { "type": "string" }
+          }
+        }
+      },
+      "rubric": "Returns conversion rates between stages and identifies the worst-converting stage.",
+      "tags": ["hr", "pipeline"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "finn-policy-update-summary",
+      "agentId": "orch-finn",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "policyName": "Remote work",
+        "diff": "Old: 2 days in office. New: 1 day in office, with one fully-remote week per quarter."
+      },
+      "expected": {
+        "rubric": "Summary should be plain-language, call out the substantive changes, and note any implementation considerations.",
+        "assertions": [
+          "Calls out the change from 2 to 1 in-office day",
+          "Calls out the new fully-remote week",
+          "Mentions implementation considerations (scheduling, fairness)"
+        ]
+      },
+      "rubric": "Both substantive changes called out plus implementation considerations.",
+      "tags": ["hr", "policy"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "finn-culture-pulse",
+      "agentId": "orch-finn",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 3,
+      "input": {
+        "surveyResults": [
+          { "question": "I understand our strategy", "score": 3.8 },
+          { "question": "I have the tools I need", "score": 4.1 },
+          { "question": "I feel heard by leadership", "score": 2.9 },
+          { "question": "My workload is sustainable", "score": 2.6 }
+        ]
+      },
+      "expected": {
+        "rubric": "Identifies the two lowest-scoring questions, recommends two concrete interventions, and notes a risk of inaction.",
+        "assertions": [
+          "Names the two lowest-scoring questions",
+          "Recommends two concrete interventions",
+          "States a risk of inaction"
+        ]
+      },
+      "rubric": "Lowest scores surfaced, two actionable interventions, risk stated.",
+      "tags": ["hr", "culture"],
+      "timeoutMs": 25000
+    },
+    {
+      "id": "cipher-forecast-format",
+      "agentId": "orch-cipher",
+      "tier": "orchestrator",
+      "category": "format-compliance",
+      "difficulty": 1,
+      "input": {
+        "currentMRR": 120000,
+        "growthRate": 0.08,
+        "horizonMonths": 12
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["projected", "series"],
+          "properties": {
+            "projected": { "type": "number" },
+            "series": { "type": "array", "items": { "type": "number" } }
+          }
+        }
+      },
+      "rubric": "Returns a `projected` MRR number (≈ 304,679 for the default inputs) and a `series` array of 13 values (start + 12 months).",
+      "tags": ["finance", "forecast"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "cipher-margin-analysis",
+      "agentId": "orch-cipher",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "revenue": 1500000,
+        "cogs": 600000,
+        "operatingExpenses": 700000
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["grossMargin", "operatingMargin"],
+          "properties": {
+            "grossMargin": { "type": "number" },
+            "operatingMargin": { "type": "number" }
+          }
+        }
+      },
+      "rubric": "Gross margin 0.6 and operating margin ≈ 0.133. Numeric values should be ratios, not percentages.",
+      "tags": ["finance", "margin"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "cipher-cost-optimization",
+      "agentId": "orch-cipher",
+      "tier": "orchestrator",
+      "category": "multi-step",
+      "difficulty": 3,
+      "input": {
+        "spend": [
+          { "category": "cloud", "monthlyUsd": 42000 },
+          { "category": "saas", "monthlyUsd": 18000 },
+          { "category": "contractors", "monthlyUsd": 65000 },
+          { "category": "office", "monthlyUsd": 12000 }
+        ],
+        "headcount": 38
+      },
+      "expected": {
+        "rubric": "Identifies the largest absolute line items, proposes 1-2 optimizations per item, estimates savings, and flags any risks.",
+        "assertions": [
+          "Names the top two spend categories by absolute size",
+          "Proposes 1-2 concrete optimizations",
+          "Estimates monthly savings",
+          "Flags at least one risk"
+        ]
+      },
+      "rubric": "Top categories named, concrete optimizations proposed, savings estimated, risks flagged.",
+      "tags": ["finance", "cost"],
+      "timeoutMs": 30000
+    },
+    {
+      "id": "axel-lead-scoring",
+      "agentId": "orch-axel",
+      "tier": "orchestrator",
+      "category": "format-compliance",
+      "difficulty": 2,
+      "input": {
+        "leads": [
+          { "id": "L1", "company": "Acme", "title": "VP Engineering", "companySize": 250, "intentSignal": "demo requested" },
+          { "id": "L2", "company": "Initech", "title": "Intern", "companySize": 12, "intentSignal": "ad click" },
+          { "id": "L3", "company": "Hooli", "title": "CTO", "companySize": 1200, "intentSignal": "pricing page" }
+        ]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["scored"],
+          "properties": {
+            "scored": { "type": "array", "items": { "type": "object" } }
+          }
+        }
+      },
+      "rubric": "Returns a `scored` array with one entry per lead (same length as input), each with a `score` in [0,1] and a `rank` integer.",
+      "tags": ["sales", "scoring"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "axel-outbound-sequence",
+      "agentId": "orch-axel",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "persona": "VP of Operations at a 200-person services firm",
+        "touchpoints": 4
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["sequence"],
+          "properties": {
+            "sequence": { "type": "array", "items": { "type": "object" } }
+          }
+        }
+      },
+      "rubric": "Returns a `sequence` array of exactly 4 touchpoint objects with `day` and `channel` fields.",
+      "tags": ["sales", "outbound"],
+      "timeoutMs": 25000
+    },
+    {
+      "id": "axel-pipeline-coverage",
+      "agentId": "orch-axel",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "quota": 1000000,
+        "pipelineByStage": [
+          { "stage": "qualified", "amount": 250000 },
+          { "stage": "proposal", "amount": 400000 },
+          { "stage": "negotiation", "amount": 200000 }
+        ],
+        "historicalWinRates": { "qualified": 0.3, "proposal": 0.5, "negotiation": 0.7 }
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["weightedPipeline", "coverageRatio"],
+          "properties": {
+            "weightedPipeline": { "type": "number" },
+            "coverageRatio": { "type": "number" }
+          }
+        }
+      },
+      "rubric": "weightedPipeline = 250000*0.3 + 400000*0.5 + 200000*0.7 = 415000. coverageRatio = weightedPipeline / quota = 0.415.",
+      "tags": ["sales", "pipeline"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "luna-content-brief",
+      "agentId": "orch-luna",
+      "tier": "orchestrator",
+      "category": "format-compliance",
+      "difficulty": 1,
+      "input": {
+        "topic": "How small firms evaluate AI agent vendors",
+        "audience": "COO"
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["title", "outline"],
+          "properties": {
+            "title": { "type": "string" },
+            "outline": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "rubric": "Title is a complete sentence or strong noun phrase; outline has 3-5 sections.",
+      "tags": ["content", "brief"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "luna-tone-check",
+      "agentId": "orch-luna",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "draft": "Our cutting-edge, best-in-class, industry-leading platform leverages bleeding-edge AI to deliver unsurpassed outcomes for our world-class customers.",
+        "targetTone": "honest, specific, low-hype"
+      },
+      "expected": {
+        "rubric": "Identifies the hype words, suggests specific replacements, and offers a revised sentence.",
+        "assertions": [
+          "Names at least 3 hype words",
+          "Suggests concrete replacements",
+          "Provides a revised sentence"
+        ]
+      },
+      "rubric": "Hype words surfaced, specific replacements, revised sentence.",
+      "tags": ["content", "editing"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "luna-headline-options",
+      "agentId": "orch-luna",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "articleSummary": "Three engineering leaders describe how they integrated an internal agent platform without breaking CI.",
+        "count": 5
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["headlines"],
+          "properties": {
+            "headlines": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "rubric": "Returns exactly 5 headlines. At least 3 should be specific (named stakeholders, concrete outcomes), not generic.",
+      "tags": ["content", "headline"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "ellie-market-scan",
+      "agentId": "orch-ellie",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 3,
+      "input": {
+        "industry": "AI agents for legal services",
+        "geographies": ["US", "UK"],
+        "horizonMonths": 6
+      },
+      "expected": {
+        "rubric": "Identifies 3-5 plausible market signals (regulatory, competitor moves, technology shifts), cites the geography distinction, and recommends one strategic move.",
+        "assertions": [
+          "Names 3-5 distinct signals",
+          "Distinguishes US vs UK signals",
+          "Recommends one concrete strategic move"
+        ]
+      },
+      "rubric": "Plausible signals, geography differentiation, one strategic recommendation.",
+      "tags": ["market-intel", "research"],
+      "timeoutMs": 30000
+    },
+    {
+      "id": "ellie-competitor-profile",
+      "agentId": "orch-ellie",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "competitor": "Acme Agent Co.",
+        "knownFacts": ["Series A 2025", "Targets SMBs", "Open-source runtime"]
+      },
+      "expected": {
+        "rubric": "Profile covers positioning, strengths, weaknesses, and a specific counter-positioning note.",
+        "assertions": [
+          "States positioning relative to us",
+          "Names at least 2 strengths",
+          "Names at least 2 weaknesses",
+          "Suggests one counter-positioning move"
+        ]
+      },
+      "rubric": "Positioning, strengths, weaknesses, counter-positioning.",
+      "tags": ["market-intel", "competitor"],
+      "timeoutMs": 25000
+    },
+    {
+      "id": "ellie-trend-summary",
+      "agentId": "orch-ellie",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "signals": [
+          "Open-source agent frameworks raising record seed rounds",
+          "Enterprise procurement teams publishing agent evaluation RFPs",
+          "Two major model providers adding built-in agent loops"
+        ]
+      },
+      "expected": {
+        "rubric": "Names the underlying trend, names implications for TechTideAI, and proposes one defensive move.",
+        "assertions": [
+          "Identifies a single underlying trend",
+          "Names at least one implication for us",
+          "Proposes one defensive move"
+        ]
+      },
+      "rubric": "Trend named, implication stated, defensive move proposed.",
+      "tags": ["market-intel", "trend"],
+      "timeoutMs": 20000
+    },
+    {
+      "id": "veronica-lite-triage",
+      "agentId": "orch-veronica-lite",
+      "tier": "orchestrator",
+      "category": "format-compliance",
+      "difficulty": 1,
+      "input": {
+        "inbox": [
+          { "id": "m1", "from": "ceo", "subject": "Board update" },
+          { "id": "m2", "from": "support", "subject": "Outage report" },
+          { "id": "m3", "from": "marketing", "subject": "Newsletter draft" }
+        ]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["triaged"],
+          "properties": {
+            "triaged": { "type": "array", "items": { "type": "object" } }
+          }
+        }
+      },
+      "rubric": "Returns a `triaged` array of the same length as `inbox`, each entry has a `priority` field (one of high/medium/low) and a `reason` string.",
+      "tags": ["triage"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "veronica-lite-summarization",
+      "agentId": "orch-veronica-lite",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 1,
+      "input": {
+        "text": "TechTideAI raised a seed round of $3M led by Cosy Ventures. The team plans to use the funds to expand the engineering org and ship the company's evaluation harness. The CEO will join the board of Cosy Labs in an observer capacity."
+      },
+      "expected": {
+        "regex": "\\$3M|Cosy Ventures|evaluat"
+      },
+      "rubric": "Summary captures the funding amount, lead investor, planned use, and the CEO's observer role.",
+      "tags": ["summarization", "regex"],
+      "timeoutMs": 15000
+    },
+    {
+      "id": "audit-compliance-check",
+      "agentId": "orch-audit",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 3,
+      "input": {
+        "controlName": "Approval gate for destructive actions",
+        "evidence": [
+          "ApprovalRequest entity has riskTier field",
+          "approval-policy.ts maps external|destructive|billing to required-approval",
+          "agent-execution-service pauses run on required-approval"
+        ],
+        "framework": "SOC 2 CC6.1"
+      },
+      "expected": {
+        "rubric": "Audit's verdict should map evidence to the control objective, identify any gaps, and recommend remediation.",
+        "assertions": [
+          "Cites the ApprovalRequest entity by name",
+          "Cites the risk-tier classification by name",
+          "Cites the run-pause behavior",
+          "Identifies at least one gap or missing evidence"
+        ]
+      },
+      "rubric": "Evidence cited, gaps identified, remediation recommended.",
+      "tags": ["audit", "soc2"],
+      "timeoutMs": 30000
+    },
+    {
+      "id": "audit-incident-postmortem",
+      "agentId": "orch-audit",
+      "tier": "orchestrator",
+      "category": "multi-step",
+      "difficulty": 3,
+      "input": {
+        "incident": "An agent auto-approved a $50k vendor contract without going through the approval gate.",
+        "context": "Production; logged via run_events."
+      },
+      "expected": {
+        "rubric": "Postmortem should cover root cause, blast radius, immediate containment, and a corrective action with owner.",
+        "assertions": [
+          "Names a root cause (e.g. policy misclassification, race condition)",
+          "Quantifies blast radius",
+          "Proposes immediate containment",
+          "Proposes corrective action with named owner"
+        ]
+      },
+      "rubric": "Root cause, blast radius, containment, corrective action with owner.",
+      "tags": ["audit", "postmortem"],
+      "timeoutMs": 30000
+    },
+    {
+      "id": "audit-policy-versioning",
+      "agentId": "orch-audit",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "question": "How should we version risk-tier classification so we can replay audit decisions?"
+      },
+      "expected": {
+        "rubric": "Recommends a versioning approach with a concrete schema (policy version on each ApprovalRequest, immutable history), and a replay procedure.",
+        "assertions": [
+          "Mentions an immutable approval_request row including policy_version",
+          "Recommends a replay procedure against historical inputs",
+          "Discusses how to detect drift"
+        ]
+      },
+      "rubric": "Versioning schema, replay procedure, drift detection.",
+      "tags": ["audit", "versioning"],
+      "timeoutMs": 25000
+    },
+    {
+      "id": "content-distribution-plan",
+      "agentId": "orch-content",
+      "tier": "orchestrator",
+      "category": "multi-step",
+      "difficulty": 2,
+      "input": {
+        "asset": "Lessons from building a company-scale agent OS (2000-word post)",
+        "audiences": ["engineering leaders", "AI researchers", "early-stage founders"]
+      },
+      "expected": {
+        "rubric": "Plan should include a channel per audience, a content adaptation (what to keep vs reshape), and a measurement metric.",
+        "assertions": [
+          "Names at least one channel per audience",
+          "Specifies content adaptation per channel",
+          "Names a measurement metric"
+        ]
+      },
+      "rubric": "Channels, adaptations, measurement metric.",
+      "tags": ["content", "distribution"],
+      "timeoutMs": 25000
+    },
+    {
+      "id": "content-repurposing",
+      "agentId": "orch-content",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "longForm": "2000-word essay on harness engineering for AI agents",
+        "formats": ["twitter thread", "linkedin post", "30-min talk outline"]
+      },
+      "expected": {
+        "jsonSchema": {
+          "type": "object",
+          "required": ["repurposed"],
+          "properties": {
+            "repurposed": { "type": "array", "items": { "type": "object" } }
+          }
+        }
+      },
+      "rubric": "Returns one repurposed asset per requested format with a length-appropriate adaptation.",
+      "tags": ["content", "repurpose"],
+      "timeoutMs": 25000
+    },
+    {
+      "id": "content-narrative-arc",
+      "agentId": "orch-content",
+      "tier": "orchestrator",
+      "category": "domain-reasoning",
+      "difficulty": 2,
+      "input": {
+        "thesis": "Harness engineering, not prompt engineering, is the durable skill in agent work."
+      },
+      "expected": {
+        "rubric": "Arc should have a hook, a tension, evidence, and a payoff — each labeled.",
+        "assertions": [
+          "Names the hook",
+          "Names the tension",
+          "Names the evidence",
+          "Names the payoff"
+        ]
+      },
+      "rubric": "Hook, tension, evidence, payoff — each labeled and substantive.",
+      "tags": ["content", "narrative"],
+      "timeoutMs": 25000
+    }
+  ]
+}

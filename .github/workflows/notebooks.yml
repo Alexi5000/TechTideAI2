@@ -1,0 +1,62 @@
+# Notebook smoke test — runs the audit-run notebook (no LLM) on every PR.
+# Confirms the .ipynb parses, the .py is in sync, and the bridge is wired.
+
+name: notebooks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: notebooks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Notebook smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Convert notebooks and check freshness
+        run: |
+          pip install --quiet pyyaml
+          python scripts/convert-notebooks.py --check
+
+      - name: AST-parse every emitted .py
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import ast, sys
+          failed = 0
+          for p in sorted(Path("notebooks").glob("*.py")):
+              try:
+                  ast.parse(p.read_text(encoding="utf-8"))
+                  print(f"  ok  {p.name}")
+              except SyntaxError as exc:
+                  print(f"  FAIL {p.name}: {exc}", file=sys.stderr)
+                  failed += 1
+          sys.exit(failed)
+          PY
+
+      - name: Test the notebook bridge
+        run: |
+          cd agents/python
+          pip install -e ".[dev]"
+          pytest tests/test_notebook_bridge.py -v

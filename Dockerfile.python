@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1.6
+# TechTideAI Python sidecar (LangGraph runtime).
+# Optional: only required when an orchestrator routes to langgraph
+# (configured via LANGGRAPH_SIDECAR_URL on the backend). Default port 4051.
+
+FROM python:3.11-slim AS builder
+ENV PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY agents/python/pyproject.toml ./
+RUN pip install --upgrade pip hatchling
+RUN pip install ".[server]"
+
+COPY agents/python/src ./src
+
+# ---- Stage 2: runtime ----
+FROM python:3.11-slim AS runtime
+ENV PORT=4051
+WORKDIR /app
+RUN useradd --create-home --uid 1001 app
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /app/src /app/src
+USER app
+EXPOSE 4051
+HEALTHCHECK --interval=15s --timeout=3s --start-period=10s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4051/healthz', timeout=2).read()" || exit 1
+CMD ["uvicorn", "techtide_agents.server:app", "--host", "0.0.0.0", "--port", "4051"]
