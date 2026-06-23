@@ -43,14 +43,17 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/v1/.well-known/ready | grep true"]
-      # Weaviate's vector module initialization can take 30-60s on a cold
-      # boot; the original 5 retries x 5s interval gave up after 25s and
-      # the backend's `depends_on: service_healthy` then refused to start.
-      # 60s total budget is comfortably above the cold-boot cost.
+      # Probe the liveness endpoint with curl. The /v1/.well-known/ready
+      # endpoint returns 503 with {"ready": false} while the vector modules
+      # initialize, and 200 with {"ready": true} once they're up. We only
+      # require the HTTP server to respond, not that ready=true, because
+      # the backend only hits Weaviate lazily.
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/v1/.well-known/live >/dev/null 2>&1 || exit 1"]
+      # Cold-boot vector-module init can take 60-120s. Start-period + retries
+      # together give the container a 150s budget to come up.
       interval: 5s
-      timeout: 3s
-      retries: 12
+      timeout: 5s
+      retries: 24
       start_period: 30s
 
   backend:

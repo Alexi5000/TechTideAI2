@@ -13,7 +13,11 @@ echo "==> Building backend image"
 $COMPOSE build backend >/tmp/smoke-build.log 2>&1 || { tail -50 /tmp/smoke-build.log; exit 1; }
 
 echo "==> Starting minimal stack (postgres, weaviate, backend, frontend)"
-$COMPOSE up -d --wait postgres weaviate backend frontend
+# --wait-timeout caps how long we wait for any container to become healthy.
+# Weaviate's vector-module init can take 90s+ on cold boot in CI; we give
+# the stack 5 minutes total to settle. The smoke curls below still probe
+# the backend, which is the surface we actually care about.
+$COMPOSE up -d --wait --wait-timeout 300 postgres weaviate backend frontend
 
 cleanup() {
   $COMPOSE down -v >/dev/null 2>&1 || true
