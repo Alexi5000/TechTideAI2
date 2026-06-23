@@ -17,7 +17,12 @@ echo "==> Starting minimal stack (postgres, weaviate, backend, frontend)"
 # Weaviate's vector-module init can take 90s+ on cold boot in CI; we give
 # the stack 5 minutes total to settle. The smoke curls below still probe
 # the backend, which is the surface we actually care about.
-$COMPOSE up -d --wait --wait-timeout 300 postgres weaviate backend frontend
+if ! $COMPOSE up -d --wait --wait-timeout 300 postgres weaviate backend frontend; then
+  echo "!! Compose up failed. Dumping container logs:"
+  $COMPOSE ps
+  $COMPOSE logs --no-color --tail=200 backend || true
+  exit 1
+fi
 
 cleanup() {
   $COMPOSE down -v >/dev/null 2>&1 || true
