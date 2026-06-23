@@ -30,9 +30,13 @@ services:
       - ./database/supabase/migrations:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
+      # Cold-boot with the supabase migrations mounted as
+      # /docker-entrypoint-initdb.d runs every *.sql on first start, which
+      # can take 30s+. Give the container a 90s budget to become healthy.
       interval: 5s
       timeout: 3s
-      retries: 5
+      retries: 12
+      start_period: 30s
 
   weaviate:
     image: cr.weaviate.io/semitechnologies/weaviate:1.35.6
