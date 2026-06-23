@@ -105,7 +105,10 @@ services:
     ports:
       - "5180:5180"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5180/healthz || exit 1"]
+      # Probe '/' (the Vite-served index.html). There is no /healthz in the
+      # nginx static surface; '/healthz' was an early stub that's no longer
+      # served.
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5180/ || exit 1"]
       interval: 15s
       timeout: 3s
       retries: 3

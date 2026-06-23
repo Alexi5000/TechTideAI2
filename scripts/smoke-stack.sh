@@ -43,8 +43,8 @@ done
 curl -fsS http://localhost:4050/health | head -1
 echo
 
-echo "==> Curling /healthz on frontend"
-curl -fsS http://localhost:5180/healthz | head -1
+echo "==> Curling / on frontend"
+curl -fsS http://localhost:5180/ | head -c 200
 echo
 
 echo "==> Curling /api/agents on backend (through frontend nginx proxy)"
