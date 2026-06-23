@@ -3,7 +3,7 @@
 # Brings the stack up, curls /health on each service, tears down.
 # Used by CI; also handy locally.
 
-set -euo pipefail
+set -eu
 
 COMPOSE="docker compose"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -42,19 +42,19 @@ for i in 1 2 3 4 5; do
   fi
   sleep 2
 done
-curl -fsS http://localhost:4050/health | head -1
+curl -fsS http://localhost:4050/health
 echo
 
 echo "==> Curling / on frontend"
-curl -fsS http://localhost:5180/ | head -c 200
+curl -fsS http://localhost:5180/
 echo
 
 echo "==> Curling /api/agents on backend (through frontend nginx proxy)"
-curl -fsS http://localhost:5180/api/agents | head -c 200
+curl -fsS http://localhost:5180/api/agents
 echo
 
 echo "==> Listing available eval suites"
-curl -fsS http://localhost:5180/api/evals/suites | head -c 200
+curl -fsS http://localhost:5180/api/evals/suites
 echo
 
 echo "==> Smoke OK"
