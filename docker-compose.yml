@@ -86,9 +86,13 @@ services:
       - ./docs/EVALS:/app/../docs/EVALS
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:4050/health || exit 1"]
-      interval: 15s
-      timeout: 3s
-      retries: 3
+      # Cold-boot of the Fastify backend (TS module load + Supabase
+      # client init + Weaviate client init + warm caches) routinely
+      # exceeds 30s in CI. Give it a 90s budget.
+      interval: 10s
+      timeout: 5s
+      retries: 9
+      start_period: 30s
 
   frontend:
     build:
