@@ -21,6 +21,8 @@ if ! $COMPOSE up -d --wait --wait-timeout 300 postgres weaviate backend frontend
   echo "!! Compose up failed. Dumping container logs:"
   $COMPOSE ps
   $COMPOSE logs --no-color --tail=200 backend || true
+  $COMPOSE logs --no-color --tail=200 frontend || true
+  $COMPOSE logs --no-color --tail=200 postgres || true
   exit 1
 fi
 
