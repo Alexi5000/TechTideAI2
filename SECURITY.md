@@ -41,7 +41,7 @@ TechTideAI is a research / portfolio system. **Do not deploy it against producti
 ## Secrets Hygiene
 
 - `.env`, `.env.*`, and any file matching `*.env` are gitignored.
-- `backend/.env.example`, `frontend/.env.example`, `agents/.env.example`, `agents/python/.env.example` are the canonical templates — keys go there with placeholder values, never real ones.
+- `backend/.env.example`, `frontend/.env.example`, `agents/.env.example`, `agents/python/.env.example` are the canonical templates, keys go there with placeholder values, never real ones.
 - CI uses stub keys (`sk-stub-for-ci`); the verify gate is safe to run on forks.
 
 ## Dependency Hygiene

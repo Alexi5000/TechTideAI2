@@ -10,10 +10,10 @@
 in order, across every TypeScript workspace (`backend`, `agents`, `apis`,
 `frontend`):
 
-1. **Lint** — `eslint .` (workspace-scoped).
-2. **Test** — `vitest run` (workspace-scoped; the frontend intentionally
-   has no unit tests — see §6).
-3. **Build** — `tsc -b` for `backend` / `agents` / `apis`, and `tsc -b`
+1. **Lint**, `eslint .` (workspace-scoped).
+2. **Test**, `vitest run` (workspace-scoped; the frontend intentionally
+   has no unit tests, see §6).
+3. **Build**, `tsc -b` for `backend` / `agents` / `apis`, and `tsc -b`
    for `frontend`.
 
 CI runs the same command and rejects any PR whose `verify` step is red.

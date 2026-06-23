@@ -30,20 +30,35 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS_DIR = REPO_ROOT / "notebooks"
 
 
-def _is_python_source(source_lines: list[str]) -> bool:
-    """Heuristic: a cell is 'code' if its first non-blank, non-comment
-    line is not markdown (i.e. doesn't start with '# '). The notebook
-    schema tells us cell_type, but we re-derive because the JSON often
-    lies. The simplest reliable signal: a cell whose source doesn't begin
-    with '# ' is code."""
+def _is_markdown(source_lines: list[str]) -> bool:
+    """Heuristic: a cell is markdown if its first non-blank line looks
+    like a markdown structural marker — heading, list, blockquote,
+    horizontal rule, or link. Anything else is treated as Python source.
+    The notebook schema tells us cell_type, but we re-derive because the
+    JSON often lies. This is intentionally conservative: when in doubt
+    we emit as code so the .py stays valid."""
     for line in source_lines:
         stripped = line.strip()
         if not stripped:
             continue
-        # Allow full-line Python comments but reject markdown headers / list items.
-        if stripped.startswith("# "):
-            continue
-        return True
+        # Headings: # ## ### etc. (but NOT '#' alone which is valid Python).
+        if stripped.startswith("# ") or stripped.startswith("##") and stripped[2:3] in (" ", "#"):
+            return True
+        # Unordered list items.
+        if stripped.startswith(("- ", "* ", "+ ")):
+            return True
+        # Ordered list: "1. " or "1) ".
+        if len(stripped) > 2 and stripped[0].isdigit() and stripped[1] in (".", ")"):
+            return True
+        # Blockquote.
+        if stripped.startswith(">"):
+            return True
+        # Horizontal rule.
+        if set(stripped) <= {"-", " "} and len(stripped) >= 3:
+            return True
+        if set(stripped) <= {"*", " "} and len(stripped) >= 3:
+            return True
+        return False
     return False
 
 
@@ -70,11 +85,11 @@ def convert_one(ipynb_path: Path) -> str:
         source = "".join(cell.get("source", []))
         if not source.strip():
             continue
-        if _is_python_source(source.splitlines()):
-            out.append(source)
-        else:
+        if _is_markdown(source.splitlines()):
             for line in source.splitlines():
                 out.append(f"# {line}" if line else "#")
+        else:
+            out.append(source)
         out.append("")
 
     return "\n".join(out).rstrip() + "\n"

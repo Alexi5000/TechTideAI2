@@ -1,4 +1,4 @@
-# AGENTS.md — procedural memory for any agent working in this repo
+# AGENTS.md, procedural memory for any agent working in this repo
 
 > Read this on session start. It is the agent's map of the codebase. If something here is wrong, the agent's first job is to fix this file (and the ADR that explains it), not to work around it.
 
@@ -67,7 +67,7 @@ These are *deliberately* hard to change. If a task asks you to modify them, push
 
 ## Workspace topology
 
-The build order is `apis → agents → backend`. To keep that DAG acyclic, any type both sides need (notably `ApprovalPolicy` and `ApprovalRiskTier`) lives in `@techtide/agents` (`agents/src/core/approval-policy.ts`) and is **re-exported** from `@techtide/backend` (`backend/src/domain/policies/approval-policy.ts`) for downstream consumers. The agents package never imports from `@techtide/backend`; the backend imports from `@techtide/agents`. If you find yourself adding an `import from "@techtide/backend"` to anything under `agents/`, stop — move the type into `agents/src/core/` (or `agents/src/runtime/`) instead, then re-export from the backend.
+The build order is `apis → agents → backend`. To keep that DAG acyclic, any type both sides need (notably `ApprovalPolicy` and `ApprovalRiskTier`) lives in `@techtide/agents` (`agents/src/core/approval-policy.ts`) and is **re-exported** from `@techtide/backend` (`backend/src/domain/policies/approval-policy.ts`) for downstream consumers. The agents package never imports from `@techtide/backend`; the backend imports from `@techtide/agents`. If you find yourself adding an `import from "@techtide/backend"` to anything under `agents/`, stop, move the type into `agents/src/core/` (or `agents/src/runtime/`) instead, then re-export from the backend.
 
 ## Test commands (cheat sheet)
 
@@ -84,12 +84,12 @@ The build order is `apis → agents → backend`. To keep that DAG acyclic, any 
 
 ## Reading order for a new contributor
 
-1. **`README.md`** — the pitch, the "what works today" table, the architecture.
-2. **`AGENTS.md` (this file)** — the operational map.
-3. **`docs/adr/`** — every architectural decision is justified here. The order is 0001 → 0009; each builds on the previous.
-4. **`backend/src/services/eval-harness.ts` + `agents/src/runtime/types.ts`** — the load-bearing code paths.
-5. **`evals/fixtures/golden-tasks.v1.json`** — what the system is supposed to be good at.
-6. **`docs/posts/lessons-from-building-a-company-scale-agent-os.md`** — the engineering retrospective.
+1. **`README.md`**, the pitch, the "what works today" table, the architecture.
+2. **`AGENTS.md` (this file)**, the operational map.
+3. **`docs/adr/`**, every architectural decision is justified here. The order is 0001 → 0009; each builds on the previous.
+4. **`backend/src/services/eval-harness.ts` + `agents/src/runtime/types.ts`**, the load-bearing code paths.
+5. **`evals/fixtures/golden-tasks.v1.json`**, what the system is supposed to be good at.
+6. **`docs/posts/lessons-from-building-a-company-scale-agent-os.md`**, the engineering retrospective.
 
 ## What agents should do
 

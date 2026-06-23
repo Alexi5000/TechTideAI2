@@ -1,4 +1,4 @@
-# ADR 0006 — The three-agent harness is a separate loop
+# ADR 0006, The three-agent harness is a separate loop
 
 - **Status:** Accepted
 - **Date:** 2026-06-23

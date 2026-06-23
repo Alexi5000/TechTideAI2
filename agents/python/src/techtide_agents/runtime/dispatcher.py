@@ -53,9 +53,7 @@ class Dispatcher:
         # default tier mappings (ceo/orchestrator).
         merged_tiers = {**DEFAULT_CONFIG["tiers"], **config.get("tiers", {})}
         merged_agents = {**DEFAULT_CONFIG["agents"], **config.get("agents", {})}
-        self.tiers: dict[str, RuntimeTarget] = {
-            tier: RuntimeTarget(value) for tier, value in merged_tiers.items()
-        }
+        self.tiers: dict[str, RuntimeTarget] = {tier: RuntimeTarget(value) for tier, value in merged_tiers.items()}
         self.agents: dict[str, RuntimeTarget] = {
             agent_id: RuntimeTarget(value) for agent_id, value in merged_agents.items()
         }
@@ -67,8 +65,7 @@ class Dispatcher:
         # The runtime config lives at the repo's agents/runtime_config.yaml,
         # which is `parents[4] / "runtime_config.yaml"`.
         path = config_path or Path(
-            os.environ.get("TECHTIDE_RUNTIME_CONFIG")
-            or Path(__file__).resolve().parents[4] / "runtime_config.yaml"
+            os.environ.get("TECHTIDE_RUNTIME_CONFIG") or Path(__file__).resolve().parents[4] / "runtime_config.yaml"
         )
         if not path.exists():
             return DEFAULT_CONFIG
@@ -95,7 +92,7 @@ class Dispatcher:
             reason="no mapping; defaulting to mastra",
         )
 
-    def extend(self, overrides: dict[str, str]) -> "Dispatcher":
+    def extend(self, overrides: dict[str, str]) -> Dispatcher:
         merged = {
             "version": self.config.get("version", 1),
             "tiers": dict(self.config.get("tiers", {})),

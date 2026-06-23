@@ -1,6 +1,6 @@
 # Lessons from building a company-scale agent OS
 
-> A 2,000-word post-mortem on the engineering choices that shaped TechTideAI — the system, the mistakes, and what we'd do differently.
+> A 2,000-word post-mortem on the engineering choices that shaped TechTideAI, the system, the mistakes, and what we'd do differently.
 
 When I started TechTideAI, the README led with a confident claim: *"Production AI needs more than prompts. Teams need agent registries, execution boundaries, API contracts, evaluation fixtures, memory surfaces, human approval paths, and logs that explain what happened."*
 
@@ -28,9 +28,9 @@ The biggest mistake I made early on was treating the eval harness as a research 
 What worked was forcing eval into the same shape as the rest of the platform:
 
 - A versioned suite of golden tasks checked into `evals/fixtures/`.
-- A scorer registry (`ScorerRegistry`) that's OCP-extensible — adding a scorer means registering it, not forking the harness.
+- A scorer registry (`ScorerRegistry`) that's OCP-extensible, adding a scorer means registering it, not forking the harness.
 - A CLI (`pnpm -C backend evals`) that emits a table and exits non-zero on regression.
-- A nightly CI workflow (`.github/workflows/evals.yml`) — and *not* on PRs, because cost. ($0.30–0.80 per run × every PR is not a budget.)
+- A nightly CI workflow (`.github/workflows/evals.yml`), and *not* on PRs, because cost. ($0.30–0.80 per run × every PR is not a budget.)
 
 The thing that surprised me: once the harness was a real surface, the *conversations* changed. "Did the model bump help?" became "pass rate went from 0.74 → 0.81, p95 latency up 200ms, mean score up 0.04." Specific claims, not vibes.
 
@@ -40,7 +40,7 @@ What I'd do differently: ship the harness before the second feature. I waited un
 
 "Human approval where risk matters" sounds obvious. It isn't.
 
-The mistake I made was treating it as a UI problem — a button on a workflow-runner tool that prompts the operator. That implementation let through plenty of high-risk actions because nothing structurally required the approval.
+The mistake I made was treating it as a UI problem, a button on a workflow-runner tool that prompts the operator. That implementation let through plenty of high-risk actions because nothing structurally required the approval.
 
 What worked was treating approval as **a first-class state in the status machine**:
 
@@ -61,7 +61,7 @@ But Cipher (the finance orchestrator) kept needing more: deterministic compute l
 
 The dual runtime won because the **contract was already the seam**. `IAgentRuntime` is just `execute(request) → result`. Adding a Python implementation is "write a class that satisfies the interface." The `Dispatcher` reads `runtime_config.yaml` and decides per agent. Drift is caught by `tests/test_contract_sync.py` reading hash markers in both generated files.
 
-The thing that surprised me: the cost curve inverted. LangGraph orchestrators are *cheaper* than equivalent Mastra orchestrators because the deterministic compute layer avoids an LLM call. The latency curve doesn't invert — Mastra is still faster for one-shot agent calls — but the orchestrator cost was the bigger lever.
+The thing that surprised me: the cost curve inverted. LangGraph orchestrators are *cheaper* than equivalent Mastra orchestrators because the deterministic compute layer avoids an LLM call. The latency curve doesn't invert, Mastra is still faster for one-shot agent calls, but the orchestrator cost was the bigger lever.
 
 What I'd do differently: write the contract first, *then* the runtimes. I wrote the TypeScript runtime first and the contract second, which meant the Python port had to be reverse-engineered into a clean schema. `contracts/schema.json` should have been the first artifact, not the third.
 
@@ -75,7 +75,7 @@ The fix was three things:
 2. **Every run gets a `trace_id`** that flows through OpenTelemetry spans for the HTTP request, the run create, the agent execute, the tool call, the LLM call. Defaults to in-process; switches to OTLP when `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
 3. **Every completed run writes a post-mortem** to `docs/EVALS/post-mortems/<run-id>.md`. Engineers review runs by reading markdown, not by querying tables.
 
-The third one is the unsung hero. A 60-line markdown file with: header, summary, event timeline, output, three-paragraph reflection. The PostMortemService asks an LLM to write the reflection against the run's input, output, and event timeline. It's not perfect — but it's always written, and a tired human can scan it.
+The third one is the unsung hero. A 60-line markdown file with: header, summary, event timeline, output, three-paragraph reflection. The PostMortemService asks an LLM to write the reflection against the run's input, output, and event timeline. It's not perfect, but it's always written, and a tired human can scan it.
 
 What I'd do differently: ship the post-mortem before shipping the trace tree. The trace tree is more powerful, but the post-mortem is what gets *read*. Optimize for read time first.
 
@@ -93,7 +93,7 @@ The original repo had three dashboard pages. The eval harness added `/dashboard/
 
 The temptation was to skip the UI for the harness and ship "the data is in `/api/evals/runs`." I tried that. The harness went unused. The moment `/dashboard/evals` shipped with a "Run suite" button, the team started running it weekly.
 
-The same was true for approvals. A Slack ping "agent paused on run X" is not a HITL system. The `/dashboard/approvals` queue — with grant/deny buttons and a rationale field — *is*.
+The same was true for approvals. A Slack ping "agent paused on run X" is not a HITL system. The `/dashboard/approvals` queue, with grant/deny buttons and a rationale field, *is*.
 
 The lesson: if a surface is part of the product, it gets a screen. Operator UI is the difference between "we have a HITL system" and "we have a HITL system that someone actually uses."
 
@@ -122,6 +122,6 @@ Three things I'd build next, in order:
 2. **Adversarial test generation.** Hand-written fixtures don't cover the long tail. Once the suite crosses ~100 tasks, we generate adversarial variants from the existing rubrics.
 3. **Production-traffic replay.** Sample real agent traffic and grade it against the eval suite after the fact. The signal is more accurate than hand-written fixtures; the engineering cost is the storage and the grader.
 
-The hard part of any agent system is the loop: ship → measure → fix → re-measure. Everything in this post — the eval harness, the approval gate, the trace surface, the post-mortem service — is in service of closing that loop faster.
+The hard part of any agent system is the loop: ship → measure → fix → re-measure. Everything in this post, the eval harness, the approval gate, the trace surface, the post-mortem service, is in service of closing that loop faster.
 
 The product is the loop. Everything else is plumbing.

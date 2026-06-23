@@ -1,4 +1,4 @@
-# ADR 0001 — Status machine as the execution boundary
+# ADR 0001, Status machine as the execution boundary
 
 - **Status:** Accepted
 - **Date:** 2026-06-22
@@ -24,7 +24,7 @@ The policy is **OCP-extensible**: `extend()` returns a new policy with additiona
 
 Positive:
 
-- `Run.status` is queryable as an enum — every dashboard, alert, and audit query works off the same vocabulary.
+- `Run.status` is queryable as an enum, every dashboard, alert, and audit query works off the same vocabulary.
 - The state machine is the **execution boundary**: a side-effect is only legal in `running`, never in `queued`.
 - Phase 3's HITL gate slotted in cleanly because the policy was already the seam.
 

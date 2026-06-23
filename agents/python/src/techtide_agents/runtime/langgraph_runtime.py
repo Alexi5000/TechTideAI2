@@ -14,22 +14,22 @@ others share a generic builder.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, Callable
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any
 from uuid import uuid4
 
 from techtide_agents.contracts import (
     AgentEvent,
     AgentRunRequest,
     AgentRunResult,
-    AgentEventType,
     LlmRequest,
 )
 from techtide_agents.runtime.llm import LlmClient
 
 
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class LangGraphRuntime:
@@ -162,7 +162,9 @@ def make_cipher_graph(llm: LlmClient) -> Callable[[AgentRunRequest], AgentRunRes
 
     def runner(request: AgentRunRequest) -> AgentRunResult:
         events: list[AgentEvent] = []
-        events.append(AgentEvent(type="message", timestamp=_now_iso(), payload={"phase": "intake", "domain": "Finance"}))
+        events.append(
+            AgentEvent(type="message", timestamp=_now_iso(), payload={"phase": "intake", "domain": "Finance"})
+        )
 
         inputs = _as_dict(request.input)
         action = inputs.get("action") if isinstance(inputs, dict) else None
@@ -186,12 +188,16 @@ def make_cipher_graph(llm: LlmClient) -> Callable[[AgentRunRequest], AgentRunRes
 
         # Deterministic compute layer.
         numbers = _compute_financials(inputs)
-        events.append(AgentEvent(type="message", timestamp=_now_iso(), payload={"phase": "compute", "numbers": numbers}))
+        events.append(
+            AgentEvent(type="message", timestamp=_now_iso(), payload={"phase": "compute", "numbers": numbers})
+        )
 
         # Narrative layer.
         prompt = _build_cipher_narrative_prompt(inputs, numbers)
         narrative = _safe_generate(llm, prompt)
-        events.append(AgentEvent(type="message", timestamp=_now_iso(), payload={"phase": "narrative", "length": len(narrative)}))
+        events.append(
+            AgentEvent(type="message", timestamp=_now_iso(), payload={"phase": "narrative", "length": len(narrative)})
+        )
 
         return AgentRunResult(
             success=True,

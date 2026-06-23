@@ -25,10 +25,16 @@ server = [
 ]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Generated files: drift-checked by pnpm tsx scripts/sync-contracts.ts.
+# Do not ruff-check them; edits would be overwritten by the next sync.
+"src/techtide_agents/contracts/generated.py" = ["ALL"]
+"notebooks/_bridge.py" = ["ALL"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

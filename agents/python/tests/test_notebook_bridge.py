@@ -28,9 +28,7 @@ class _StubHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802 — http.server convention
         if self.path == "/api/evals/suites":
-            self._respond(200, [
-                {"id": "golden-tasks", "version": "v1.0.0", "taskCount": 33}
-            ])
+            self._respond(200, [{"id": "golden-tasks", "version": "v1.0.0", "taskCount": 33}])
             return
         if self.path.startswith("/api/evals/runs/"):
             self._respond(200, self.payload["run"])

@@ -25,8 +25,11 @@ class LlmClient:
 
     def __init__(self, *, default_provider: LlmProvider | None = None) -> None:
         self.default_provider: LlmProvider | None = default_provider or (
-            "openai" if os.environ.get("OPENAI_API_KEY") else "anthropic"
-            if os.environ.get("ANTHROPIC_API_KEY") else None
+            "openai"
+            if os.environ.get("OPENAI_API_KEY")
+            else "anthropic"
+            if os.environ.get("ANTHROPIC_API_KEY")
+            else None
         )
 
     def generate(self, request: LlmRequest) -> LlmResponse:
@@ -90,9 +93,7 @@ class LlmClient:
 
     @staticmethod
     def _extract_usage(result: Any) -> LlmUsage | None:
-        usage = getattr(result, "response_metadata", {}).get("token_usage") or getattr(
-            result, "usage_metadata", None
-        )
+        usage = getattr(result, "response_metadata", {}).get("token_usage") or getattr(result, "usage_metadata", None)
         if not usage:
             return None
         return LlmUsage(

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from techtide_agents.runtime.dispatcher import Dispatcher, RuntimeTarget
 
 

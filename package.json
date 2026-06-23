@@ -1,7 +1,8 @@
 {
   "name": "techtideai",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
+  "description": "Company-scale AI agent operating system. 1 CEO + 10 orchestrators + 50 workers, three-agent adversarial harness, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack.",
   "workspaces": [
     "frontend",
     "backend",
@@ -22,6 +23,7 @@
     "verify": "pnpm run lint && pnpm run test && pnpm run build"
   },
   "devDependencies": {
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "tsx": "^4.21.0"
   }
 }

@@ -14,9 +14,9 @@ suites = bridge.list_suites()
 for s in suites:
     print(f"  {s.id} @ {s.version} — {s.task_count} tasks")
 
-## Draft a new task
-
-Edit the cell below. The `expected` shape follows `EvalExpected` from `agents/src/runtime/contract-types.generated.ts`.
+# ## Draft a new task
+#
+# Edit the cell below. The `expected` shape follows `EvalExpected` from `agents/src/runtime/contract-types.generated.ts`.
 
 new_task = {
     "id": "<your-task-id>",
@@ -41,9 +41,9 @@ new_task = {
 }
 print(json.dumps(new_task, indent=2))
 
-## Validate against the schema
-
-The notebook reads `evals/fixtures/golden-tasks.v1.json` directly so you can sanity-check shape compatibility.
+# ## Validate against the schema
+#
+# The notebook reads `evals/fixtures/golden-tasks.v1.json` directly so you can sanity-check shape compatibility.
 
 from pathlib import Path
 import json
@@ -60,9 +60,9 @@ print("missing:     ", sorted(missing) or "(none)")
 print("extra:       ", sorted(extra) or "(none)")
 assert not missing, f"Missing required keys: {missing}"
 
-## Next steps
-
-1. Save your task by appending to `evals/fixtures/golden-tasks.v1.json`.
-2. Bump the suite's `version` field (e.g. `v1.0.0` → `v1.1.0`).
-3. Run `pnpm -C backend evals --suite golden-tasks.v1 --concurrency 1` to confirm the harness scores it correctly.
-4. Commit the change. The next nightly CI run will pick it up and the dashboard will show the new task's score alongside the others.
+# ## Next steps
+#
+# 1. Save your task by appending to `evals/fixtures/golden-tasks.v1.json`.
+# 2. Bump the suite's `version` field (e.g. `v1.0.0` → `v1.1.0`).
+# 3. Run `pnpm -C backend evals --suite golden-tasks.v1 --concurrency 1` to confirm the harness scores it correctly.
+# 4. Commit the change. The next nightly CI run will pick it up and the dashboard will show the new task's score alongside the others.

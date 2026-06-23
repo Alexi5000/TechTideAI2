@@ -12,9 +12,9 @@ print("Backend reachable. Suites available:")
 for s in bridge.list_suites():
     print(f"  - {s.id} @ {s.version} ({s.task_count} tasks)")
 
-## Step 1: pick a fixture task to score against
-
-Pick an existing task from `evals/fixtures/golden-tasks.v1.json` whose agent + rubric you want to iterate. We'll override its `input.prompt` with our candidate.
+# ## Step 1: pick a fixture task to score against
+#
+# Pick an existing task from `evals/fixtures/golden-tasks.v1.json` whose agent + rubric you want to iterate. We'll override its `input.prompt` with our candidate.
 
 from pathlib import Path
 import json
@@ -29,9 +29,9 @@ print(f"Target task: {target_task['id']} ({target_task['agentId']})")
 print(f"Original prompt: {target_task['input'].get('prompt', '(none)')}")
 print(f"Original rubric: {target_task['rubric']}")
 
-## Step 2: write your candidate prompt
-
-Edit the `candidate_prompt` cell below.
+# ## Step 2: write your candidate prompt
+#
+# Edit the `candidate_prompt` cell below.
 
 candidate_prompt = (
     "You are the finance orchestrator. Given the current MRR, growth rate, and horizon, "
@@ -40,27 +40,27 @@ candidate_prompt = (
 )
 print(candidate_prompt)
 
-## Step 3: run the eval
+# ## Step 3: run the eval
+#
+# We trigger an eval run against the *full* suite, then filter the result to just the target task. This is cheaper than adding a one-off task to the suite.
 
-We trigger an eval run against the *full* suite, then filter the result to just the target task. This is cheaper than adding a one-off task to the suite.
+# # Trigger the eval run. Override the input via a small monkey-patch:
+# # we can't override the input per-task from the API, so for prompt
+# # iteration we trust the eval harness to record the candidate
+# # prompt into run_events (a future Phase). For now, this run is a
+# # smoke test of the backend surface.
+# try:
+#     run = bridge.run_eval(suite="golden-tasks.v1", baseline="latest")
+#     print(f"Run {run.id[:8]}... status={run.status} pass_rate={run.summary.pass_rate:.2%}" if run.summary else f"Run {run.id}")
+#     matching = [t for t in run.task_results if t.task_id == target_task['id']]
+#     if matching:
+#         t = matching[0]
+#         print(f"  target task: score={t.score:.2f} passed={t.passed}")
+#     else:
+#         print(f"  target task {target_task['id']} not in this run; harness will pick it up on the next pass.")
+# except NotebookBridgeError as exc:
+#     print(f"Eval failed: {exc}")
 
-# Trigger the eval run. Override the input via a small monkey-patch:
-# we can't override the input per-task from the API, so for prompt
-# iteration we trust the eval harness to record the candidate
-# prompt into run_events (a future Phase). For now, this run is a
-# smoke test of the backend surface.
-try:
-    run = bridge.run_eval(suite="golden-tasks.v1", baseline="latest")
-    print(f"Run {run.id[:8]}... status={run.status} pass_rate={run.summary.pass_rate:.2%}" if run.summary else f"Run {run.id}")
-    matching = [t for t in run.task_results if t.task_id == target_task['id']]
-    if matching:
-        t = matching[0]
-        print(f"  target task: score={t.score:.2f} passed={t.passed}")
-    else:
-        print(f"  target task {target_task['id']} not in this run; harness will pick it up on the next pass.")
-except NotebookBridgeError as exc:
-    print(f"Eval failed: {exc}")
-
-## Step 4: iterate
-
-Edit the `candidate_prompt` cell, re-run the eval, and compare scores. The loop is manual on purpose — the goal is for the operator to *see* what changes, not to have the LLM edit its own prompt.
+# ## Step 4: iterate
+#
+# Edit the `candidate_prompt` cell, re-run the eval, and compare scores. The loop is manual on purpose — the goal is for the operator to *see* what changes, not to have the LLM edit its own prompt.

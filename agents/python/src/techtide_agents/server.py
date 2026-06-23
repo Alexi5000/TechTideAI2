@@ -16,8 +16,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from techtide_agents.contracts import AgentRunRequest, AgentRunResult
-from techtide_agents.runtime.langgraph_runtime import LangGraphRuntime
 from techtide_agents.runtime.dispatcher import Dispatcher, RuntimeTarget
+from techtide_agents.runtime.langgraph_runtime import LangGraphRuntime
 
 app = FastAPI(title="TechTideAI Python Sidecar", version="0.2.0")
 _runtime: LangGraphRuntime | None = None

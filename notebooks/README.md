@@ -9,7 +9,7 @@ Authoring surface for golden tasks, prompts, and rubrics. Notebooks are reviewed
 | `01_author_golden_task.ipynb` | Walk a new task from idea to fixture. | Free (no LLM). |
 | `02_iterate_prompt.ipynb` | Score a candidate prompt against a fixture. | $0.30–$0.80/run. |
 | `03_audit_run.ipynb` | Pull a run by id and inspect per-scorer breakdown. | Free (no LLM). |
-| `_bridge.py` | Re-export of `techtide_agents.notebook_bridge`. | — |
+| `_bridge.py` | Re-export of `techtide_agents.notebook_bridge`. |, |
 
 ## How the surface works
 

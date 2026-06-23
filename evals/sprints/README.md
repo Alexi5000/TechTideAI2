@@ -51,7 +51,7 @@ Validated in `backend/src/domain/entities/sprint-contract.ts` (Zod).
 ## Adding a contract
 
 1. Pick an id (kebab-case, e.g. `pricing-memo-v1`).
-2. Choose a generator + evaluator pair. The evaluator should be a different agent from the generator — the harness passes the generator's output to the evaluator, so an LLM-as-judge bias toward a peer agent is a real risk.
+2. Choose a generator + evaluator pair. The evaluator should be a different agent from the generator, the harness passes the generator's output to the evaluator, so an LLM-as-judge bias toward a peer agent is a real risk.
 3. Write 3-7 acceptance criteria. The rubric-weighted scorer grades each one.
 4. Pick scorers. The default set is `llm-judge` + `rubric-weighted` + `four-axis-grader`. Drop `four-axis-grader` for tasks where the four axes don't make sense (e.g. translation).
 5. Run `pnpm -C backend sprint --contract evals/sprints/<id>.v1.json`. The CLI prints the iteration table.

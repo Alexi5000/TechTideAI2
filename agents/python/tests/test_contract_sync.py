@@ -71,9 +71,17 @@ def test_python_models_match_schema_definitions() -> None:
     if not SCHEMA.exists() or not PY_GENERATED.exists():
         pytest.skip("schema or generated file missing")
 
-    schema = json.loads(SCHEMA.read_text(encoding="utf8"))
+    _ = json.loads(SCHEMA.read_text(encoding="utf8"))
     py_text = PY_GENERATED.read_text(encoding="utf8")
-    expected = {"LlmProvider", "AgentEventType", "AgentRunRequest", "AgentEvent", "AgentRunResult", "LlmRequest", "LlmResponse"}
+    expected = {
+        "LlmProvider",
+        "AgentEventType",
+        "AgentRunRequest",
+        "AgentEvent",
+        "AgentRunResult",
+        "LlmRequest",
+        "LlmResponse",
+    }
     for name in expected:
         if name in {"LlmProvider", "AgentEventType"}:
             # Literal aliases — names must appear in the file.

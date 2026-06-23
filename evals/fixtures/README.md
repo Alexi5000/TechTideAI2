@@ -46,9 +46,9 @@ The schema is validated in `backend/src/domain/entities/eval-task.ts` and `eval-
 
 1. Pick the next available ID. For the v1 suite, IDs are `<agent-or-domain>-<short>`.
 2. Decide what scoring you want:
-   - **json-schema** — output must be a JSON object matching a schema. Use for format-compliance tasks.
-   - **llm-judge** — open-ended output graded by a separate LLM with a rubric. Use for domain-reasoning.
-   - **rubric-weighted** — list concrete `assertions` and grade each. Use for multi-step tasks with multiple claims.
+   - **json-schema**, output must be a JSON object matching a schema. Use for format-compliance tasks.
+   - **llm-judge**, open-ended output graded by a separate LLM with a rubric. Use for domain-reasoning.
+   - **rubric-weighted**, list concrete `assertions` and grade each. Use for multi-step tasks with multiple claims.
 3. Pick a category and difficulty. Difficulty 3 means the task requires composition or tradeoffs.
 4. Write the rubric as if you were briefing a smart non-expert. The judge reads it.
 5. Add the task to the suite's `tasks` array. Bump `version` if it's a new suite; otherwise add in-place.
@@ -64,4 +64,4 @@ A task `passes` when the weighted score across all scorers meets the per-scorer 
 
 ## Cost guardrails
 
-The harness estimates cost at $0.005 / 1k tokens. A full v1 suite against the default Mastra runtime should fit comfortably under $1. The CI evals workflow runs the suite nightly and posts results as a workflow artifact. PR-triggered runs are intentionally off — see `docs/EVALS.md` for the rationale.
+The harness estimates cost at $0.005 / 1k tokens. A full v1 suite against the default Mastra runtime should fit comfortably under $1. The CI evals workflow runs the suite nightly and posts results as a workflow artifact. PR-triggered runs are intentionally off, see `docs/EVALS.md` for the rationale.

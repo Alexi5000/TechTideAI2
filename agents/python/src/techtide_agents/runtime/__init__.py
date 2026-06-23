@@ -11,7 +11,7 @@ importing this package does not eagerly load them.
 
 from __future__ import annotations
 
-from .dispatcher import Dispatcher, DispatchDecision, RuntimeTarget
+from .dispatcher import DispatchDecision, Dispatcher, RuntimeTarget
 from .langgraph_runtime import LangGraphRuntime
 from .llm import LlmClient, LlmClientError
 

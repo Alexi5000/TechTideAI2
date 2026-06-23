@@ -2,21 +2,58 @@
 
 ![TechTideAI agent operating system](assets/techtideai_hero_2026.png)
 
-> **v0.2.0** — three-agent adversarial harness, skills-vs-tools, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack, nine ADRs. See [CHANGELOG.md](CHANGELOG.md).
+> **v0.2.1**. A company-scale agent operating system, built and operated in the open. 1 CEO + 10 orchestrators + 50 workers, three-agent adversarial harness, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack, nine ADRs, 124 TS tests + 20 Python tests + a 33-task golden suite, all green. See [CHANGELOG.md](CHANGELOG.md).
 
-**TechTideAI** is a company-scale AI agent operating system for building, operating, and evaluating production agent teams. It combines a React operator console, a Fastify orchestration API, Mastra (TypeScript) agents, LangGraph (Python) orchestrators, OpenAI / Anthropic provider adapters, Supabase persistence, Weaviate retrieval, an in-process eval harness with regression detection, a human-in-the-loop approval gate, an OpenTelemetry trace surface, a skills-vs-tools distinction, a three-agent adversarial feedback harness, and a notebook authoring surface.
+**TechTideAI** is the harness an FDE ships into a customer environment, that the customer's operators monitor, and that an auditor can replay. It is a typed, observable, testable, reviewable surface for production agent teams: a React operator console, a Fastify orchestration API, a TypeScript Mastra runtime, a Python LangGraph runtime, OpenAI and Anthropic provider adapters, a Supabase-backed evidence plane with an append-only `run_events` audit log, an in-process eval harness with regression detection, a human-in-the-loop approval gate that stamps the policy version on every decision, an OpenTelemetry trace surface, and a notebook authoring flow for new golden tasks.
 
-The repo is designed around one standard: **agent systems that ship.** Every major surface is typed, observable, testable, and reviewable.
+The standard: **agent systems that ship.** Every major surface is typed end-to-end, observable through the trace plane, testable through the eval suite, and reviewable through the ADR set.
+
+## About
+
+TechTideAI is a portfolio repo for a company-scale agent operating system, the kind of harness a forward-deployed engineer ships to a customer, not the kind of demo a vendor demo team gives in a sales call. The mental model is a working company modelled as an agent system: one CEO agent, ten orchestrators, fifty workers (five per orchestrator). The CEO delegates, the orchestrators coordinate, the workers execute. Tools, memory, evals, approvals, and traces are the harness around them, present and load-bearing on every request.
+
+The four planes:
+
+| Plane | What lives here | Where to read |
+|---|---|---|
+| **Control** | CEO + orchestrators, dispatching, risk classification | `agents/src/core/registry.ts`, `docs/adr/0003-dual-runtime.md` |
+| **Execution** | Workers, tool calls, workflow runs, contracts | `agents/src/mastra/`, `agents/src/runtime/`, `docs/adr/0007-skills-vs-tools.md` |
+| **Evidence** | `run_events`, traces, post-mortems, evals | `backend/src/services/trace-service.ts`, `docs/EVALS.md`, `docs/adr/0005-trace-and-memory.md` |
+| **Product** | Operator console | `frontend/src/pages/` |
 
 ## Customer scenario
 
-TechTideAI exists to solve a problem that a VP of Operations at a 200-person services firm lives every day. Their firm runs hundreds of operational queries a week — ticket volume, on-call rotations, SLA breaches, customer escalations — and the answers are scattered across three dashboards, a ticketing system, and a Slack channel. The firm's leadership is exploring agentic tools, but the off-the-shelf products either (a) require a long implementation, (b) don't fit the firm's data residency rules, or (c) can't be evaluated against the firm's specific operational vocabulary.
+TechTideAI exists for a problem a VP of Operations at a 200-person services firm lives every day. Their firm runs hundreds of operational queries a week, ticket volume, on-call rotations, SLA breaches, customer escalations, and the answers are scattered across three dashboards, a ticketing system, and a Slack channel. Leadership is exploring agentic tools, but the off-the-shelf products either (a) require a long implementation, (b) don't fit the firm's data residency rules, or (c) can't be evaluated against the firm's specific operational vocabulary.
 
-A forward-deployed engineer at TechTideAI's operator ships a harness: the firm's domain experts author a small set of "golden" tasks that represent the queries the firm actually wants answered ("what's our SLA breach rate for the last 30 days, by team?"). The harness runs those tasks against the firm's agent configuration nightly; any drop in pass rate pages the FDE. New tasks are added as a Jupyter notebook is opened, the candidate prompt is iterated, the result is committed to the eval suite, and the dashboard shows the new task's score alongside the rest.
+An FDE at TechTideAI ships a harness. The firm's domain experts author a small set of golden tasks that represent the queries the firm actually wants answered ("what's our SLA breach rate for the last 30 days, by team?"). The harness runs those tasks against the firm's agent configuration nightly; any drop in pass rate pages the FDE. New tasks are added by opening a Jupyter notebook, iterating the candidate prompt, and committing the result to the eval suite. The dashboard shows the new task's score alongside the rest.
 
-When the firm wants to add a high-risk action — say, "auto-approve a vendor payment under $1,000" — the FDE doesn't bypass the approval gate. The harness classifies the action as `billing`; the run pauses; the operator (a human, not the FDE) decides. The decision is recorded in `run_events` with the policy version stamped on the row, so a future audit can replay the decision against the policy in force at the time.
+When the firm wants to add a high-risk action, say, "auto-approve a vendor payment under $1,000", the FDE does not bypass the approval gate. The harness classifies the action as `billing`; the run pauses; the operator (a human, not the FDE) decides. The decision is recorded in `run_events` with the policy version stamped on the row, so a future audit can replay the decision against the policy in force at the time.
 
-This is what the harness is for: a system that an FDE can ship into a customer environment, that a customer's operators can monitor, and that an auditor can replay. The customer scenario is in the README, not just in the architecture diagram, because the architecture follows the scenario.
+This is what the harness is for: a system an FDE can ship, a customer's operators can monitor, and an auditor can replay. The customer scenario is in the README, not just the architecture diagram, because the architecture follows the scenario.
+
+## What works today
+
+A reader can walk the repo top-to-bottom and find a working surface behind every claim.
+
+| Surface | Where | How to verify |
+|---|---|---|
+| Agent registry (1 CEO + 10 orchestrators + 50 workers) | `agents/src/core/registry.ts` | `pnpm -C agents test` (61-agent invariant asserted in `registry.test.ts`) |
+| Skills vs. tools distinction | `agents/src/skills/`, `docs/adr/0007-skills-vs-tools.md` | 3 skills (`prompt-iteration`, `tool-evaluator`, `contract-aware`) wired into every agent's system prompt |
+| Mastra runtime (TypeScript) | `agents/src/mastra/`, `agents/src/runtime/mastra-runtime.ts` | `pnpm -C backend dev` then `POST /api/agents/:id/run` |
+| LangGraph runtime (Python sidecar) | `agents/python/src/techtide_agents/runtime/` | `uvicorn techtide_agents.server:app --port 4051` + `LANGGRAPH_SIDECAR_URL` |
+| Eval harness with scorer framework | `backend/src/services/eval-harness.ts`, `backend/src/services/scoring/` | `pnpm -C backend evals --suite golden-tasks.v1` |
+| Four-axis grader + plateau detector | `backend/src/services/scoring/four-axis-grader.ts`, `plateau-scorer.ts` | Used by every sprint contract in `evals/sprints/` |
+| Three-agent adversarial harness | `backend/src/services/three-agent-harness.ts`, `/dashboard/sprints` | `pnpm -C backend sprint --contract evals/sprints/well-scoped-sprint.v1.json` |
+| Sprint contracts | `evals/sprints/well-scoped-sprint.v1.json`, `evals/sprints/README.md` | One example contract; add more as needed |
+| Golden task fixtures | `evals/fixtures/golden-tasks.v1.json` | 33 tasks across all 10 orchestrators + CEO |
+| Notebook authoring surface | `notebooks/`, `notebooks/_bridge.py`, `scripts/convert-notebooks.py` | 3 hand-written notebooks; run via Jupyter or read as `.py` |
+| Approval gate (HITL) | `backend/src/services/approval-service.ts`, `/dashboard/approvals` | Submit a high-risk action, see it paused in the UI |
+| OpenTelemetry trace surface (enriched) | `backend/src/services/trace-service.ts` | `GET /api/runs/:id/trace`, per-span `eval.*` attributes |
+| Mastra memory | `agents/src/mastra/memory.ts`, `database/supabase/migrations/0005_mastra_memory.sql` | Boot with `SUPABASE_URL` |
+| Post-mortem auto-generation | `backend/src/services/post-mortem-service.ts` | Run any agent, `docs/EVALS/post-mortems/<run-id>.md` is emitted |
+| TS ↔ Python contract sync | `contracts/schema.json`, `scripts/sync-contracts.ts` | `pytest agents/python/tests/test_contract_sync.py` |
+| Containerized local stack | `Dockerfile.{backend,frontend,agents,python}`, `docker-compose.yml` | `docker compose up --build` |
+| Agent-legible procedural memory | `AGENTS.md` (root) | Read on session start |
 
 ## Success metrics we track
 
@@ -30,34 +67,6 @@ This is what the harness is for: a system that an FDE can ship into a customer e
 | Per-task scorer-version drift | zero unrecorded changes | `EvalRun.scorerVersions` vs the previous run |
 
 If any of these slips, the FDE writes a follow-up task. The eval suite *is* the regression dashboard.
-
-## What works today
-
-A reader can walk the repo top-to-bottom and find a working surface behind every claim.
-
-| Surface | Where | How to verify |
-|---|---|---|
-| Agent registry (1 CEO + 10 orchestrators + 50 workers) | `agents/src/core/registry.ts` | `pnpm -C agents test` (61-agent invariant) |
-| Skills vs. tools distinction | `agents/src/skills/`, `docs/adr/0007-skills-vs-tools.md` | 3 skills (prompt-iteration, tool-evaluator, contract-aware) wired into every agent's system prompt |
-| Mastra runtime (TypeScript) | `agents/src/mastra/`, `agents/src/runtime/mastra-runtime.ts` | `pnpm -C backend dev:backend` then POST `/api/agents/:id/run` |
-| LangGraph runtime (Python sidecar) | `agents/python/src/techtide_agents/runtime/` | `uvicorn techtide_agents.server:app --port 4051` + `LANGGRAPH_SIDECAR_URL` |
-| Eval harness with scorer framework | `backend/src/services/eval-harness.ts`, `backend/src/services/scoring/` | `pnpm -C backend evals --suite golden-tasks.v1` |
-| Four-axis grader + plateau detector | `backend/src/services/scoring/four-axis-grader.ts`, `plateau-scorer.ts` | Used by sprint contracts in `evals/sprints/` |
-| Three-agent adversarial harness | `backend/src/services/three-agent-harness.ts`, `/dashboard/sprints` | `pnpm -C backend sprint --contract evals/sprints/well-scoped-sprint.v1.json` |
-| Sprint contracts | `evals/sprints/well-scoped-sprint.v1.json`, `evals/sprints/README.md` | One example; add more as needed |
-| Golden task fixtures | `evals/fixtures/golden-tasks.v1.json` | 33 tasks across all 10 orchestrators + CEO |
-| Notebook authoring surface | `notebooks/`, `notebooks/_bridge.py`, `scripts/convert-notebooks.py` | 3 hand-written notebooks; run via Jupyter or read as `.py` |
-| Approval gate (HITL) | `backend/src/services/approval-service.ts`, `/dashboard/approvals` | Submit a high-risk action, see it paused in the UI |
-| OpenTelemetry trace surface (enriched) | `backend/src/services/trace-service.ts` | `GET /api/runs/:id/trace` — per-span `eval.*` attributes |
-| Mastra memory | `agents/src/mastra/memory.ts`, `database/supabase/migrations/0005_mastra_memory.sql` | Boot with `SUPABASE_URL` |
-| Post-mortem auto-generation | `backend/src/services/post-mortem-service.ts` | Run any agent; `docs/EVALS/post-mortems/<run-id>.md` |
-| TS ↔ Python contract sync | `contracts/schema.json`, `scripts/sync-contracts.ts` | `pytest agents/python/tests/test_contract_sync.py` |
-| Containerized local stack | `Dockerfile.{backend,frontend,agents,python}`, `docker-compose.yml` | `docker compose up --build` |
-| Agent-legible procedural memory | `AGENTS.md` (root) | Read on session start |
-
-## Why it exists
-
-Production AI needs more than prompts. Teams need **agent registries, execution boundaries, API contracts, evaluation fixtures, memory surfaces, human approval paths, and logs that explain what happened.** TechTideAI is the engineering harness for those ideas — a product shell, an orchestration backend, two agent runtimes, an evidence plane, and docs that make the system understandable to future maintainers.
 
 ## Architecture
 
@@ -87,15 +96,6 @@ Post-mortems → docs/EVALS     decision                     → docs/EVALS/late
    Memory: Postgres + Weaviate                                  │
                                                                ─┘
 ```
-
-The four planes:
-
-| Layer | Purpose |
-|---|---|
-| **Control** | CEO agent, orchestrators, objectives, risk tiers, dispatching. |
-| **Execution** | Worker pods, provider calls, tool calls, workflow runs, artifacts. |
-| **Evidence** | Run events, knowledge records, vector search, traces, audit log, post-mortems. |
-| **Product** | React operator console for inspecting agents, runs, evals, and approvals. |
 
 ## Stack
 
@@ -135,7 +135,7 @@ pnpm run dev:frontend   # Vite on :5180
 pnpm run dev:agents     # Mastra dev console
 ```
 
-Optional — bring up the Python sidecar:
+Optional, bring up the Python sidecar:
 
 ```powershell
 cd agents/python
@@ -170,6 +170,13 @@ cd agents/python
 python -m pip install -e ".[dev,server]"
 python -m pytest
 python -m ruff check .
+python -m ruff format --check .
+```
+
+For contract sync (the TS ↔ Python drift check):
+
+```powershell
+pnpm exec tsx scripts/sync-contracts.ts
 ```
 
 ## Repository map
@@ -187,7 +194,7 @@ python -m ruff check .
 | `contracts/` | Single source of truth for the TS ↔ Python runtime contract. |
 | `notebooks/` | Hand-written `.ipynb` authoring surface + sibling `.py` (reviewable). |
 | `Dockerfile.*` | Per-service container images (backend, frontend, agents, python). |
-| `docker-compose.yml` | Local stack: postgres, weaviate, backend, frontend, agents-python. |
+| `docker-compose.yml` | Local stack, postgres, weaviate, backend, frontend, agents-python. |
 | `scripts/` | `sync-contracts.ts`, `convert-notebooks.py`, `smoke-stack.sh`, `close-stale-deps-prs.sh`. |
 | `docs/` | Architecture, dev setup, quality gates, eval methodology, ADRs, engineering blog, benchmark. |
 | `assets/` | Repo-owned README graphics. |
@@ -199,15 +206,15 @@ python -m ruff check .
 
 The nine ADRs under `docs/adr/` describe the load-bearing choices. They are written in the order an FDE should read them.
 
-- [0001 — Status machine as the execution boundary](docs/adr/0001-status-machine.md)
-- [0002 — Evaluation is part of the product](docs/adr/0002-eval-as-product.md)
-- [0003 — Dual runtime (TypeScript + Python)](docs/adr/0003-dual-runtime.md)
-- [0004 — Approval as execution boundary](docs/adr/0004-approval-as-execution-boundary.md)
-- [0005 — Trace and memory as the contract](docs/adr/0005-trace-and-memory.md)
-- [0006 — The three-agent harness is a separate loop](docs/adr/0006-three-agent-harness.md)
-- [0007 — Skills vs. tools](docs/adr/0007-skills-vs-tools.md)
-- [0008 — Notebooks are authoring surfaces, not runtimes](docs/adr/0008-notebook-authoring-surface.md)
-- [0009 — Per-service Dockerfiles + compose, deliberately no production stack](docs/adr/0009-containerization.md)
+- [0001, Status machine as the execution boundary](docs/adr/0001-status-machine.md)
+- [0002, Evaluation is part of the product](docs/adr/0002-eval-as-product.md)
+- [0003, Dual runtime (TypeScript + Python)](docs/adr/0003-dual-runtime.md)
+- [0004, Approval as execution boundary](docs/adr/0004-approval-as-execution-boundary.md)
+- [0005, Trace and memory as the contract](docs/adr/0005-trace-and-memory.md)
+- [0006, The three-agent harness is a separate loop](docs/adr/0006-three-agent-harness.md)
+- [0007, Skills vs. tools](docs/adr/0007-skills-vs-tools.md)
+- [0008, Notebooks are authoring surfaces, not runtimes](docs/adr/0008-notebook-authoring-surface.md)
+- [0009, Per-service Dockerfiles + compose, deliberately no production stack](docs/adr/0009-containerization.md)
 
 ## Engineering blog
 
@@ -223,6 +230,7 @@ The nine ADRs under `docs/adr/` describe the load-bearing choices. They are writ
 | `pnpm run test` | Run all Vitest workspaces. |
 | `pnpm run verify` | Lint + test + build as a release gate. |
 | `pnpm -C backend evals` | Run the eval suite; emit a baseline to `docs/EVALS/`. |
+| `pnpm exec tsx scripts/sync-contracts.ts` | Regenerate TS + Python contract files and assert drift hash equality. |
 
 Python checks:
 

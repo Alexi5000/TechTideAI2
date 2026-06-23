@@ -1,4 +1,4 @@
-# ADR 0008 — Notebooks are authoring surfaces, not runtimes
+# ADR 0008, Notebooks are authoring surfaces, not runtimes
 
 - **Status:** Accepted
 - **Date:** 2026-06-23
@@ -19,10 +19,10 @@ We needed both: the iteration affordance of notebooks, and the discipline of typ
 We ship a **notebook authoring surface**, not a notebook runtime:
 
 - Three hand-written `*.ipynb` files under `notebooks/`:
-  - `01_author_golden_task.ipynb` — walk a new task from idea to fixture.
-  - `02_iterate_prompt.ipynb` — score a candidate prompt against an existing fixture.
-  - `03_audit_run.ipynb` — pull a run by id and inspect per-scorer breakdown.
-- A single Python file (`notebooks/_bridge.py`) that re-exports `techtide_agents.notebook_bridge`. The bridge is a thin typed HTTP client around `/api/evals/*` — the *real* runtime is the backend.
+  - `01_author_golden_task.ipynb`, walk a new task from idea to fixture.
+  - `02_iterate_prompt.ipynb`, score a candidate prompt against an existing fixture.
+  - `03_audit_run.ipynb`, pull a run by id and inspect per-scorer breakdown.
+- A single Python file (`notebooks/_bridge.py`) that re-exports `techtide_agents.notebook_bridge`. The bridge is a thin typed HTTP client around `/api/evals/*`, the *real* runtime is the backend.
 - A `scripts/convert-notebooks.py` script that emits a sibling `*.py` for every `*.ipynb`. The `.py` is what reviewers see in PRs; the `.ipynb` is the authoring surface.
 - A CI workflow (`.github/workflows/notebooks.yml`) that runs `jupyter nbconvert --execute` on the audit notebook (which needs no LLM) and AST-parses every emitted `.py`.
 

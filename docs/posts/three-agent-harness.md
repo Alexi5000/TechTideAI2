@@ -34,7 +34,7 @@ The harness is *evaluator-correctness > generator-cleverness*. A plateau is not 
 
 ## Why four axes (not a single score)
 
-A single `score ∈ [0, 1]` is the right *metric* for ranking — pass rate, mean score, p95 latency all roll up to a number. It is the wrong *spec* for grading. "Score 0.73" tells you almost nothing about *what to fix*.
+A single `score ∈ [0, 1]` is the right *metric* for ranking, pass rate, mean score, p95 latency all roll up to a number. It is the wrong *spec* for grading. "Score 0.73" tells you almost nothing about *what to fix*.
 
 The four axes (correctness, safety, completeness, quality) give the harness four actionable signals per iteration:
 
@@ -47,7 +47,7 @@ The four axes (correctness, safety, completeness, quality) give the harness four
 
 Per-axis thresholds mean the harness fails fast on the *important* axis even when the headline score would pass. A product brief that scores 0.9 on completeness and 0.5 on safety fails. A code change that scores 0.9 on quality and 0.5 on correctness fails. Single-score grading would let both through.
 
-The four-axis grader is itself a `Scorer` (`backend/src/services/scoring/four-axis-grader.ts`). It does not call the LLM directly — it reads the four axis scores from `context.history[last].meta.axes`, which the harness sets after the Evaluator returns. This composition (a grader that consumes another scorer's structured output) is the pattern: scorers are composable, not magical.
+The four-axis grader is itself a `Scorer` (`backend/src/services/scoring/four-axis-grader.ts`). It does not call the LLM directly, it reads the four axis scores from `context.history[last].meta.axes`, which the harness sets after the Evaluator returns. This composition (a grader that consumes another scorer's structured output) is the pattern: scorers are composable, not magical.
 
 ## Why a separate loop (and not fold it into EvalHarness)
 
@@ -57,7 +57,7 @@ Folding them together would force the eval harness to learn about convergence, p
 
 ## The plateau-scorer (and why it never short-circuits the loop)
 
-`PlateauScorer` is a *wrapper* around any inner scorer. It looks at the rolling history (`context.history`) and decides whether the latest `plateauWindow` scores have a spread below `plateauTolerance`. If yes, it publishes `{ plateauDetected: true, rollingDelta, ... }` on `meta`. It does not change `passed` — the inner scorer's verdict stands.
+`PlateauScorer` is a *wrapper* around any inner scorer. It looks at the rolling history (`context.history`) and decides whether the latest `plateauWindow` scores have a spread below `plateauTolerance`. If yes, it publishes `{ plateauDetected: true, rollingDelta, ... }` on `meta`. It does not change `passed`, the inner scorer's verdict stands.
 
 Why? Because the harness's loop reads `meta.rollingDelta` to decide whether to stop. The scorer never *forces* the loop to stop; the harness owns the stop decision. The scorer only reports. This is a deliberate separation: scorers measure, the harness decides.
 

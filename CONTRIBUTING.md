@@ -26,7 +26,7 @@ TechTideAI is a **company-scale agent operating system**. The bar for a change i
 - **Evidence records for every important decision.** `run_events` is the system of record.
 - **Small, reviewable changes over giant unowned drops.** PRs should be mergeable in one sitting.
 
-If your change doesn't fit one of these surfaces — control plane, execution plane, evidence plane, or product plane — open an issue first.
+If your change doesn't fit one of these surfaces, control plane, execution plane, evidence plane, or product plane, open an issue first.
 
 ## Development workflow
 
@@ -99,7 +99,7 @@ If you ran the eval suite locally and got different numbers than `docs/EVALS/lat
 
 ## Proposing features
 
-Use the [feature request template](.github/ISSUE_TEMPLATE/feature.yml). Before opening a feature request, please skim the ADRs in `docs/adr/` — many "ideas" are already filed as decisions.
+Use the [feature request template](.github/ISSUE_TEMPLATE/feature.yml). Before opening a feature request, please skim the ADRs in `docs/adr/`, many "ideas" are already filed as decisions.
 
 ## License
 

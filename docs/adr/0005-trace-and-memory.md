@@ -1,4 +1,4 @@
-# ADR 0005 — Trace and memory as the contract
+# ADR 0005, Trace and memory as the contract
 
 - **Status:** Accepted
 - **Date:** 2026-06-22
@@ -13,11 +13,11 @@
 
 Three surfaces, all versioned and contract-tested:
 
-1. **Structured run events** — every state transition emits a `run_events` row of a fixed `RunEventType` (e.g. `run.started`, `agent.tool_call`, `approval.requested`). Each row carries `correlationId` (ties events to a trace), `severity`, and `occurredAt`. `GET /api/runs/:id/events` returns the full timeline.
+1. **Structured run events**, every state transition emits a `run_events` row of a fixed `RunEventType` (e.g. `run.started`, `agent.tool_call`, `approval.requested`). Each row carries `correlationId` (ties events to a trace), `severity`, and `occurredAt`. `GET /api/runs/:id/events` returns the full timeline.
 
-2. **OpenTelemetry traces** — every `Run` gets a `trace_id`. Spans for HTTP request → run create → agent execute → tool call → LLM call. Defaults to in-process buffering; switches to OTLP when `OTEL_EXPORTER_OTLP_ENDPOINT` is set. `GET /api/runs/:id/trace` returns the span tree.
+2. **OpenTelemetry traces**, every `Run` gets a `trace_id`. Spans for HTTP request → run create → agent execute → tool call → LLM call. Defaults to in-process buffering; switches to OTLP when `OTEL_EXPORTER_OTLP_ENDPOINT` is set. `GET /api/runs/:id/trace` returns the span tree.
 
-3. **Mastra memory surface** — `agents/src/mastra/memory.ts` wires `Memory` against a Postgres store (`mastra_messages`, `mastra_working_memory`) when configured. Tier-scoped working-memory templates (CEO / orchestrator / worker).
+3. **Mastra memory surface**, `agents/src/mastra/memory.ts` wires `Memory` against a Postgres store (`mastra_messages`, `mastra_working_memory`) when configured. Tier-scoped working-memory templates (CEO / orchestrator / worker).
 
 A `PostMortemService` listens for `run.completed` and writes `docs/EVALS/post-mortems/<run-id>.md`. Engineers review runs by reading markdown, not by querying tables.
 

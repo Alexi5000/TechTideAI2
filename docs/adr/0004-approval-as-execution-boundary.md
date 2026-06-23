@@ -1,4 +1,4 @@
-# ADR 0004 — Approval as execution boundary
+# ADR 0004, Approval as execution boundary
 
 - **Status:** Accepted
 - **Date:** 2026-06-22
@@ -13,8 +13,8 @@
 
 The `ApprovalPolicy` classifies every agent action into a `riskTier`:
 
-- `read` / `write` — auto-approved.
-- `external` / `destructive` / `billing` — paused for human approval.
+- `read` / `write`, auto-approved.
+- `external` / `destructive` / `billing`, paused for human approval.
 
 The classification is heuristic (`defaultRiskClassifier`) and overridable per deployment. The `IAgentExecutionService` consults the policy on every `executeAgent`:
 
@@ -35,7 +35,7 @@ Positive:
 
 - High-risk actions are visible, gated, and auditable. The queue is the system's risk surface.
 - The default policy covers the obvious cases (payment, deletion, external API) without operator intervention.
-- Approval replay is possible — you can ask "what would the policy in effect on 2026-06-01 have decided?" because the policy version is stamped.
+- Approval replay is possible, you can ask "what would the policy in effect on 2026-06-01 have decided?" because the policy version is stamped.
 
 Negative:
 

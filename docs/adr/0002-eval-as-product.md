@@ -1,4 +1,4 @@
-# ADR 0002 — Evaluation is part of the product
+# ADR 0002, Evaluation is part of the product
 
 - **Status:** Accepted
 - **Date:** 2026-06-22
@@ -7,7 +7,7 @@
 
 ## Context
 
-Production agent systems drift. Model bumps, prompt tweaks, and tool-wiring changes all silently degrade quality. Without a harness, the only signal is "the dashboard looks slower" or "a customer complained" — by which point the damage is done.
+Production agent systems drift. Model bumps, prompt tweaks, and tool-wiring changes all silently degrade quality. Without a harness, the only signal is "the dashboard looks slower" or "a customer complained", by which point the damage is done.
 
 ## Decision
 
@@ -18,7 +18,7 @@ The eval harness is a **first-class product surface**, not a notebook. It ships 
 - A runner that records model versions, scorer versions, latency, cost, and per-scorer breakdowns on every run.
 - A CLI with regression detection (`pnpm -C backend evals`).
 - An API surface (`/api/evals/*`) and a dashboard (`/dashboard/evals`).
-- CI on a nightly schedule (`.github/workflows/evals.yml`). PRs do not run evals — see below.
+- CI on a nightly schedule (`.github/workflows/evals.yml`). PRs do not run evals, see below.
 
 ### Why not on PRs
 

@@ -1,4 +1,4 @@
-# ADR 0003 — Dual runtime (TypeScript + Python)
+# ADR 0003, Dual runtime (TypeScript + Python)
 
 - **Status:** Accepted
 - **Date:** 2026-06-22
@@ -9,9 +9,9 @@
 
 We needed to choose between:
 
-1. **Mastra-only** — single runtime, ergonomic for the worker hot path.
-2. **LangGraph-only** — single runtime, strong for graph-heavy control flow.
-3. **Dual runtime** — Mastra (TS) for workers, LangGraph (Python) for orchestrators.
+1. **Mastra-only**, single runtime, ergonomic for the worker hot path.
+2. **LangGraph-only**, single runtime, strong for graph-heavy control flow.
+3. **Dual runtime**, Mastra (TS) for workers, LangGraph (Python) for orchestrators.
 
 ## Decision
 
@@ -28,13 +28,13 @@ Default routing:
 Positive:
 
 - Workers stay fast. Orchestrators get graph primitives. Each runtime does what it's good at.
-- The contract is the boundary — neither side leaks framework types into the other.
+- The contract is the boundary, neither side leaks framework types into the other.
 - Drift detection (`tests/test_contract_sync.py`) catches schema drift at CI time.
 
 Negative:
 
 - Two sets of dependencies. Two ways to fail. Two places to test.
-- Ops needs to know about the Python sidecar (`LANGGRAPH_SIDECAR_URL`). If unset, the backend silently routes everything to Mastra — a "soft" failure mode we mitigate with a sidecar health check.
+- Ops needs to know about the Python sidecar (`LANGGRAPH_SIDECAR_URL`). If unset, the backend silently routes everything to Mastra, a "soft" failure mode we mitigate with a sidecar health check.
 
 ## Alternatives considered
 

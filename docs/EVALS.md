@@ -32,11 +32,11 @@ A task passes when **every scorer's** individual `passed` flag is true. The weig
 
 ### Why we hand-rolled the JSON-schema scorer
 
-We deliberately did not pull in `ajv` to keep the eval path dependency-light and deterministic. The schema subset covers every fixture in `evals/fixtures/`. If you need a fuller subset, add it to `backend/src/services/scoring/json-schema.ts` — the function is small enough to read in one screen.
+We deliberately did not pull in `ajv` to keep the eval path dependency-light and deterministic. The schema subset covers every fixture in `evals/fixtures/`. If you need a fuller subset, add it to `backend/src/services/scoring/json-schema.ts`, the function is small enough to read in one screen.
 
 ## Fixtures
 
-Fixtures live in `evals/fixtures/*.json` and are validated against the Zod schema in `backend/src/domain/entities/eval-task.ts` and `eval-suite.ts`. The canonical suite today is `golden-tasks.v1.json` — **33 tasks** spanning the CEO + all 10 orchestrators. Difficulty is 1-3; category is `format-compliance`, `domain-reasoning`, `tool-use`, `memory-recall`, or `multi-step`.
+Fixtures live in `evals/fixtures/*.json` and are validated against the Zod schema in `backend/src/domain/entities/eval-task.ts` and `eval-suite.ts`. The canonical suite today is `golden-tasks.v1.json`, **33 tasks** spanning the CEO + all 10 orchestrators. Difficulty is 1-3; category is `format-compliance`, `domain-reasoning`, `tool-use`, `memory-recall`, or `multi-step`.
 
 To add a task:
 

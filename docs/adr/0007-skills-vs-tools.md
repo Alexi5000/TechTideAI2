@@ -1,4 +1,4 @@
-# ADR 0007 — Skills vs. tools
+# ADR 0007, Skills vs. tools
 
 - **Status:** Accepted
 - **Date:** 2026-06-23
@@ -7,7 +7,7 @@
 
 ## Context
 
-Most agent harnesses conflate two distinct concepts: **tools** (which execute a function and return a result) and **skills** (which augment the agent's internal reasoning). The PDF on FDE-aligned harness engineering flags this as a real distinction — skills "prepare an agent to solve a broader class of problems, effectively augmenting its internal reasoning capabilities," while tools "execute specific functions and return results."
+Most agent harnesses conflate two distinct concepts: **tools** (which execute a function and return a result) and **skills** (which augment the agent's internal reasoning). The PDF on FDE-aligned harness engineering flags this as a real distinction, skills "prepare an agent to solve a broader class of problems, effectively augmenting its internal reasoning capabilities," while tools "execute specific functions and return results."
 
 Our pre-Phase-8 surface had only tools. The Mastra runtime registered `systemStatusTool`, `llmRouterTool`, `knowledgeBaseTool`, and `workflowRunnerTool`. There was no notion of "augment the agent's reasoning with a pattern." Skills were a missing layer.
 
@@ -50,7 +50,7 @@ Concretely:
 Positive:
 
 - Tools and skills can evolve independently. A new tool doesn't require re-architecting the system-prompt builder; a new skill doesn't require a new tool.
-- Skill sections are visible in the agent's instructions — easy to inspect, easy to test.
+- Skill sections are visible in the agent's instructions, easy to inspect, easy to test.
 - The OCP-friendly registry means a contributor can add a skill without touching the harness.
 
 Negative:

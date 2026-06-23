@@ -22,6 +22,8 @@ COPY tsconfig.base.json ./
 COPY apis/        ./apis/
 COPY agents/src/  ./agents/src/
 COPY agents/package.json ./agents/package.json
+COPY agents/tsconfig.json ./agents/tsconfig.json
+COPY agents/tsconfig.build.json ./agents/tsconfig.build.json
 COPY backend/src/ ./backend/src/
 COPY backend/tsconfig.json ./backend/tsconfig.json
 COPY backend/tsconfig.build.json ./backend/tsconfig.build.json

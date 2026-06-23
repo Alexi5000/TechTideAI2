@@ -22,11 +22,11 @@ Python wheel.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any
 import json
 import urllib.error
 import urllib.request
+from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -46,7 +46,7 @@ class ScoringBreakdown:
     duration_ms: int
 
     @classmethod
-    def from_api(cls, payload: dict[str, Any]) -> "ScoringBreakdown":
+    def from_api(cls, payload: dict[str, Any]) -> ScoringBreakdown:
         return cls(
             scorer=payload["scorer"],
             score=float(payload["score"]),
@@ -67,7 +67,7 @@ class EvalTaskResult:
     scorers: list[ScoringBreakdown] = field(default_factory=list)
 
     @classmethod
-    def from_api(cls, payload: dict[str, Any]) -> "EvalTaskResult":
+    def from_api(cls, payload: dict[str, Any]) -> EvalTaskResult:
         return cls(
             task_id=str(payload["taskId"]),
             agent_id=str(payload["agentId"]),
@@ -99,7 +99,7 @@ class EvalRun:
     failure_reason: str | None
 
     @classmethod
-    def from_api(cls, payload: dict[str, Any]) -> "EvalRun":
+    def from_api(cls, payload: dict[str, Any]) -> EvalRun:
         summary = payload.get("summary")
         return cls(
             id=str(payload["id"]),
@@ -115,9 +115,7 @@ class EvalRun:
                     mean_score=float(summary["meanScore"]),
                     total_cost_usd=float(summary["totalCostUsd"]),
                     regression_delta_pct=(
-                        float(summary["regressionDeltaPct"])
-                        if summary.get("regressionDeltaPct") is not None
-                        else None
+                        float(summary["regressionDeltaPct"]) if summary.get("regressionDeltaPct") is not None else None
                     ),
                 )
                 if summary
@@ -166,10 +164,7 @@ class NotebookBridge:
         concurrency: int = 1,
         judge_model: str = "gpt-4o",
     ) -> EvalRun:
-        params = (
-            f"suite={suite}&baseline={baseline}"
-            f"&concurrency={concurrency}&judgeModel={judge_model}"
-        )
+        params = f"suite={suite}&baseline={baseline}&concurrency={concurrency}&judgeModel={judge_model}"
         return EvalRun.from_api(self._post(f"/api/evals/run?{params}"))
 
     # ---- HTTP helpers ----
@@ -197,10 +192,6 @@ class NotebookBridge:
                 return json.loads(body)
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
-            raise NotebookBridgeError(
-                f"{request.method} {request.full_url} returned {exc.code}: {detail}"
-            ) from exc
+            raise NotebookBridgeError(f"{request.method} {request.full_url} returned {exc.code}: {detail}") from exc
         except urllib.error.URLError as exc:
-            raise NotebookBridgeError(
-                f"{request.method} {request.full_url} failed: {exc.reason}"
-            ) from exc
+            raise NotebookBridgeError(f"{request.method} {request.full_url} failed: {exc.reason}") from exc

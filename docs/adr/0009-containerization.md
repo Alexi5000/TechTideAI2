@@ -1,4 +1,4 @@
-# ADR 0009 — Per-service Dockerfiles + compose, deliberately no production stack
+# ADR 0009, Per-service Dockerfiles + compose, deliberately no production stack
 
 - **Status:** Accepted
 - **Date:** 2026-06-23
@@ -9,20 +9,20 @@
 
 The PDF on FDE-aligned harness engineering is right that "the industry has largely moved past the notion of using Jupyter notebooks as a runtime component for production systems," and that the corollary discipline is to "containerize the entire agent application." We needed a container story that matched the rest of the harness: typed, observable, testable.
 
-The trap is going from "containerize" to "build a full production deployment stack" — which is what most monorepos do, and which is the wrong scope for a portfolio piece. Production deployment is a separate decision (Vercel, Railway, Fly.io, Kubernetes) and the FDE makes that decision per customer.
+The trap is going from "containerize" to "build a full production deployment stack", which is what most monorepos do, and which is the wrong scope for a portfolio piece. Production deployment is a separate decision (Vercel, Railway, Fly.io, Kubernetes) and the FDE makes that decision per customer.
 
 ## Decision
 
 We ship a **local development stack** built from per-service Dockerfiles and a single `docker-compose.yml`:
 
-- `Dockerfile.backend` — multi-stage Node 20 build, non-root runtime, `/health` healthcheck.
-- `Dockerfile.frontend` — Vite build → nginx:alpine; `frontend/nginx.conf` reverse-proxies `/api/*` to `backend:4050`.
-- `Dockerfile.agents` — Mastra dev image. Optional; not the production runtime.
-- `Dockerfile.python` — Python 3.11-slim; uvicorn. Optional; only when an orchestrator routes to langgraph.
-- `docker-compose.yml` — postgres:16, weaviate, backend, frontend, and (in the `full` profile) `agents-python`. Healthchecks gate dependencies via `depends_on: condition: service_healthy`.
-- `docker-compose.override.yml.example` — local dev overrides (mount source for live reload).
+- `Dockerfile.backend`, multi-stage Node 20 build, non-root runtime, `/health` healthcheck.
+- `Dockerfile.frontend`, Vite build → nginx:alpine; `frontend/nginx.conf` reverse-proxies `/api/*` to `backend:4050`.
+- `Dockerfile.agents`, Mastra dev image. Optional; not the production runtime.
+- `Dockerfile.python`, Python 3.11-slim; uvicorn. Optional; only when an orchestrator routes to langgraph.
+- `docker-compose.yml`, postgres:16, weaviate, backend, frontend, and (in the `full` profile) `agents-python`. Healthchecks gate dependencies via `depends_on: condition: service_healthy`.
+- `docker-compose.override.yml.example`, local dev overrides (mount source for live reload).
 - `.dockerignore` at the repo root.
-- `scripts/smoke-stack.sh` — CI smoke test: bring up the stack, curl `/health` on backend, curl `/healthz` on frontend, curl `/api/agents` through the nginx proxy, tear down.
+- `scripts/smoke-stack.sh`, CI smoke test: bring up the stack, curl `/health` on backend, curl `/healthz` on frontend, curl `/api/agents` through the nginx proxy, tear down.
 
 The CI `docker` job builds the backend + frontend images on every PR and runs the smoke test. We do **not** push to a registry. We do **not** include production auth, TLS, or a multi-tenant stack. The deploy workflow (`.github/workflows/deploy.yml`) targets Railway + Vercel; production deployment is a separate decision.
 

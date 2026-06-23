@@ -4,7 +4,7 @@
 
 ## Why two runtimes
 
-The Mastra (TypeScript) runtime is fast and ergonomic for the worker hot path — a single LLM call plus a few tool calls. It is the wrong shape for orchestrators that:
+The Mastra (TypeScript) runtime is fast and ergonomic for the worker hot path, a single LLM call plus a few tool calls. It is the wrong shape for orchestrators that:
 
 - Need a deterministic compute layer (e.g. Cipher's forecast / margin / pipeline math).
 - Gate execution on human approval with conditional edges.
@@ -50,8 +50,8 @@ Per-agent overrides win over tier defaults. To backport an orchestrator to Mastr
 
 The TS and Python runtimes share a single source-of-truth: `contracts/schema.json`. `scripts/sync-contracts.ts` reads the schema and emits:
 
-- `agents/src/runtime/contract-types.generated.ts` — TypeScript types.
-- `agents/python/src/techtide_agents/contracts/generated.py` — Pydantic models.
+- `agents/src/runtime/contract-types.generated.ts`, TypeScript types.
+- `agents/python/src/techtide_agents/contracts/generated.py`, Pydantic models.
 
 The two files embed a **drift-check hash** at the bottom. `agents/python/tests/test_contract_sync.py` reads both hashes and asserts they match. CI fails if anyone edits one side without re-running the sync.
 
@@ -78,7 +78,7 @@ SIDECAR_PORT=4051 uvicorn techtide_agents.server:app --host 0.0.0.0 --port 4051
 # backend/.env
 LANGGRAPH_SIDECAR_URL=http://localhost:4051
 
-# 4. Run an orchestrator agent — it'll route to Python
+# 4. Run an orchestrator agent, it'll route to Python
 pnpm -C backend dev:backend
 curl -X POST http://localhost:4050/api/agents/orch-cipher/run \
   -H "Content-Type: application/json" \
@@ -89,10 +89,10 @@ curl -X POST http://localhost:4050/api/agents/orch-cipher/run \
 
 Cipher is the showcase graph. It has four phases:
 
-1. **Intake** — extract the financial inputs from `AgentRunRequest.input`.
-2. **Compute** — apply deterministic formulas (compound growth for forecast, gross/operating margin, weighted pipeline coverage).
-3. **Narrative** — call the LLM with a structured prompt that grounds the narrative in the computed numbers.
-4. **Gate** — if `input.action == "cost_optimization"`, return `awaiting-approval` instead of executing. This is the canonical example of how a high-risk orchestrator action pauses for human review.
+1. **Intake**, extract the financial inputs from `AgentRunRequest.input`.
+2. **Compute**, apply deterministic formulas (compound growth for forecast, gross/operating margin, weighted pipeline coverage).
+3. **Narrative**, call the LLM with a structured prompt that grounds the narrative in the computed numbers.
+4. **Gate**, if `input.action == "cost_optimization"`, return `awaiting-approval` instead of executing. This is the canonical example of how a high-risk orchestrator action pauses for human review.
 
 The other orchestrators use a generic 4-node synthesis graph (intake → plan → delegate → synthesize). Each is small enough to read in one sitting and bespoke-tunable when an orchestrator graduates.
 
