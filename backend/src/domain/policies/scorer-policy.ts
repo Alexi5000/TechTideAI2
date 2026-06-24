@@ -49,7 +49,7 @@ export class ScorerRegistry<TScorer> {
     return out;
   }
 
-  /** OCP: extends by appending a new entry — never modifies the existing map. */
+  /** OCP: extends by appending a new entry, never modifies the existing map. */
   extend(entries: readonly ScorerPolicyEntry<TScorer>[]): ScorerRegistry<TScorer> {
     const next = new ScorerRegistry<TScorer>();
     for (const existing of this.entries.values()) {

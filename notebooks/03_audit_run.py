@@ -1,5 +1,5 @@
 """
-# 03 — Audit a Run
+# 03, Audit a Run
 
 Pull a single eval run by id and inspect its per-scorer breakdown. Useful when a regression alert fires or when an operator asks "why did this run fail?"
 
@@ -11,7 +11,7 @@ bridge = NotebookBridge(base_url="http://localhost:4050")
 runs = bridge.list_runs(limit=10)
 for r in runs:
     summary = r.summary
-    pass_rate = f"{summary.pass_rate:.0%}" if summary else "—"
+    pass_rate = f"{summary.pass_rate:.0%}" if summary else ", "
     print(f"  {r.id[:8]}  {r.suite_id}  {r.status:10s}  pass={pass_rate}  {r.started_at}")
 
 # # Pick a run to audit. The first run is the most recent.

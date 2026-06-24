@@ -1,4 +1,4 @@
-"""Contract-sync test — guards against TS/Python drift.
+"""Contract-sync test, guards against TS/Python drift.
 
 Reads the drift-check hash embedded in both the TS and Python generated files
 and asserts they match. The hash is produced by ``scripts/sync-contracts.ts``
@@ -84,7 +84,7 @@ def test_python_models_match_schema_definitions() -> None:
     }
     for name in expected:
         if name in {"LlmProvider", "AgentEventType"}:
-            # Literal aliases — names must appear in the file.
+            # Literal aliases, names must appear in the file.
             assert name in py_text, f"Python file missing type alias {name}"
         else:
             # Class definitions.

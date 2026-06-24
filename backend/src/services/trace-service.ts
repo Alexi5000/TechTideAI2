@@ -9,7 +9,7 @@
  * Design notes:
  * - The OTel SDK is loaded lazily so the backend doesn't pay the bundle cost
  *   in environments that don't want tracing.
- * - We don't import `@opentelemetry/api` types as a hard dep — instead we
+ * - We don't import `@opentelemetry/api` types as a hard dep, instead we
  *   type the seam as `unknown` and accept any compatible tracer.
  * - The trace tree surface (`getTraceTree`) reads from a lightweight in-memory
  *   buffer; production should swap to an OTLP collector (Jaeger, Tempo, etc.).
@@ -28,7 +28,7 @@ export interface SpanRecord {
   endMs: number | null;
   attributes: Record<string, string | number | boolean>;
   status: "ok" | "error" | "unset";
-  /** Optional runId binding — when set, the span is part of the trace for that run. */
+  /** Optional runId binding, when set, the span is part of the trace for that run. */
   runId?: string;
 }
 
@@ -67,7 +67,7 @@ let initialized = false;
 
 /**
  * Best-effort SDK init. If the OTel packages aren't installed we silently
- * fall back to in-process tracing — the API surface stays the same.
+ * fall back to in-process tracing, the API surface stays the same.
  */
 export async function initTracing(): Promise<void> {
   if (initialized) return;
@@ -86,7 +86,7 @@ export async function initTracing(): Promise<void> {
     });
     instance.start();
   } catch {
-    // OTel not installed — in-process only.
+    // OTel not installed, in-process only.
   }
 }
 

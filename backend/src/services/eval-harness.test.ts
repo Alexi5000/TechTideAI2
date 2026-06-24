@@ -67,7 +67,7 @@ const suite: EvalSuite = {
       difficulty: 1,
       input: {},
       expected: { exact: { ok: true } },
-      rubric: "agent missing — should fail cleanly",
+      rubric: "agent missing, should fail cleanly",
       tags: [],
       timeoutMs: 5000,
     },

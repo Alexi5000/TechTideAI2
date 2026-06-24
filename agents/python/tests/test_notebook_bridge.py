@@ -26,7 +26,7 @@ from techtide_agents.notebook_bridge import (
 class _StubHandler(BaseHTTPRequestHandler):
     payload: dict[str, Any] = {}
 
-    def do_GET(self) -> None:  # noqa: N802 — http.server convention
+    def do_GET(self) -> None:  # noqa: N802, http.server convention
         if self.path == "/api/evals/suites":
             self._respond(200, [{"id": "golden-tasks", "version": "v1.0.0", "taskCount": 33}])
             return

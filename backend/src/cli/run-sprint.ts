@@ -110,7 +110,7 @@ function printTable(run: SprintResult): void {
   process.stdout.write(`Contract:     ${run.contractId} @ ${run.contractVersion}\n`);
   process.stdout.write(`Status:       ${run.status}\n`);
   process.stdout.write(`Iterations:   ${run.iterations.length}\n`);
-  process.stdout.write(`Best score:   ${run.bestScore.toFixed(3)} (iter ${run.bestIteration ?? "—"})\n`);
+  process.stdout.write(`Best score:   ${run.bestScore.toFixed(3)} (iter ${run.bestIteration ?? ", "})\n`);
   process.stdout.write(`Total tokens: ${run.totalTokens}\n`);
   process.stdout.write(`Cost (USD):   $${run.totalCostUsd.toFixed(3)}\n`);
   if (run.failureReason) process.stdout.write(`Reason:       ${run.failureReason}\n`);

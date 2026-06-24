@@ -70,6 +70,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
+    # Per ADR 0009: skip cleanly when no Supabase project is wired up.
+    if: ${{ vars.SUPABASE_PROJECT_REF != '' && secrets.SUPABASE_ACCESS_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -95,6 +97,8 @@ jobs:
     needs: [build, migrate]
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
+    # Per ADR 0009: skip cleanly when no Railway project is wired up.
+    if: ${{ vars.RAILWAY_SERVICE_ID != '' && secrets.RAILWAY_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -122,6 +126,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
+    # Per ADR 0009: skip cleanly when no Vercel project is wired up.
+    if: ${{ secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
     steps:
       - uses: actions/checkout@v4
 

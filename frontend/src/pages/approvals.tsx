@@ -115,7 +115,7 @@ function ApprovalCard({
       {approval.status !== "pending" && approval.decidedAt && (
         <p className="text-sm text-[var(--muted)]">
           {approval.status === "granted" ? "Granted" : "Denied"} by{" "}
-          <span className="font-medium">{approval.decidedBy ?? "—"}</span> ·{" "}
+          <span className="font-medium">{approval.decidedBy ?? ", "}</span> ·{" "}
           {new Date(approval.decidedAt).toLocaleString()}
           {approval.rationale ? ` · "${approval.rationale}"` : ""}
         </p>

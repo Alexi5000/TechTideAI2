@@ -1,5 +1,5 @@
 /**
- * Approval Policy — Domain Rule (re-export).
+ * Approval Policy, Domain Rule (re-export).
  *
  * The canonical implementation lives in `@techtide/agents` so the agents
  * package can use it without depending on the backend. This module

@@ -101,7 +101,7 @@ export function createRunService(
 
     const updated = await repository.updateStatus(id, updates);
 
-    // Phase 2.1 — emit a structured evidence-plane event for every transition.
+    // Phase 2.1, emit a structured evidence-plane event for every transition.
     await repository.addEvent(
       updated.id,
       updated.orgId,

@@ -8,7 +8,7 @@ body:
     attributes:
       value: |
         Use this template when running the eval suite locally produces numbers that disagree with
-        `docs/EVALS/latest.json`. Don't file a "bug" — this is the dedicated channel for eval
+        `docs/EVALS/latest.json`. Don't file a "bug", this is the dedicated channel for eval
         regressions.
 
   - type: input
@@ -47,4 +47,4 @@ body:
     id: hypothesis
     attributes:
       label: Hypothesis
-      description: Your best guess for why the numbers diverged — prompt change, model update, scorer bug, etc.
+      description: Your best guess for why the numbers diverged, prompt change, model update, scorer bug, etc.

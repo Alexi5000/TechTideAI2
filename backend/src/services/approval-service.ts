@@ -2,12 +2,12 @@
  * Approval Service - Application Layer
  *
  * Orchestrates the approval gate:
- *   1. `request` — create an ApprovalRequest; returns it for the caller to
+ *   1. `request`, create an ApprovalRequest; returns it for the caller to
  *      pause the originating run.
- *   2. `grant` / `deny` — operator decision; flips status and records audit.
- *   3. `expireStale` — sweep job to mark expired requests.
+ *   2. `grant` / `deny`, operator decision; flips status and records audit.
+ *   3. `expireStale`, sweep job to mark expired requests.
  *
- * The service never resumes a run directly — that's the agent-execution
+ * The service never resumes a run directly, that's the agent-execution
  * service's job once the approval is granted.
  */
 

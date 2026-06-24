@@ -1,5 +1,5 @@
 /**
- * Workflow Runner Tool — Phase 3.4
+ * Workflow Runner Tool, Phase 3.4
  *
  * Real implementation. Classifies the workflow against the ApprovalPolicy and
  * either:
@@ -13,7 +13,7 @@
  *   - "awaiting-approval"
  *   - "rejected"      (validation failure)
  *
- * Status `queued` is no longer a stand-in for "everything worked" — it now
+ * Status `queued` is no longer a stand-in for "everything worked", it now
  * means "valid, awaiting downstream decision".
  */
 

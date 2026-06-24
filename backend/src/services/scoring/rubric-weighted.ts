@@ -112,7 +112,7 @@ export class RubricWeightedScorer implements Scorer {
     const satisfied = parsed.results.filter((r) => r.satisfied).length;
     const score = satisfied / assertions.length;
     const evidence = parsed.results
-      .map((r) => `${r.satisfied ? "✓" : "✗"} ${r.assertion} — ${r.evidence}`)
+      .map((r) => `${r.satisfied ? "✓" : "✗"} ${r.assertion}, ${r.evidence}`)
       .join("\n");
 
     return {

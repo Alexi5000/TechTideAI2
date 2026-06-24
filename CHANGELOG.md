@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-24
+
+### Added
+- Five architecture SVG diagrams under `assets/`:
+  `techtideai_architecture.svg` (full system), `techtideai_control_plane.svg`
+  (1 CEO + 10 orchestrators + 50 workers in five-worker pods),
+  `techtideai_contract_sync.svg` (schema.json as the single source of truth),
+  `techtideai_three_agent_loop.svg` (generator + evaluator + judge loop), and
+  `techtideai_run_lifecycle.svg` (queued → running → approval_requested → succeeded/failed).
+  Each diagram is referenced from the corresponding README section.
+
+### Changed
+- `package.json` `description` expanded to ~250 chars so the GitHub About
+  sidebar shows a specific blurb instead of a generic one. Added `homepage`
+  and 15 `keywords` (mastra, langgraph, human-in-the-loop, evaluation-harness,
+  approval-gate, opentelemetry, etc.) so GitHub auto-syncs them into the
+  repo's `/topics` page.
+- `README.md` About section rewritten as a tight bullet list of the mental
+  model (one CEO, ten orchestrators, fifty workers in five-worker pods).
+- `.github/workflows/deploy.yml`: each deploy job (migrate, deploy-backend,
+  deploy-frontend) now skips cleanly when its required secrets and vars are
+  absent. Per ADR 0009, the repo deliberately ships no production deploy
+  target, so "no infra wired up" is a green skip, not a red failure.
+- `package.json` `version`, README callout, Python `pyproject.toml`,
+  `__init__.py`, and `server.py` all bumped to `0.3.0`.
+
+### Fixed
+- GitHub repo description (set via the web UI) had a stray em-dash.
+  Replaced with a comma via the API; verified the About sidebar is now
+  em-dash-free alongside `package.json` `description` and the README.
+
 ## [0.2.1] - 2026-06-23
 
 ### Fixed

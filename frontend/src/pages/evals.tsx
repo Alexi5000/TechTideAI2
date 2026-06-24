@@ -93,7 +93,7 @@ function TaskBreakdown({ run }: { run: EvalRun }) {
                 </td>
                 <td className="py-2 pr-3">{r.latencyMs}ms</td>
                 <td className="py-2 pr-3 text-[var(--muted)] truncate max-w-[420px]">
-                  {r.failureReason ?? "—"}
+                  {r.failureReason ?? ", "}
                 </td>
               </tr>
             ))}
@@ -203,7 +203,7 @@ export function EvalsPage() {
                     <div key={r.id} className="flex items-center justify-between text-sm">
                       <span className="font-mono text-xs">{r.id.substring(0, 8)}…</span>
                       <span className="text-[var(--muted)]">
-                        {r.summary ? formatPct(r.summary.passRate) : "—"} pass · {new Date(r.startedAt).toLocaleString()}
+                        {r.summary ? formatPct(r.summary.passRate) : ", "} pass · {new Date(r.startedAt).toLocaleString()}
                       </span>
                       <Badge variant={r.status === "succeeded" ? "success" : "error"}>{r.status}</Badge>
                     </div>

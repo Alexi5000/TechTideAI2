@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Eval CLI — runs a suite, prints a summary table, exits non-zero on regression.
+ * Eval CLI, runs a suite, prints a summary table, exits non-zero on regression.
  *
  * Usage:
  *   pnpm -C backend evals [--suite golden-tasks.v1] [--baseline latest] [--json]

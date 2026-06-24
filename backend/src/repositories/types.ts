@@ -63,7 +63,7 @@ export interface IRunRepository {
     payload: Record<string, unknown>,
     meta?: AddRunEventInput,
   ): Promise<RunEvent>;
-  /** Phase 2.1 — read events back for the trace view. */
+  /** Phase 2.1, read events back for the trace view. */
   findEventsByRunId(runId: string): Promise<RunEvent[]>;
 }
 

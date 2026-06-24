@@ -1,5 +1,5 @@
 /**
- * Approval Policy — Domain Rule.
+ * Approval Policy, Domain Rule.
  *
  * Classifies agent actions into risk tiers and decides whether an action
  * requires human approval before it can run. OCP-extensible: add new tiers
@@ -32,7 +32,7 @@ export interface RiskClassifier {
 }
 
 /**
- * ApprovalRequest — pending human-in-the-loop decision for a high-risk
+ * ApprovalRequest, pending human-in-the-loop decision for a high-risk
  * agent action. Defined here as a TypeScript type so the agents runtime can
  * reference the shape without depending on the backend package; the
  * backend's `entities/approval-request.ts` is the Zod-validated source.
@@ -60,7 +60,7 @@ const DEFAULT_HIGH_RISK_TIERS: readonly ApprovalRiskTier[] = [
 ];
 
 /**
- * Default classifier — heuristics. Operators can replace via constructor.
+ * Default classifier, heuristics. Operators can replace via constructor.
  *
  * - Anything touching `payment`, `wire`, `transfer`, `billing`, `invoice` → billing.
  * - Anything touching `delete`, `purge`, `drop`, `terminate`, `cancel_account` → destructive.

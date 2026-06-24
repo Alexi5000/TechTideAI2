@@ -14,7 +14,7 @@ const memoryConfig = supabaseUrl
   : undefined;
 
 // Bootstrap memory asynchronously. Mastra accepts an undefined memory slot, so
-// if `@mastra/pg` isn't installed we still boot — just without cross-session
+// if `@mastra/pg` isn't installed we still boot, just without cross-session
 // recall. The runtime tests assert this fallback path.
 const memory = await getMastraMemory(memoryConfig);
 

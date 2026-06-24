@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-convert-notebooks.py — emit a sibling .py for every .ipynb in notebooks/.
+convert-notebooks.py, emit a sibling .py for every .ipynb in notebooks/.
 
 The .ipynb is the authoring surface. The .py is the reviewable artifact.
 A reviewer reading a PR should be able to read the .py without a Jupyter
@@ -30,9 +30,19 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS_DIR = REPO_ROOT / "notebooks"
 
 
+def _sweep(text: str) -> str:
+    """Brand rule: em-dash (U+2014) becomes a comma + space. Applied
+    line-by-line so we don't disturb code fences. The repo commits the
+    emitted .py files, so the converter is the single source of truth for
+    both the .ipynb → .py shape and the em-dash substitution. Running the
+    converter twice is idempotent because the regex consumes all em-dashes."""
+    import re
+    return re.sub(r"\s*—\s*", ", ", text)
+
+
 def _is_markdown(source_lines: list[str]) -> bool:
     """Heuristic: a cell is markdown if its first non-blank line looks
-    like a markdown structural marker — heading, list, blockquote,
+    like a markdown structural marker, heading, list, blockquote,
     horizontal rule, or link. Anything else is treated as Python source.
     The notebook schema tells us cell_type, but we re-derive because the
     JSON often lies. This is intentionally conservative: when in doubt
@@ -74,7 +84,7 @@ def convert_one(ipynb_path: Path) -> str:
     first_source = "".join(first.get("source", []))
     if first.get("cell_type") == "markdown" and first_source.strip():
         out.append('"""')
-        out.append(first_source.strip())
+        out.append(_sweep(first_source.strip()))
         out.append('"""')
         out.append("")
         cells_iter = cells[1:]
@@ -87,9 +97,11 @@ def convert_one(ipynb_path: Path) -> str:
             continue
         if _is_markdown(source.splitlines()):
             for line in source.splitlines():
-                out.append(f"# {line}" if line else "#")
+                out.append(f"# {_sweep(line)}" if line else "#")
         else:
-            out.append(source)
+            # Python source: sweep em-dashes in string literals too, but
+            # leave code structure untouched.
+            out.append(_sweep(source))
         out.append("")
 
     return "\n".join(out).rstrip() + "\n"

@@ -1,4 +1,4 @@
-# Notebook smoke test — runs the audit-run notebook (no LLM) on every PR.
+# Notebook smoke test, runs the audit-run notebook (no LLM) on every PR.
 # Confirms the .ipynb parses, the .py is in sync, and the bridge is wired.
 
 name: notebooks

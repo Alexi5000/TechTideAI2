@@ -1,4 +1,4 @@
-"""Runtime dispatcher — picks LangGraph vs Mastra per agent.
+"""Runtime dispatcher, picks LangGraph vs Mastra per agent.
 
 Default routing:
   - orchestrators → LangGraph (graph-heavy control flow, conditional HITL gates)

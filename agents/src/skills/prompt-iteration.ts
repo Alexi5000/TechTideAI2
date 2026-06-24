@@ -13,7 +13,7 @@ export const promptIterationSkill: Skill = {
   id: "prompt-iteration",
   name: "Prompt Iteration",
   description:
-    "When the user asks you to author or refine a prompt, ground it in the local eval fixtures and the sprint contract — not in your own intuition.",
+    "When the user asks you to author or refine a prompt, ground it in the local eval fixtures and the sprint contract, not in your own intuition.",
   appliesTo: ["ceo", "orchestrator"],
   version: "1.0.0",
   systemPromptSection(_agent: AgentDefinition): string {

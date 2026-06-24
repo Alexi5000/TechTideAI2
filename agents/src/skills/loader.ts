@@ -3,7 +3,7 @@
  *
  * Resolves the system-prompt sections contributed by all skills that apply to
  * a given agent. Composes with the Mastra instructions builder in
- * `agents/src/mastra/agents.ts` — skills augment the prompt; they do not
+ * `agents/src/mastra/agents.ts`, skills augment the prompt; they do not
  * replace it.
  */
 

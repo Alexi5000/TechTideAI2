@@ -9,7 +9,7 @@
  * - This service is **synchronous** by default; tasks run sequentially so output
  *   is deterministic for replay. Parallel mode is available via `concurrency`
  *   for nightly CI.
- * - The harness never writes to the run-service — it owns its own persistence
+ * - The harness never writes to the run-service, it owns its own persistence
  *   surface (`eval-run-repository.ts`) so eval runs can't accidentally pollute
  *   the production run stream.
  * - Cost estimation is conservative: $0.005 per 1k tokens for OpenAI-class models.
@@ -224,7 +224,7 @@ export class EvalHarness {
 
   private pickScorersFor(task: EvalTask): Array<{ spec: ScorerSpec; scorer: Scorer }> {
     if (!this.activeSuite) {
-      throw new Error("pickScorersFor called outside of runSuite — no active suite");
+      throw new Error("pickScorersFor called outside of runSuite, no active suite");
     }
     // The suite is the source of truth for which scorers apply and at what weight.
     // Per-task overrides are reserved for a future fixture format (task.scorerOverrides).

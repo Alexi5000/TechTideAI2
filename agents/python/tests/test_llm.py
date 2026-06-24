@@ -1,4 +1,4 @@
-"""LlmClient tests — provider selection and error surface."""
+"""LlmClient tests, provider selection and error surface."""
 
 from __future__ import annotations
 

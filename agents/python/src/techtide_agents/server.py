@@ -4,7 +4,7 @@ The backend's `agent-execution-service` POSTs ``AgentRunRequest`` here when
 the dispatcher routes an agent to ``langgraph``. The sidecar runs the
 LangGraph runtime and returns an ``AgentRunResult``.
 
-This module is optional — install with ``pip install techtide-agents[server]``.
+This module is optional, install with ``pip install techtide-agents[server]``.
 
 Run locally:
     SIDECAR_PORT=4051 uvicorn techtide_agents.server:app --host 0.0.0.0 --port 4051
@@ -19,7 +19,7 @@ from techtide_agents.contracts import AgentRunRequest, AgentRunResult
 from techtide_agents.runtime.dispatcher import Dispatcher, RuntimeTarget
 from techtide_agents.runtime.langgraph_runtime import LangGraphRuntime
 
-app = FastAPI(title="TechTideAI Python Sidecar", version="0.2.0")
+app = FastAPI(title="TechTideAI Python Sidecar", version="0.3.0")
 _runtime: LangGraphRuntime | None = None
 _dispatcher: Dispatcher | None = None
 

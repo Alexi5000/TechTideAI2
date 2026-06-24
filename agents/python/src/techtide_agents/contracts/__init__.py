@@ -1,4 +1,4 @@
-"""Contract package — re-exports the generated Pydantic models.
+"""Contract package, re-exports the generated Pydantic models.
 
 The authoritative types live in ``generated.py`` (produced by
 ``scripts/sync-contracts.ts`` from ``contracts/schema.json``). DO NOT

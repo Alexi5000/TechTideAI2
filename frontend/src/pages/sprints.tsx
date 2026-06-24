@@ -91,11 +91,11 @@ function IterationTable({ run }: { run: SprintResult }) {
                   </Badge>
                 </td>
                 <td className="py-2 pr-3">
-                  {it.plateauDetected ? <Badge variant="warning">plateau</Badge> : "—"}
+                  {it.plateauDetected ? <Badge variant="warning">plateau</Badge> : ", "}
                 </td>
                 <td className="py-2 pr-3">{it.rollingDelta.toFixed(3)}</td>
                 <td className="py-2 pr-3 text-[var(--muted)] truncate max-w-[420px]">
-                  {it.taskResult.failureReason ?? "—"}
+                  {it.taskResult.failureReason ?? ", "}
                 </td>
               </tr>
             ))}

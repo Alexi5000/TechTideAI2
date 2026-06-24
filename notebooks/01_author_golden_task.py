@@ -1,5 +1,5 @@
 """
-# 01 — Author a Golden Task
+# 01, Author a Golden Task
 
 Walk a new golden task from idea to fixture. The notebook talks to the backend via `notebooks._bridge` (a thin HTTP client around `/api/evals/*`). When you're happy with the task, paste it into `evals/fixtures/golden-tasks.v1.json` and run `pnpm -C backend evals --suite golden-tasks.v1` to confirm the schema is valid and the harness can score it.
 
@@ -12,7 +12,7 @@ import json
 bridge = NotebookBridge(base_url="http://localhost:4050")
 suites = bridge.list_suites()
 for s in suites:
-    print(f"  {s.id} @ {s.version} — {s.task_count} tasks")
+    print(f"  {s.id} @ {s.version}, {s.task_count} tasks")
 
 # ## Draft a new task
 #

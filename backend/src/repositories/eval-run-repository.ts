@@ -20,7 +20,7 @@ export interface IEvalRunRepository {
   findById(id: string): Promise<EvalRun | null>;
   listRecent(limit: number): Promise<EvalRun[]>;
   listBySuite(suiteId: string, limit: number): Promise<EvalRun[]>;
-  /** Returns the most recent `EvalRun` for a suite — used as a baseline. */
+  /** Returns the most recent `EvalRun` for a suite, used as a baseline. */
   findLatestBySuite(suiteId: string): Promise<EvalRun | null>;
 }
 
