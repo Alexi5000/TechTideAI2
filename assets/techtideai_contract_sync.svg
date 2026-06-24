@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">
+  <title>TechTideAI TypeScript and Python contract sync</title>
+  <desc>The single source of truth is contracts/schema.json. The sync-contracts.ts script regenerates TypeScript and Pydantic types, both stamped with the same drift-check hash. The Python test_contract_sync test reads both files and asserts equality.</desc>
+
+  <style>
+    .src { fill: #fef3c7; stroke: #b45309; stroke-width: 2; rx: 8; ry: 8; }
+    .gen { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 1.4; rx: 8; ry: 8; }
+    .runtime { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; rx: 8; ry: 8; }
+    .check { fill: #f1f5f9; stroke: #475569; stroke-width: 1.4; rx: 8; ry: 8; }
+    .title { fill: #0f172a; font-weight: 700; }
+    .sub { fill: #475569; font-size: 11px; }
+    .mono { fill: #0f172a; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; }
+    .edge { stroke: #475569; stroke-width: 1.4; fill: none; }
+    .edge-warm { stroke: #b45309; stroke-width: 1.6; fill: none; }
+    .arrow { fill: #475569; }
+    .arrow-warm { fill: #b45309; }
+    .badge { fill: #15803d; }
+    .badge-text { fill: #ffffff; font-size: 11px; font-weight: 700; }
+  </style>
+
+  <!-- Source of truth -->
+  <rect x="380" y="30" width="320" height="100" class="src"/>
+  <text x="540" y="56" text-anchor="middle" class="title">contracts/schema.json</text>
+  <text x="540" y="76" text-anchor="middle" class="sub">Single source of truth.</text>
+  <text x="540" y="92" text-anchor="middle" class="sub">CONTRACT_VERSION: 1.1.0</text>
+  <text x="540" y="108" text-anchor="middle" class="sub">Drift hash: sha256(schema + gen order)</text>
+
+  <!-- TS side -->
+  <rect x="60" y="220" width="320" height="100" class="gen"/>
+  <text x="220" y="246" text-anchor="middle" class="title">TypeScript runtime</text>
+  <text x="220" y="266" text-anchor="middle" class="sub">agents/src/runtime/contract-types.generated.ts</text>
+  <text x="220" y="284" text-anchor="middle" class="sub">agents/src/mastra/* + backend/src/*</text>
+  <text x="220" y="302" text-anchor="middle" class="sub">// Drift-check hash (mirrored in Python): ...</text>
+
+  <!-- Python side -->
+  <rect x="700" y="220" width="320" height="100" class="gen"/>
+  <text x="860" y="246" text-anchor="middle" class="title">Python runtime</text>
+  <text x="860" y="266" text-anchor="middle" class="sub">agents/python/src/techtide_agents/contracts/generated.py</text>
+  <text x="860" y="284" text-anchor="middle" class="sub">Pydantic v2 models + runtime dispatcher</text>
+  <text x="860" y="302" text-anchor="middle" class="sub"># Drift-check hash (mirrored in TypeScript): ...</text>
+
+  <!-- Sync script in middle -->
+  <rect x="380" y="380" width="320" height="80" class="check"/>
+  <text x="540" y="406" text-anchor="middle" class="title">scripts/sync-contracts.ts</text>
+  <text x="540" y="426" text-anchor="middle" class="sub">Reads schema.json</text>
+  <text x="540" y="442" text-anchor="middle" class="sub">Generates both files; writes drift hash.</text>
+
+  <!-- Test -->
+  <rect x="380" y="490" width="320" height="80" class="check"/>
+  <text x="540" y="516" text-anchor="middle" class="title">test_contract_sync.py</text>
+  <text x="540" y="536" text-anchor="middle" class="sub">Reads both generated files.</text>
+  <text x="540" y="552" text-anchor="middle" class="sub">Asserts hash equality.</text>
+
+  <!-- Edges from schema.json -->
+  <path d="M 460 130 L 220 220" class="edge-warm"/>
+  <polygon points="216,214 226,222 220,212" class="arrow-warm"/>
+  <path d="M 620 130 L 860 220" class="edge-warm"/>
+  <polygon points="864,214 854,222 860,212" class="arrow-warm"/>
+
+  <!-- Edges to script -->
+  <path d="M 460 130 L 460 380" class="edge"/>
+  <path d="M 220 320 L 460 380" class="edge"/>
+  <path d="M 860 320 L 620 380" class="edge"/>
+
+  <!-- Sync script to test -->
+  <path d="M 540 460 L 540 490" class="edge"/>
+  <polygon points="535,484 540,494 545,484" class="arrow"/>
+
+  <!-- CI badge / label -->
+  <g transform="translate(960, 250)">
+    <rect x="0" y="0" width="100" height="22" rx="4" ry="4" class="badge"/>
+    <text x="50" y="16" text-anchor="middle" class="badge-text">CI Gate</text>
+  </g>
+  <text x="960" y="290" text-anchor="middle" class="sub">Pytest fails</text>
+  <text x="960" y="304" text-anchor="middle" class="sub">if drift.</text>
+
+  <!-- Side note -->
+  <text x="40" y="580" class="sub">Any change to a contract type: edit schema.json, run pnpm exec tsx scripts/sync-contracts.ts, commit both generated files in the same PR. Hand-edit fails CI.</text>
+</svg>

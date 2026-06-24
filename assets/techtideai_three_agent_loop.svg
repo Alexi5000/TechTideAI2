@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">
+  <title>TechTideAI three-agent harness loop</title>
+  <desc>The sprint harness runs a generator, an evaluator, and an optional judge agent in a loop until the contract's pass criteria are met, the score plateaus, or the iteration cap is hit. Every iteration emits a RunEvent.</desc>
+
+  <style>
+    .loop { fill: none; stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .node { fill: #f1f5f9; stroke: #475569; stroke-width: 1.4; rx: 8; ry: 8; }
+    .generator { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 1.4; rx: 8; ry: 8; }
+    .evaluator { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; rx: 8; ry: 8; }
+    .judge { fill: #fef3c7; stroke: #b45309; stroke-width: 1.4; rx: 8; ry: 8; }
+    .scorer { fill: #fce7f3; stroke: #be185d; stroke-width: 1.4; rx: 8; ry: 8; }
+    .term { fill: #0f172a; stroke: #0f172a; stroke-width: 1.4; rx: 8; ry: 8; }
+    .term-text { fill: #ffffff; font-weight: 700; }
+    .title { fill: #0f172a; font-weight: 700; }
+    .sub { fill: #475569; font-size: 11px; }
+    .edge { stroke: #475569; stroke-width: 1.4; fill: none; }
+    .arrow { fill: #475569; }
+    .axis { fill: #15803d; font-size: 11px; }
+  </style>
+
+  <!-- Start node -->
+  <rect x="40" y="270" width="120" height="60" class="node"/>
+  <text x="100" y="294" text-anchor="middle" class="title">Sprint start</text>
+  <text x="100" y="312" text-anchor="middle" class="sub">load contract</text>
+
+  <!-- Generator -->
+  <rect x="220" y="60" width="220" height="100" class="generator"/>
+  <text x="330" y="86" text-anchor="middle" class="title">Generator agent</text>
+  <text x="330" y="104" text-anchor="middle" class="sub">orch-ava / orch-finn /</text>
+  <text x="330" y="120" text-anchor="middle" class="sub">orch-content / orch-cipher</text>
+  <text x="330" y="138" text-anchor="middle" class="sub">produces candidate output</text>
+
+  <!-- Evaluator -->
+  <rect x="500" y="60" width="220" height="100" class="evaluator"/>
+  <text x="610" y="86" text-anchor="middle" class="title">Evaluator agent</text>
+  <text x="610" y="104" text-anchor="middle" class="sub">orch-audit (default)</text>
+  <text x="610" y="120" text-anchor="middle" class="sub">grades candidate along</text>
+  <text x="610" y="138" text-anchor="middle" class="sub">the four axes</text>
+
+  <!-- Judge (optional, only for high-risk sprints) -->
+  <rect x="780" y="60" width="240" height="100" class="judge"/>
+  <text x="900" y="86" text-anchor="middle" class="title">Judge agent (optional)</text>
+  <text x="900" y="104" text-anchor="middle" class="sub">orch-audit / orch-veronica</text>
+  <text x="900" y="120" text-anchor="middle" class="sub">second-opinion review</text>
+  <text x="900" y="138" text-anchor="middle" class="sub">on destructive / billing</text>
+
+  <!-- Scorers -->
+  <rect x="500" y="220" width="220" height="120" class="scorer"/>
+  <text x="610" y="246" text-anchor="middle" class="title">Scorers</text>
+  <text x="610" y="266" text-anchor="middle" class="sub">four-axis-grader</text>
+  <text x="610" y="284" text-anchor="middle" class="sub">exact-match / regex / json-schema</text>
+  <text x="610" y="302" text-anchor="middle" class="sub">plateau-scorer (rolling delta)</text>
+  <text x="610" y="320" text-anchor="middle" class="sub">weights from SprintContract</text>
+
+  <!-- Decision -->
+  <rect x="220" y="240" width="220" height="100" class="node"/>
+  <text x="330" y="266" text-anchor="middle" class="title">Decision</text>
+  <text x="330" y="284" text-anchor="middle" class="sub">passed OR plateau OR</text>
+  <text x="330" y="302" text-anchor="middle" class="sub">max-iterations OR errored</text>
+  <text x="330" y="320" text-anchor="middle" class="sub">iterate or terminate?</text>
+
+  <!-- Terminal states -->
+  <rect x="60" y="440" width="160" height="60" class="term"/>
+  <text x="140" y="464" text-anchor="middle" class="term-text">succeeded</text>
+  <text x="140" y="482" text-anchor="middle" class="sub" fill="#e2e8f0">score &gt;= threshold</text>
+
+  <rect x="240" y="440" width="160" height="60" class="term"/>
+  <text x="320" y="464" text-anchor="middle" class="term-text">plateau</text>
+  <text x="320" y="482" text-anchor="middle" class="sub" fill="#e2e8f0">rolling delta &lt; tol</text>
+
+  <rect x="420" y="440" width="160" height="60" class="term"/>
+  <text x="500" y="464" text-anchor="middle" class="term-text">max-iterations</text>
+  <text x="500" y="482" text-anchor="middle" class="sub" fill="#e2e8f0">cap reached</text>
+
+  <rect x="600" y="440" width="160" height="60" class="term"/>
+  <text x="680" y="464" text-anchor="middle" class="term-text">errored</text>
+  <text x="680" y="482" text-anchor="middle" class="sub" fill="#e2e8f0">runtime throws</text>
+
+  <!-- Edges -->
+  <path d="M 160 300 L 220 110" class="edge"/>
+  <path d="M 440 110 L 500 110" class="edge"/>
+  <path d="M 720 110 L 780 110" class="edge"/>
+  <path d="M 900 160 L 720 160 L 720 240" class="edge"/>
+  <path d="M 610 220 L 610 240" class="edge"/>
+  <path d="M 500 280 L 440 290" class="edge"/>
+  <path d="M 330 240 L 330 200 L 330 200" class="edge"/>
+
+  <!-- Loop back from Decision to Generator -->
+  <path d="M 330 340 L 330 380 L 280 380 L 280 160" class="edge"/>
+  <polygon points="275,154 285,162 275,170" class="arrow"/>
+
+  <!-- Decision to terminal states -->
+  <path d="M 280 340 L 140 440" class="edge"/>
+  <path d="M 310 340 L 320 440" class="edge"/>
+  <path d="M 340 340 L 500 440" class="edge"/>
+  <path d="M 360 340 L 680 440" class="edge"/>
+
+  <!-- RunEvent stream under everything -->
+  <rect x="780" y="220" width="240" height="80" class="node"/>
+  <text x="900" y="246" text-anchor="middle" class="title">run_events (append-only)</text>
+  <text x="900" y="264" text-anchor="middle" class="sub">sprint_started, iteration_completed,</text>
+  <text x="900" y="280" text-anchor="middle" class="sub">scorer_run, sprint_succeeded, etc.</text>
+  <text x="900" y="296" text-anchor="middle" class="sub">auditable from any row.</text>
+
+  <path d="M 440 290 L 780 270" class="edge"/>
+
+  <!-- Axis callout -->
+  <text x="500" y="180" class="axis">four axes: correctness (0.4) safety (0.2) completeness (0.2) quality (0.2)</text>
+
+  <!-- Footer -->
+  <text x="40" y="568" class="sub">Iteration loop terminates on any of the four terminal states. Every iteration emits a run_event so an auditor can replay the full history.</text>
+</svg>

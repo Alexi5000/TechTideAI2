@@ -8,11 +8,25 @@
 
 The standard: **agent systems that ship.** Every major surface is typed end-to-end, observable through the trace plane, testable through the eval suite, and reviewable through the ADR set.
 
+## Architecture at a glance
+
+![TechTideAI architecture](assets/techtideai_architecture.svg)
+
+The full system, from operator console to Fastify backend to Mastra (TypeScript) and LangGraph (Python) runtimes, with Supabase persistence, Weaviate retrieval, OpenTelemetry traces, and the eval / approval / post-mortem surfaces. See [Architecture decisions](#architecture-decisions) for the load-bearing choices behind this surface.
+
 ## About
 
-TechTideAI is a portfolio repo for a company-scale agent operating system, the kind of harness a forward-deployed engineer ships to a customer, not the kind of demo a vendor demo team gives in a sales call. The mental model is a working company modelled as an agent system: one CEO agent, ten orchestrators, fifty workers (five per orchestrator). The CEO delegates, the orchestrators coordinate, the workers execute. Tools, memory, evals, approvals, and traces are the harness around them, present and load-bearing on every request.
+TechTideAI is a portfolio repo for a company-scale agent operating system, the kind of harness a forward-deployed engineer ships to a customer, not the kind of demo a vendor demo team gives in a sales call.
 
-The four planes:
+The mental model is a working company modelled as an agent system:
+
+- One CEO agent at the top, delegating to the orchestrators.
+- Ten orchestrators coordinating pods of workers and reviewing their output.
+- Fifty workers (five per orchestrator) doing the actual tool-calling work.
+
+Tools, memory, evals, approvals, and traces are the harness around them, present and load-bearing on every request. The same harness that the FDE ships is the harness the customer's operators monitor, and the harness an auditor can replay.
+
+### The four planes
 
 | Plane | What lives here | Where to read |
 |---|---|---|
@@ -20,6 +34,12 @@ The four planes:
 | **Execution** | Workers, tool calls, workflow runs, contracts | `agents/src/mastra/`, `agents/src/runtime/`, `docs/adr/0007-skills-vs-tools.md` |
 | **Evidence** | `run_events`, traces, post-mortems, evals | `backend/src/services/trace-service.ts`, `docs/EVALS.md`, `docs/adr/0005-trace-and-memory.md` |
 | **Product** | Operator console | `frontend/src/pages/` |
+
+### Control plane hierarchy
+
+![TechTideAI control plane](assets/techtideai_control_plane.svg)
+
+One CEO, ten orchestrators, fifty workers grouped into five-worker pods per orchestrator. The 61-agent invariant is asserted in `agents/src/core/registry.test.ts` and will fail the test suite the moment a worker is added without a sibling.
 
 ## Customer scenario
 
@@ -44,14 +64,33 @@ A reader can walk the repo top-to-bottom and find a working surface behind every
 | Eval harness with scorer framework | `backend/src/services/eval-harness.ts`, `backend/src/services/scoring/` | `pnpm -C backend evals --suite golden-tasks.v1` |
 | Four-axis grader + plateau detector | `backend/src/services/scoring/four-axis-grader.ts`, `plateau-scorer.ts` | Used by every sprint contract in `evals/sprints/` |
 | Three-agent adversarial harness | `backend/src/services/three-agent-harness.ts`, `/dashboard/sprints` | `pnpm -C backend sprint --contract evals/sprints/well-scoped-sprint.v1.json` |
+
+### Three-agent harness loop
+
+![TechTideAI three-agent loop](assets/techtideai_three_agent_loop.svg)
+
+The sprint harness runs a generator, an evaluator, and an optional judge in a loop. Every iteration emits an append-only `run_event` (sprint_started, iteration_completed, scorer_run, sprint_succeeded, ...). The loop terminates on one of four states: `succeeded`, `plateau`, `max-iterations`, or `errored`. The decision branch and the rolling-delta plateau detector live in `backend/src/services/three-agent-harness.ts` and `backend/src/services/scoring/plateau-scorer.ts`.
 | Sprint contracts | `evals/sprints/well-scoped-sprint.v1.json`, `evals/sprints/README.md` | One example contract; add more as needed |
 | Golden task fixtures | `evals/fixtures/golden-tasks.v1.json` | 33 tasks across all 10 orchestrators + CEO |
 | Notebook authoring surface | `notebooks/`, `notebooks/_bridge.py`, `scripts/convert-notebooks.py` | 3 hand-written notebooks; run via Jupyter or read as `.py` |
 | Approval gate (HITL) | `backend/src/services/approval-service.ts`, `/dashboard/approvals` | Submit a high-risk action, see it paused in the UI |
+
+### Run lifecycle and the approval gate
+
+![TechTideAI run lifecycle](assets/techtideai_run_lifecycle.svg)
+
+A run starts queued, transitions through running, and (when the policy classifies the action as high risk, i.e. `external`, `destructive`, or `billing`) pauses at `approval_requested` until a human operator decides. The decision is recorded in `run_events` with the policy version stamped on the row, so a future audit can replay the decision against the policy in force at the time. `StatusTransitionPolicy` is the single source of truth for legal transitions; extend via `extend()` (OCP), never mutate the default.
 | OpenTelemetry trace surface (enriched) | `backend/src/services/trace-service.ts` | `GET /api/runs/:id/trace`, per-span `eval.*` attributes |
 | Mastra memory | `agents/src/mastra/memory.ts`, `database/supabase/migrations/0005_mastra_memory.sql` | Boot with `SUPABASE_URL` |
 | Post-mortem auto-generation | `backend/src/services/post-mortem-service.ts` | Run any agent, `docs/EVALS/post-mortems/<run-id>.md` is emitted |
 | TS ↔ Python contract sync | `contracts/schema.json`, `scripts/sync-contracts.ts` | `pytest agents/python/tests/test_contract_sync.py` |
+
+### TypeScript and Python share one contract
+
+![TechTideAI contract sync](assets/techtideai_contract_sync.svg)
+
+`contracts/schema.json` is the single source of truth. `scripts/sync-contracts.ts` regenerates the TypeScript and Pydantic types and stamps the same drift-check hash on both. Any hand-edit to either generated file fails CI. To add a contract type, edit `schema.json`, run the sync, and commit the regenerated files in the same PR.
+
 | Containerized local stack | `Dockerfile.{backend,frontend,agents,python}`, `docker-compose.yml` | `docker compose up --build` |
 | Agent-legible procedural memory | `AGENTS.md` (root) | Read on session start |
 
