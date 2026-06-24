@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 540" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <title>Segment 1: the mental model</title>
+  <desc>The harness models a working company as an agent system. One CEO agent, ten orchestrator agents, fifty worker agents grouped into five-worker pods. CEO delegates to orchestrators; orchestrators coordinate workers; workers do tool-calling work. The mental model is a leverage pyramid: a small leadership tier commands a large execution tier.</desc>
+
+  <style>
+    .ceo { fill: #fef3c7; stroke: #b45309; stroke-width: 2; rx: 50; ry: 50; }
+    .orch { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 1.4; rx: 8; ry: 8; }
+    .worker { fill: #f1f5f9; stroke: #475569; stroke-width: 1; rx: 4; ry: 4; }
+    .pod { fill: none; stroke: #94a3b8; stroke-width: 1; stroke-dasharray: 3 3; rx: 12; ry: 12; }
+    .title { fill: #0f172a; font-weight: 700; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 22px; }
+    .sub { fill: #475569; font-size: 11px; }
+    .label { fill: #15803d; font-weight: 700; font-size: 13px; }
+    .edge { stroke: #475569; stroke-width: 1.2; fill: none; }
+    text { fill: #0f172a; }
+  </style>
+
+  <text x="540" y="50" text-anchor="middle" class="h">Segment 1: The Mental Model</text>
+  <text x="540" y="78" text-anchor="middle" class="label">"It's a company. 1 CEO. 10 leads. 50 doers."</text>
+
+  <!-- CEO -->
+  <circle cx="540" cy="130" r="42" class="ceo"/>
+  <text x="540" y="125" text-anchor="middle" class="title">ceo</text>
+  <text x="540" y="141" text-anchor="middle" class="sub">Brian Cozy</text>
+  <text x="540" y="156" text-anchor="middle" class="sub">delegates to</text>
+  <text x="540" y="168" text-anchor="middle" class="sub">orchestrators</text>
+
+  <!-- Orchestrators row 1 -->
+  <g>
+    <rect x="60" y="220" width="160" height="50" class="orch"/>
+    <text x="140" y="240" text-anchor="middle" class="title">orch-cipher</text>
+    <text x="140" y="256" text-anchor="middle" class="sub">finance + analytics</text>
+
+    <rect x="240" y="220" width="160" height="50" class="orch"/>
+    <text x="320" y="240" text-anchor="middle" class="title">orch-axel</text>
+    <text x="320" y="256" text-anchor="middle" class="sub">sales</text>
+
+    <rect x="420" y="220" width="160" height="50" class="orch"/>
+    <text x="500" y="240" text-anchor="middle" class="title">orch-ava</text>
+    <text x="500" y="256" text-anchor="middle" class="sub">product + GTM</text>
+
+    <rect x="600" y="220" width="160" height="50" class="orch"/>
+    <text x="680" y="240" text-anchor="middle" class="title">orch-luna</text>
+    <text x="680" y="256" text-anchor="middle" class="sub">marketing</text>
+
+    <rect x="780" y="220" width="160" height="50" class="orch"/>
+    <text x="860" y="240" text-anchor="middle" class="title">orch-audit</text>
+    <text x="860" y="256" text-anchor="middle" class="sub">compliance</text>
+  </g>
+
+  <!-- Orchestrators row 2 (showing the rest compactly) -->
+  <g>
+    <rect x="60" y="280" width="160" height="50" class="orch"/>
+    <text x="140" y="300" text-anchor="middle" class="title">orch-ellie</text>
+    <text x="140" y="316" text-anchor="middle" class="sub">people ops</text>
+
+    <rect x="240" y="280" width="160" height="50" class="orch"/>
+    <text x="320" y="300" text-anchor="middle" class="title">orch-finn</text>
+    <text x="320" y="316" text-anchor="middle" class="sub">HR / internal</text>
+
+    <rect x="420" y="280" width="160" height="50" class="orch"/>
+    <text x="500" y="300" text-anchor="middle" class="title">orch-veronica</text>
+    <text x="500" y="316" text-anchor="middle" class="sub">customer success</text>
+
+    <rect x="600" y="280" width="160" height="50" class="orch"/>
+    <text x="680" y="300" text-anchor="middle" class="title">orch-content</text>
+    <text x="680" y="316" text-anchor="middle" class="sub">content + docs</text>
+
+    <rect x="780" y="280" width="160" height="50" class="orch"/>
+    <text x="860" y="300" text-anchor="middle" class="title">orch-veronica-lite</text>
+    <text x="860" y="316" text-anchor="middle" class="sub">CS triage</text>
+  </g>
+
+  <!-- CEO to orchestrators: 10 edges -->
+  <path d="M 540 172 L 140 220" class="edge"/>
+  <path d="M 540 172 L 320 220" class="edge"/>
+  <path d="M 540 172 L 500 220" class="edge"/>
+  <path d="M 540 172 L 680 220" class="edge"/>
+  <path d="M 540 172 L 860 220" class="edge"/>
+  <path d="M 540 172 L 140 280" class="edge"/>
+  <path d="M 540 172 L 320 280" class="edge"/>
+  <path d="M 540 172 L 500 280" class="edge"/>
+  <path d="M 540 172 L 680 280" class="edge"/>
+  <path d="M 540 172 L 860 280" class="edge"/>
+
+  <!-- Worker pod detail: orch-cipher's 5 workers -->
+  <rect x="100" y="370" width="880" height="140" class="pod"/>
+  <text x="540" y="392" text-anchor="middle" class="label">orch-cipher's 5-worker pod (each orchestrator has 5 workers)</text>
+  <rect x="130" y="410" width="160" height="36" class="worker"/>
+  <text x="210" y="432" text-anchor="middle" class="title">worker-cipher-fpna</text>
+  <rect x="310" y="410" width="160" height="36" class="worker"/>
+  <text x="390" y="432" text-anchor="middle" class="title">worker-cipher-ar</text>
+  <rect x="490" y="410" width="160" height="36" class="worker"/>
+  <text x="570" y="432" text-anchor="middle" class="title">worker-cipher-ap</text>
+  <rect x="670" y="410" width="160" height="36" class="worker"/>
+  <text x="750" y="432" text-anchor="middle" class="title">worker-cipher-treasury</text>
+  <rect x="850" y="410" width="110" height="36" class="worker"/>
+  <text x="905" y="432" text-anchor="middle" class="title">+ 1 more</text>
+
+  <text x="540" y="475" text-anchor="middle" class="sub">CEO delegates. Orchestrators coordinate. Workers execute. Test: agents/src/core/registry.test.ts asserts 1 + 10 + 50.</text>
+</svg>

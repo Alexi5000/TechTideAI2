@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 540" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <title>The puzzle: 50 agents, no receipts</title>
+  <desc>Set-the-stage graphic. A 200-person services firm runs hundreds of operational queries a week. The current stack scatters answers across three dashboards, a ticketing system, and a Slack channel. The FDE needs a harness that ships into this customer's environment, that the customer's operators can monitor, and that an auditor can replay.</desc>
+
+  <style>
+    .stage { fill: #fef3c7; stroke: #b45309; stroke-width: 2; rx: 12; ry: 12; }
+    .box { fill: #f1f5f9; stroke: #475569; stroke-width: 1.4; rx: 8; ry: 8; }
+    .warn { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.4; rx: 8; ry: 8; }
+    .arrow { fill: #b91c1c; }
+    .title { fill: #0f172a; font-weight: 700; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 22px; }
+    .sub { fill: #475569; font-size: 12px; }
+    .q { fill: #b45309; font-size: 18px; font-weight: 700; }
+    text { fill: #0f172a; }
+  </style>
+
+  <text x="540" y="50" text-anchor="middle" class="h">The Puzzle</text>
+  <text x="540" y="78" text-anchor="middle" class="q">200 people, 100s of questions a week, no receipts.</text>
+
+  <rect x="60" y="120" width="960" height="80" class="stage"/>
+  <text x="100" y="148" class="title">A 200-person services firm. Operations questions every day.</text>
+  <text x="100" y="170" class="sub">"What's our SLA breach rate for the last 30 days, by team?"</text>
+  <text x="100" y="188" class="sub">"Auto-approve a vendor payment under $1,000."</text>
+
+  <rect x="60" y="240" width="220" height="220" class="box"/>
+  <text x="170" y="270" text-anchor="middle" class="title">Dashboard A</text>
+  <text x="170" y="296" text-anchor="middle" class="sub">KPIs, ticket volume</text>
+  <text x="170" y="316" text-anchor="middle" class="sub">(Metabase)</text>
+  <rect x="100" y="340" width="140" height="100" class="warn"/>
+  <text x="170" y="370" text-anchor="middle" class="sub">no audit log</text>
+  <text x="170" y="386" text-anchor="middle" class="sub">no replay</text>
+  <text x="170" y="402" text-anchor="middle" class="sub">no policy</text>
+
+  <rect x="320" y="240" width="220" height="220" class="box"/>
+  <text x="430" y="270" text-anchor="middle" class="title">Ticketing system</text>
+  <text x="430" y="296" text-anchor="middle" class="sub">on-call, SLA, escalations</text>
+  <text x="430" y="316" text-anchor="middle" class="sub">(Jira / Zendesk)</text>
+  <rect x="360" y="340" width="140" height="100" class="warn"/>
+  <text x="430" y="370" text-anchor="middle" class="sub">closed by who?</text>
+  <text x="430" y="386" text-anchor="middle" class="sub">approved by what?</text>
+  <text x="430" y="402" text-anchor="middle" class="sub">replay = manual</text>
+
+  <rect x="580" y="240" width="220" height="220" class="box"/>
+  <text x="690" y="270" text-anchor="middle" class="title">Slack</text>
+  <text x="690" y="296" text-anchor="middle" class="sub">where answers get</text>
+  <text x="690" y="316" text-anchor="middle" class="sub">typed and lost</text>
+  <rect x="620" y="340" width="140" height="100" class="warn"/>
+  <text x="690" y="370" text-anchor="middle" class="sub">ephemeral</text>
+  <text x="690" y="386" text-anchor="middle" class="sub">no agent</text>
+  <text x="690" y="402" text-anchor="middle" class="sub">no replay</text>
+
+  <text x="540" y="500" text-anchor="middle" class="q">How do you ship 50 agents into this without losing the receipts?</text>
+</svg>

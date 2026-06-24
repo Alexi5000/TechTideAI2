@@ -16,6 +16,8 @@ The full system, from operator console to Fastify backend to Mastra (TypeScript)
 
 ## About
 
+Looking for the 15-minute walkthrough script (6 diagrams, run-of-show dialogue, printable cheat sheet)? It is at [HUMAN_WALKTHROUGH_DEMO.md](HUMAN_WALKTHROUGH_DEMO.md) at the repo root. Designed for phone screen-shares, virtual interviews, and live demos.
+
 TechTideAI is a portfolio repo for a company-scale agent operating system, the kind of harness a forward-deployed engineer ships to a customer, not the kind of demo a vendor demo team gives in a sales call.
 
 The mental model is a working company modelled as an agent system:
