@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 540" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <title>Segment 4: audit replay from any run_event row</title>
+  <desc>Every run_event row is append-only and carries the policy version stamp. A future auditor can replay the decision against the policy in force at the time. The run_events table is the audit log; the ApprovalPolicy stamps the version; the trace is the open-loop.</desc>
+
+  <style>
+    .table { fill: #f1f5f9; stroke: #475569; stroke-width: 1.4; rx: 4; }
+    .row1 { fill: #dbeafe; }
+    .row2 { fill: #f1f5f9; }
+    .row3 { fill: #fef3c7; }
+    .row4 { fill: #dcfce7; }
+    .row5 { fill: #fee2e2; }
+    .title { fill: #0f172a; font-weight: 700; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 22px; }
+    .sub { fill: #475569; font-size: 11px; }
+    .label { fill: #15803d; font-weight: 700; font-size: 13px; }
+    .key { fill: #1d4ed8; font-weight: 700; }
+    text { fill: #0f172a; }
+  </style>
+
+  <text x="540" y="50" text-anchor="middle" class="h">Segment 4: Audit Replay from any run_event</text>
+  <text x="540" y="78" text-anchor="middle" class="label">"Future operator: what was the policy when the decision was made?"</text>
+
+  <text x="40" y="120" class="key">run_events (append-only, no UPDATE):</text>
+
+  <rect x="40" y="135" width="1000" height="220" class="table"/>
+
+  <rect x="50" y="145" width="980" height="28" class="row1"/>
+  <text x="60" y="164" class="sub">id</text>
+  <text x="120" y="164" class="sub">runId</text>
+  <text x="220" y="164" class="sub">eventType</text>
+  <text x="370" y="164" class="sub">payload</text>
+  <text x="700" y="164" class="sub">policyVersion</text>
+  <text x="900" y="164" class="sub">createdAt</text>
+
+  <rect x="50" y="173" width="980" height="28" class="row2"/>
+  <text x="60" y="192" class="sub">e-1</text>
+  <text x="120" y="192" class="sub">r-9001</text>
+  <text x="220" y="192" class="sub">run.created</text>
+  <text x="370" y="192" class="sub">{orch: "orch-cipher"}</text>
+  <text x="700" y="192" class="sub">approval-policy-v1</text>
+  <text x="900" y="192" class="sub">2026-06-23T17:55Z</text>
+
+  <rect x="50" y="201" width="980" height="28" class="row3"/>
+  <text x="60" y="220" class="sub">e-2</text>
+  <text x="120" y="220" class="sub">r-9001</text>
+  <text x="220" y="220" class="sub">approval.requested</text>
+  <text x="370" y="220" class="sub">{amountUsd: 900}</text>
+  <text x="700" y="220" class="sub">approval-policy-v1</text>
+  <text x="900" y="220" class="sub">2026-06-23T17:55Z</text>
+
+  <rect x="50" y="229" width="980" height="28" class="row4"/>
+  <text x="60" y="248" class="sub">e-3</text>
+  <text x="120" y="248" class="sub">r-9001</text>
+  <text x="220" y="248" class="sub">approval.granted</text>
+  <text x="370" y="248" class="sub">{by: "operator-7"}</text>
+  <text x="700" y="248" class="sub">approval-policy-v1</text>
+  <text x="900" y="248" class="sub">2026-06-23T17:55Z</text>
+
+  <rect x="50" y="257" width="980" height="28" class="row5"/>
+  <text x="60" y="276" class="sub">e-4</text>
+  <text x="120" y="276" class="sub">r-9001</text>
+  <text x="220" y="276" class="sub">run.succeeded</text>
+  <text x="370" y="276" class="sub">{output: "..."}</text>
+  <text x="700" y="276" class="sub">approval-policy-v1</text>
+  <text x="900" y="276" class="sub">2026-06-23T17:55Z</text>
+
+  <rect x="50" y="285" width="980" height="28" class="row2"/>
+  <text x="60" y="304" class="sub">e-5</text>
+  <text x="120" y="304" class="sub">r-9001</text>
+  <text x="220" y="304" class="sub">post_mortem.emitted</text>
+  <text x="370" y="304" class="sub">{path: "docs/EVALS/post-mortems/r-9001.md"}</text>
+  <text x="700" y="304" class="sub">approval-policy-v1</text>
+  <text x="900" y="304" class="sub">2026-06-23T17:55Z</text>
+
+  <text x="40" y="395" class="key">The audit replay (one-line):</text>
+  <rect x="40" y="410" width="1000" height="50" class="row1"/>
+  <text x="540" y="442" text-anchor="middle" class="sub">"On 2026-06-23, run r-9001 was granted by operator-7 under approval-policy-v1, which classifies a $900 vendor payment as billing."</text>
+</svg>

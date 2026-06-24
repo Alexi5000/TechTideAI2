@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 540" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <title>Closer: three things to remember</title>
+  <desc>The three takeaways. The first takeaway is the company-as-agent model: one CEO, ten orchestrators, fifty workers, in five-worker pods. The second takeaway is the policy-stamped audit log: every run_event row carries the policy version that was in force when the decision was made, so a future auditor can replay the decision against the policy in force at the time. The third takeaway is that the eval harness is the regression dashboard: a 33-task golden suite, frozen baseline, regression threshold, post-mortem auto-gen, nightly run.</desc>
+
+  <style>
+    .takeaway { fill: #fef3c7; stroke: #b45309; stroke-width: 2; rx: 12; ry: 12; }
+    .number { fill: #b45309; font-weight: 700; font-size: 56px; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 26px; }
+    .title { fill: #0f172a; font-weight: 700; font-size: 18px; }
+    .sub { fill: #475569; font-size: 14px; }
+    .small { fill: #475569; font-size: 12px; }
+    .icon { fill: #0f172a; font-size: 28px; }
+    text { fill: #0f172a; }
+  </style>
+
+  <text x="540" y="50" text-anchor="middle" class="h">Three things to remember</text>
+
+  <rect x="40" y="100" width="333" height="320" class="takeaway"/>
+  <text x="80" y="170" class="number">1</text>
+  <text x="200" y="135" class="title">It's a company</text>
+  <text x="60" y="220" class="sub">1 CEO + 10 orchestrators</text>
+  <text x="60" y="244" class="sub">+ 50 workers in 5-worker pods.</text>
+  <text x="60" y="278" class="sub">CEO delegates.</text>
+  <text x="60" y="300" class="sub">Orchestrators coordinate.</text>
+  <text x="60" y="322" class="sub">Workers execute.</text>
+  <text x="60" y="370" class="small">Mental model: leverage</text>
+  <text x="60" y="388" class="small">pyramid. 1 + 10 + 50.</text>
+
+  <rect x="383" y="100" width="333" height="320" class="takeaway"/>
+  <text x="423" y="170" class="number">2</text>
+  <text x="540" y="135" class="title">Every row is an</text>
+  <text x="540" y="155" class="title">audit row</text>
+  <text x="403" y="220" class="sub">run_events is append-only.</text>
+  <text x="403" y="244" class="sub">Every transition emits one.</text>
+  <text x="403" y="278" class="sub">Each row carries the</text>
+  <text x="403" y="300" class="sub">policyVersion stamp.</text>
+  <text x="403" y="370" class="small">Replay: future operator</text>
+  <text x="403" y="388" class="small">vs. policy in force at the time.</text>
+
+  <rect x="726" y="100" width="313" height="320" class="takeaway"/>
+  <text x="766" y="170" class="number">3</text>
+  <text x="880" y="135" class="title">The eval is the</text>
+  <text x="880" y="155" class="title">regression dashboard</text>
+  <text x="746" y="220" class="sub">33-task golden suite.</text>
+  <text x="746" y="244" class="sub">Frozen baseline + threshold.</text>
+  <text x="746" y="278" class="sub">Per-axis grader: correctness,</text>
+  <text x="746" y="300" class="sub">safety, completeness, quality.</text>
+  <text x="746" y="370" class="small">Drop in pass rate = page</text>
+  <text x="746" y="388" class="small">the FDE. Post-mortem auto-gen.</text>
+
+  <text x="540" y="475" text-anchor="middle" class="title">That's the whole harness. One CEO, ten leads, fifty doers, a typed audit log, and a regression dashboard.</text>
+  <text x="540" y="500" text-anchor="middle" class="sub">Available in the repo at HUMAN_WALKTHROUGH_DEMO.md. 15 minutes. Two diagrams. One job offer.</text>
+</svg>
