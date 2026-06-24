@@ -1,4 +1,4 @@
-"""Notebook bridge — re-export of the package module.
+"""Notebook bridge, re-export of the package module.
 
 This file exists so notebooks can `import notebooks._bridge` and the
 reviewer-facing notebook (the `.ipynb` exported via `scripts/convert-notebooks.py`)
@@ -11,7 +11,7 @@ If you edit one, edit the other. The CI test
 directly.
 """
 
-from techtide_agents.notebook_bridge import (  # noqa: F401 — re-export
+from techtide_agents.notebook_bridge import (  # noqa: F401, re-export
     EvalRun,
     EvalRunSummary,
     EvalSuiteSummary,

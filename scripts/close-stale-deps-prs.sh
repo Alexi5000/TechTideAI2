@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# close-stale-deps-prs.sh — closes the stale dependabot PRs that pre-date a
+# close-stale-deps-prs.sh, closes the stale dependabot PRs that pre-date a
 # consolidated `build(deps): refresh all groups` PR.
 #
 # After this script runs, the consolidated PR is the canonical record.

@@ -779,7 +779,7 @@
         "thesis": "Harness engineering, not prompt engineering, is the durable skill in agent work."
       },
       "expected": {
-        "rubric": "Arc should have a hook, a tension, evidence, and a payoff — each labeled.",
+        "rubric": "Arc should have a hook, a tension, evidence, and a payoff, each labeled.",
         "assertions": [
           "Names the hook",
           "Names the tension",
@@ -787,7 +787,7 @@
           "Names the payoff"
         ]
       },
-      "rubric": "Hook, tension, evidence, payoff — each labeled and substantive.",
+      "rubric": "Hook, tension, evidence, payoff, each labeled and substantive.",
       "tags": ["content", "narrative"],
       "timeoutMs": 25000
     }

@@ -204,13 +204,13 @@ jobs:
               echo "❌ Empty migration file: $f"
               exit 1
             fi
-            echo "✅ $(basename "$f") — $(wc -l < "$f") lines"
+            echo "✅ $(basename "$f"), $(wc -l < "$f") lines"
           done
 
           echo "✅ All migration files validated"
 
   # ──────────────────────────────────────────────
-  # Contract drift — TS ↔ Python shared schema
+  # Contract drift, TS ↔ Python shared schema
   # ──────────────────────────────────────────────
   contracts-drift:
     name: Contract drift check
@@ -243,7 +243,7 @@ jobs:
           echo "✅ Contract files are in sync with contracts/schema.json"
 
   # ──────────────────────────────────────────────
-  # Docker — build images and smoke-test the stack
+  # Docker, build images and smoke-test the stack
   # ──────────────────────────────────────────────
   docker:
     name: Docker smoke
@@ -266,7 +266,7 @@ jobs:
         run: bash scripts/smoke-stack.sh
 
   # ──────────────────────────────────────────────
-  # Gate — all checks must pass before merge
+  # Gate, all checks must pass before merge
   # ──────────────────────────────────────────────
   ci-gate:
     name: CI Gate
@@ -282,7 +282,7 @@ jobs:
           echo "Contracts drift: ${{ needs.contracts-drift.result }}"
           echo "Docker:          ${{ needs.docker.result }}"
 
-          # Fail if any required job failed (skipped is OK — means no changes)
+          # Fail if any required job failed (skipped is OK, means no changes)
           if [[ "${{ needs.typescript.result }}" == "failure" ]]; then exit 1; fi
           if [[ "${{ needs.python.result }}" == "failure" ]]; then exit 1; fi
           if [[ "${{ needs.database.result }}" == "failure" ]]; then exit 1; fi

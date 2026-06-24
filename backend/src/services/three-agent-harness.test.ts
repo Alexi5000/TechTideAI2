@@ -49,7 +49,7 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     const callLog: AgentRunRequest[] = [];
     // Generator returns "yes" (iteration 0), "yes yes" (iteration 1). The
     // four-axis grader reads axes from the evaluator's output and grades
-    // along correctness/safety/completeness/quality — all above thresholds
+    // along correctness/safety/completeness/quality, all above thresholds
     // → run is "succeeded".
     const runtime = makeRuntime(
       {
@@ -69,7 +69,7 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
 
   it("max-iterations: never passes, run reports max-iterations", async () => {
     // To force `max-iterations` we need the rolling delta to stay above the
-    // plateau tolerance (0.02) — use sharply different axes per iteration so
+    // plateau tolerance (0.02), use sharply different axes per iteration so
     // the delta is large. Correctness stays below the 0.8 threshold so the
     // run never passes either.
     let iter = 0;
@@ -105,7 +105,7 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     const harness = new ThreeAgentHarness({ agentRuntime: runtime });
     const result = await harness.runSprint({ contract: baseContract });
     expect(result.status).toBe("plateau");
-    // Stopped early — fewer iterations than max.
+    // Stopped early, fewer iterations than max.
     expect(result.iterations.length).toBeLessThanOrEqual(3);
   });
 
@@ -113,7 +113,7 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     // `runAgent` absorbs runtime exceptions into `{ error: "..." }` outputs,
     // so the loop never sees a thrown error. With the four-axis grader and
     // every iteration producing the same zero score, the run stops on
-    // `plateau` instead of `errored` — the iteration `taskResult.failureReason`
+    // `plateau` instead of `errored`, the iteration `taskResult.failureReason`
     // captures the underlying runtime error.
     const runtime: IAgentRuntime = {
       async execute(): Promise<AgentRunResult> {

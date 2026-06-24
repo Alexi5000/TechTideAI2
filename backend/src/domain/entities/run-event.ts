@@ -1,5 +1,5 @@
 /**
- * RunEvent entity — extended for the evidence plane (Phase 2.1).
+ * RunEvent entity, extended for the evidence plane (Phase 2.1).
  *
  * The original `RunEvent` defined alongside `Run` was structurally identical
  * to what we want here, but the v2 model adds `correlation_id`, `severity`,

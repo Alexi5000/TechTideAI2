@@ -2,7 +2,7 @@
  * Skill: tool-evaluator.
  *
  * After every tool call, the agent critiques whether the result is sufficient
- * — or whether the tool needs to be called again with different arguments.
+ *, or whether the tool needs to be called again with different arguments.
  * Applies to all tiers.
  */
 

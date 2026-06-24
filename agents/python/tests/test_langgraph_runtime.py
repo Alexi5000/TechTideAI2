@@ -1,4 +1,4 @@
-"""LangGraphRuntime tests — exercise the contract surface."""
+"""LangGraphRuntime tests, exercise the contract surface."""
 
 from __future__ import annotations
 

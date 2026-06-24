@@ -1,11 +1,11 @@
 /**
  * Four-axis grader scorer (Phase 8.3, item 3).
  *
- * Grades a candidate output along four axes — Correctness, Safety, Completeness,
- * Quality — each on [0, 1]. The headline score is the weighted mean of the four.
+ * Grades a candidate output along four axes, Correctness, Safety, Completeness,
+ * Quality, each on [0, 1]. The headline score is the weighted mean of the four.
  * Each axis has a per-axis threshold; the task fails if any axis is below.
  *
- * This scorer is *not* an LLM call itself — it composes a `llm-judge` scorer
+ * This scorer is *not* an LLM call itself, it composes a `llm-judge` scorer
  * (or any other) under the hood, and the four axes are extracted from the
  * inner scorer's `meta` field. The three-agent harness builds a single LLM call
  * via `llm-judge`, asks the model to grade along the four axes, and `FourAxisGrader`

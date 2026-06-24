@@ -1,4 +1,4 @@
-"""Runtime package — the Python implementation of ``IAgentRuntime``.
+"""Runtime package, the Python implementation of ``IAgentRuntime``.
 
 The runtime is registered as a backend destination for orchestrator-tier agents
 via the dispatcher. Workers continue to run on Mastra (TypeScript); orchestrators

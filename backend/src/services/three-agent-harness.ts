@@ -238,7 +238,7 @@ export class ThreeAgentHarness {
       },
     );
 
-    // Step 3: Scorers — run every scorer in the contract against the generator's
+    // Step 3: Scorers, run every scorer in the contract against the generator's
     // output, with the evaluator's `axes` meta published to the four-axis grader
     // and the rolling history published to the plateau scorer.
     const scoringResults: IterationScorer[] = [];

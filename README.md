@@ -2,7 +2,7 @@
 
 ![TechTideAI agent operating system](assets/techtideai_hero_2026.png)
 
-> **v0.2.1**. A company-scale agent operating system, built and operated in the open. 1 CEO + 10 orchestrators + 50 workers, three-agent adversarial harness, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack, nine ADRs, 124 TS tests + 20 Python tests + a 33-task golden suite, all green. See [CHANGELOG.md](CHANGELOG.md).
+> **v0.3.0**. A company-scale agent operating system, built and operated in the open. 1 CEO + 10 orchestrators + 50 workers, three-agent adversarial harness, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack, nine ADRs, 124 TS tests + 20 Python tests + a 33-task golden suite, all green. See [CHANGELOG.md](CHANGELOG.md).
 
 **TechTideAI** is the harness an FDE ships into a customer environment, that the customer's operators monitor, and that an auditor can replay. It is a typed, observable, testable, reviewable surface for production agent teams: a React operator console, a Fastify orchestration API, a TypeScript Mastra runtime, a Python LangGraph runtime, OpenAI and Anthropic provider adapters, a Supabase-backed evidence plane with an append-only `run_events` audit log, an in-process eval harness with regression detection, a human-in-the-loop approval gate that stamps the policy version on every decision, an OpenTelemetry trace surface, and a notebook authoring flow for new golden tasks.
 

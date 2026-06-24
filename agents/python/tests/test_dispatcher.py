@@ -1,4 +1,4 @@
-"""Dispatcher tests — routing logic and config merging."""
+"""Dispatcher tests, routing logic and config merging."""
 
 from __future__ import annotations
 

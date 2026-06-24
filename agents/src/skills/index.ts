@@ -1,5 +1,5 @@
 /**
- * Skills surface — public exports.
+ * Skills surface, public exports.
  */
 
 export type { Skill, AgentTier } from "./interfaces.js";

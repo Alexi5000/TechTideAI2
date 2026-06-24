@@ -9,7 +9,7 @@
  * - Memory is opt-in: `getMastraMemory()` returns `undefined` when the
  *   environment isn't ready (missing SUPABASE_URL, missing memory table).
  *   That keeps the rest of the system honest about availability.
- * - We do NOT pin to a specific Postgres adapter at import time — we try to
+ * - We do NOT pin to a specific Postgres adapter at import time, we try to
  *   load `@mastra/pg` dynamically. If the package isn't installed, we
  *   fall back to a no-op memory that's still legal in Mastra's API.
  * - Working-memory templates are tier-scoped (CEO/orchestrator/worker).
@@ -40,7 +40,7 @@ export async function getMastraMemory(
   if (!config?.connectionString) return undefined;
 
   try {
-    // Dynamic import — @mastra/pg is an optional peer in case operators
+    // Dynamic import, @mastra/pg is an optional peer in case operators
     // want to wire up their own store.
     const mod = (await import(/* @vite-ignore */ "@mastra/pg")) as Record<string, unknown>;
     const PostgresStore = (mod as { PostgresStore?: unknown }).PostgresStore;
@@ -66,7 +66,7 @@ export async function getMastraMemory(
     });
     return memory;
   } catch {
-    // @mastra/pg not installed — memory is opt-in.
+    // @mastra/pg not installed, memory is opt-in.
     return undefined;
   }
 }

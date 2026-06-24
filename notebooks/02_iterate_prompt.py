@@ -1,5 +1,5 @@
 """
-# 02 — Iterate a Prompt
+# 02, Iterate a Prompt
 
 Bring your own prompt, score it against an existing fixture, and iterate until the score meets your threshold. The loop is small on purpose: edit, run, inspect, edit again.
 
@@ -63,4 +63,4 @@ print(candidate_prompt)
 
 # ## Step 4: iterate
 #
-# Edit the `candidate_prompt` cell, re-run the eval, and compare scores. The loop is manual on purpose — the goal is for the operator to *see* what changes, not to have the LLM edit its own prompt.
+# Edit the `candidate_prompt` cell, re-run the eval, and compare scores. The loop is manual on purpose, the goal is for the operator to *see* what changes, not to have the LLM edit its own prompt.

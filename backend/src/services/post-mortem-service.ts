@@ -69,8 +69,8 @@ export class PostMortemService {
       "",
       `- Agent: \`${run.agentId ?? "unknown"}\``,
       `- Status: \`${run.status}\``,
-      `- Started: ${run.startedAt ?? "—"}`,
-      `- Finished: ${run.finishedAt ?? "—"}`,
+      `- Started: ${run.startedAt ?? ", "}`,
+      `- Finished: ${run.finishedAt ?? ", "}`,
       ``,
     ].join("\n");
   }
@@ -83,7 +83,7 @@ export class PostMortemService {
   private eventTimeline(events: ReadonlyArray<{ eventType: string; createdAt: string; payload: Record<string, unknown> }>): string {
     if (events.length === 0) return "## Event Timeline\n\n_No events recorded._";
     const rows = events
-      .map((e) => `- \`${e.createdAt}\` **${e.eventType}** — ${summarizePayload(e.payload)}`)
+      .map((e) => `- \`${e.createdAt}\` **${e.eventType}**, ${summarizePayload(e.payload)}`)
       .join("\n");
     return `## Event Timeline\n\n${rows}`;
   }

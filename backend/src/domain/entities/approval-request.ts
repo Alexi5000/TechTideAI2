@@ -1,12 +1,12 @@
 /**
- * ApprovalRequest entity — Phase 3.
+ * ApprovalRequest entity, Phase 3.
  *
  * A pending human-in-the-loop decision for a high-risk agent action. The
  * ApprovalRequest is the durable artifact; the run that triggered it pauses
  * until the request is granted or denied (or expires).
  *
  * Status vocabulary is intentionally small: `pending | granted | denied | expired`.
- * The four states are exhaustive — anything else is a bug.
+ * The four states are exhaustive, anything else is a bug.
  *
  * The canonical TS type for `ApprovalRiskTier` lives in `@techtide/agents`
  * (see `agents/src/core/approval-policy.ts`) so the agents package and the

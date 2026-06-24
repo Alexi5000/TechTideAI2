@@ -1,4 +1,4 @@
-"""LangGraph Runtime — implements the IAgentRuntime contract for orchestrator-tier agents.
+"""LangGraph Runtime, implements the IAgentRuntime contract for orchestrator-tier agents.
 
 Each orchestrator gets a graph with:
   - an intake node (parses request, classifies intent)
@@ -65,7 +65,7 @@ class LangGraphRuntime:
             )
         try:
             return runner(request)
-        except Exception as exc:  # noqa: BLE001 — runtime boundary
+        except Exception as exc:  # noqa: BLE001, runtime boundary
             return AgentRunResult(
                 success=False,
                 output={},
@@ -103,7 +103,7 @@ def default_orchestrator_graphs(llm: LlmClient) -> dict[str, Callable[[AgentRunR
 def make_synthesis_graph(domain: str, llm: LlmClient) -> Callable[[AgentRunRequest], AgentRunResult]:
     """Generic 4-node orchestrator graph: intake → plan → delegate → synthesize.
 
-    The "delegate" step is symbolic — workers run on Mastra in production. The
+    The "delegate" step is symbolic, workers run on Mastra in production. The
     Python runtime plans the delegation and returns a structured output that
     the Mastra runtime can act on.
     """
@@ -153,10 +153,10 @@ def make_cipher_graph(llm: LlmClient) -> Callable[[AgentRunRequest], AgentRunRes
     """Hand-tuned forecast / margin / cost graph for the Cipher orchestrator.
 
     Steps:
-      1. Intake — extract financial inputs.
-      2. Compute — apply deterministic formulas (compound growth, margins).
-      3. LLM — produce a narrative + risk callout from the numbers.
-      4. Gate — if a `cost_optimization` action is requested, return
+      1. Intake, extract financial inputs.
+      2. Compute, apply deterministic formulas (compound growth, margins).
+      3. LLM, produce a narrative + risk callout from the numbers.
+      4. Gate, if a `cost_optimization` action is requested, return
          `awaiting-approval` because cost decisions are externally observable.
     """
 
@@ -227,7 +227,7 @@ def _plan(request: AgentRunRequest) -> dict[str, Any]:
 def _suggest_delegations(agent_id: str, inputs: dict[str, Any]) -> list[str]:
     """Map an orchestrator to its 5-worker pod.
 
-    Source of truth is `agents/src/core/registry.ts` — the workers are
+    Source of truth is `agents/src/core/registry.ts`, the workers are
     grouped by `reportsTo`. When a worker is added to the registry, this
     map must be updated. The CI `pytest` for the runtime asserts the
     invariant that each orchestrator has exactly 5 workers (see
@@ -392,5 +392,5 @@ def _safe_generate(llm: LlmClient, prompt: str) -> str:
             )
         )
         return response.text
-    except Exception as exc:  # noqa: BLE001 — surface upstream failure as a stub
+    except Exception as exc:  # noqa: BLE001, surface upstream failure as a stub
         return f"[llm unavailable: {exc}]"
