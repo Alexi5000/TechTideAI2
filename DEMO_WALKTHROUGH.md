@@ -1,4 +1,4 @@
-# Human Walkthrough Demo
+# Demo Walkthrough
 
 > A 15-minute, single-file run-of-show for the TechTideAI company-scale
 > agent operating system. Designed for a phone screen-share, a virtual
@@ -247,7 +247,7 @@ this one. The first slide they see on the call is also this one
 >
 > "That's the whole harness. One CEO, ten leads, fifty doers, a
 > typed audit log, and a regression dashboard. Available in the repo
-> at `HUMAN_WALKTHROUGH_DEMO.md`. Fifteen minutes. Six diagrams.
+> at `DEMO_WALKTHROUGH.md`. Fifteen minutes. Six diagrams.
 > One job offer."
 
 Take a beat. The next sentence is the only one that matters.
