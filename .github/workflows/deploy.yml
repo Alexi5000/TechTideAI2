@@ -14,13 +14,14 @@ on:
           - production
         default: staging
 
-concurrency:
-  group: deploy-${{ github.event.inputs.environment || 'staging' }}
-  cancel-in-progress: false
-
 env:
   NODE_VERSION: "20"
   PNPM_VERSION: "9"
+  DEPLOY_TARGET: ${{ github.event.inputs.environment || 'staging' }}
+
+concurrency:
+  group: deploy-${{ env.DEPLOY_TARGET }}
+  cancel-in-progress: false
 
 jobs:
   # ----------------------------------------------
@@ -143,11 +144,15 @@ jobs:
         run: npm i -g vercel@latest
 
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=${{ github.event.inputs.environment == 'production' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TARGET: ${{ env.DEPLOY_TARGET == 'production' && 'production' || 'preview' }}
+        run: vercel pull --yes --environment=$VERCEL_TARGET --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy frontend to Vercel
+        env:
+          VERCEL_TARGET: ${{ env.DEPLOY_TARGET == 'production' && 'production' || 'preview' }}
         run: |
-          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+          if [ "$VERCEL_TARGET" = "production" ]; then
             vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
@@ -164,13 +169,13 @@ jobs:
   # when at least one deploy step ran, and is the single source of truth
   # for the per-push deployment status.
   publish:
-    name: "Publish deployment -> ${{ github.event.inputs.environment || 'staging' }}"
+    name: "Publish deployment -> ${{ env.DEPLOY_TARGET }}"
     needs: [build, deploy-backend, deploy-frontend]
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'staging' }}
+    environment: ${{ env.DEPLOY_TARGET }}
     steps:
       - name: Mark deployment successful
         run: |
-          echo "Deployment record for ${{ github.event.inputs.environment || 'staging' }} on sha ${{ github.sha }} is the canonical record."
+          echo "Deployment record for ${{ env.DEPLOY_TARGET }} on sha ${{ github.sha }} is the canonical record."
           echo "Sub-jobs: migrate=${{ needs.migrate.result }} deploy-backend=${{ needs.deploy-backend.result }} deploy-frontend=${{ needs.deploy-frontend.result }}"
