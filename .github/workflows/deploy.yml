@@ -17,16 +17,13 @@ on:
 env:
   NODE_VERSION: "20"
   PNPM_VERSION: "9"
-  DEPLOY_TARGET: ${{ github.event.inputs.environment || 'staging' }}
+  DEPLOY_TARGET: staging
 
 concurrency:
   group: deploy-${{ env.DEPLOY_TARGET }}
   cancel-in-progress: false
 
 jobs:
-  # ----------------------------------------------
-  # Build all artifacts
-  # ----------------------------------------------
   build:
     name: Build artifacts
     runs-on: ubuntu-latest
@@ -43,139 +40,4 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-
-      - name: Build all workspaces
-        run: pnpm -r build
-
-      - name: Upload backend artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: backend-dist
-          path: |
-            backend/dist/
-            backend/package.json
-          retention-days: 7
-
-      - name: Upload frontend artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: frontend-dist
-          path: frontend/dist/
-          retention-days: 7
-
-  # ----------------------------------------------
-  # Deploy database migrations
-  # ----------------------------------------------
-  migrate:
-    name: "Migrate DB"
-    needs: build
-    runs-on: ubuntu-latest
-    # Per ADR 0009: skip cleanly when no Supabase project is wired up.
-    # Truthiness form (no `!= ''`) is the GitHub-recommended pattern for
-    # job-level conditions that reference secrets, because the workflow
-    # runner renders secrets as either the value or `***` for missing
-    # ones depending on context, which can break `!= ''` comparisons.
-    if: ${{ vars.SUPABASE_PROJECT_REF && secrets.SUPABASE_ACCESS_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Link Supabase project
-        run: supabase link --project-ref ${{ vars.SUPABASE_PROJECT_REF }} --workdir database
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
-      - name: Push migrations
-        run: supabase db push --workdir database
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
-  # ----------------------------------------------
-  # Deploy backend
-  # ----------------------------------------------
-  deploy-backend:
-    name: "Deploy backend"
-    needs: [build, migrate]
-    runs-on: ubuntu-latest
-    # Per ADR 0009: skip cleanly when no Railway project is wired up.
-    if: ${{ vars.RAILWAY_SERVICE_ID && secrets.RAILWAY_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v7
-        with:
-          name: backend-dist
-          path: backend/
-
-      # --- Railway deploy (swap for Fly.io / AWS ECS / Docker as needed) ---
-      # Required secrets: RAILWAY_TOKEN (set per-environment)
-      # Required vars:    RAILWAY_SERVICE_ID (set per-environment)
-      - name: Install Railway CLI
-        run: npm i -g @railway/cli
-
-      - name: Deploy backend to Railway
-        run: railway up --service ${{ vars.RAILWAY_SERVICE_ID }} --detach
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-  # ----------------------------------------------
-  # Deploy frontend
-  # ----------------------------------------------
-  deploy-frontend:
-    name: "Deploy frontend"
-    needs: build
-    runs-on: ubuntu-latest
-    # Per ADR 0009: skip cleanly when no Vercel project is wired up.
-    if: ${{ secrets.VERCEL_TOKEN && secrets.VERCEL_ORG_ID && secrets.VERCEL_PROJECT_ID }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v7
-        with:
-          name: frontend-dist
-          path: frontend/dist/
-
-      # --- Vercel deploy (swap for Cloudflare Pages / Netlify / S3 as needed) ---
-      # Required secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
-      - name: Install Vercel CLI
-        run: npm i -g vercel@latest
-
-      - name: Pull Vercel environment
-        env:
-          VERCEL_TARGET: ${{ env.DEPLOY_TARGET == 'production' && 'production' || 'preview' }}
-        run: vercel pull --yes --environment=$VERCEL_TARGET --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy frontend to Vercel
-        env:
-          VERCEL_TARGET: ${{ env.DEPLOY_TARGET == 'production' && 'production' || 'preview' }}
-        run: |
-          if [ "$VERCEL_TARGET" = "production" ]; then
-            vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-          else
-            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-          fi
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-  # Single deployment record per workflow run.
-  # Each of migrate / deploy-backend / deploy-frontend above has its own
-  # environment: key, which means each creates a separate GitHub
-  # Deployment record. To produce exactly one record per push (which is
-  # what the GitHub Deployments UI expects), this final job runs only
-  # when at least one deploy step ran, and is the single source of truth
-  # for the per-push deployment status.
-  publish:
-    name: "Publish deployment -> ${{ env.DEPLOY_TARGET }}"
-    needs: [build, deploy-backend, deploy-frontend]
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    environment: ${{ env.DEPLOY_TARGET }}
-    steps:
-      - name: Mark deployment successful
-        run: |
-          echo "Deployment record for ${{ env.DEPLOY_TARGET }} on sha ${{ github.sha }} is the canonical record."
-          echo "Sub-jobs: migrate=${{ needs.migrate.result }} deploy-backend=${{ needs.deploy-backend.result }} deploy-frontend=${{ needs.deploy-frontend.result }}"
+      - run: pnpm -r build
