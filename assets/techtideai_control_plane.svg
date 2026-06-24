@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 720" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">
+  <title>TechTideAI control plane hierarchy</title>
+  <desc>One CEO agent at the top, ten orchestrator agents below, fifty worker agents at the bottom, grouped into five-worker pods per orchestrator.</desc>
+
+  <style>
+    .ceo { fill: #fef3c7; stroke: #b45309; stroke-width: 2; rx: 50; ry: 50; }
+    .orch { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 1.4; rx: 8; ry: 8; }
+    .worker { fill: #f1f5f9; stroke: #475569; stroke-width: 1; rx: 4; ry: 4; }
+    .title { fill: #0f172a; font-weight: 700; }
+    .sub { fill: #475569; font-size: 11px; }
+    .edge { stroke: #475569; stroke-width: 1; fill: none; }
+    .pod-rect { fill: none; stroke: #94a3b8; stroke-width: 1; stroke-dasharray: 3 3; rx: 12; ry: 12; }
+    .pod-label { fill: #64748b; font-size: 10px; }
+    .inv { fill: #15803d; font-weight: 700; }
+  </style>
+
+  <!-- CEO -->
+  <circle cx="540" cy="60" r="42" class="ceo"/>
+  <text x="540" y="56" text-anchor="middle" class="title">ceo</text>
+  <text x="540" y="72" text-anchor="middle" class="sub">delegates to</text>
+  <text x="540" y="86" text-anchor="middle" class="sub">orchestrators</text>
+
+  <!-- Orchestrators row -->
+  <g>
+    <rect x="60" y="160" width="160" height="50" class="orch"/>
+    <text x="140" y="182" text-anchor="middle" class="title">orch-ava</text>
+    <text x="140" y="198" text-anchor="middle" class="sub">product + GTM</text>
+
+    <rect x="240" y="160" width="160" height="50" class="orch"/>
+    <text x="320" y="182" text-anchor="middle" class="title">orch-finn</text>
+    <text x="320" y="198" text-anchor="middle" class="sub">sales ops</text>
+
+    <rect x="420" y="160" width="160" height="50" class="orch"/>
+    <text x="500" y="182" text-anchor="middle" class="title">orch-veronica</text>
+    <text x="500" y="198" text-anchor="middle" class="sub">customer success</text>
+
+    <rect x="600" y="160" width="160" height="50" class="orch"/>
+    <text x="680" y="182" text-anchor="middle" class="title">orch-cipher</text>
+    <text x="680" y="198" text-anchor="middle" class="sub">finance + analytics</text>
+
+    <rect x="780" y="160" width="160" height="50" class="orch"/>
+    <text x="860" y="182" text-anchor="middle" class="title">orch-axel</text>
+    <text x="860" y="198" text-anchor="middle" class="sub">engineering</text>
+
+    <rect x="60" y="220" width="160" height="50" class="orch"/>
+    <text x="140" y="242" text-anchor="middle" class="title">orch-luna</text>
+    <text x="140" y="258" text-anchor="middle" class="sub">marketing</text>
+
+    <rect x="240" y="220" width="160" height="50" class="orch"/>
+    <text x="320" y="242" text-anchor="middle" class="title">orch-ellie</text>
+    <text x="320" y="258" text-anchor="middle" class="sub">people ops</text>
+
+    <rect x="420" y="220" width="160" height="50" class="orch"/>
+    <text x="500" y="242" text-anchor="middle" class="title">orch-audit</text>
+    <text x="500" y="258" text-anchor="middle" class="sub">compliance</text>
+
+    <rect x="600" y="220" width="160" height="50" class="orch"/>
+    <text x="680" y="242" text-anchor="middle" class="title">orch-veronica-lite</text>
+    <text x="680" y="258" text-anchor="middle" class="sub">CS triage</text>
+
+    <rect x="780" y="220" width="160" height="50" class="orch"/>
+    <text x="860" y="242" text-anchor="middle" class="title">orch-content</text>
+    <text x="860" y="258" text-anchor="middle" class="sub">content + docs</text>
+  </g>
+
+  <!-- CEO to orchestrators: 10 edges -->
+  <path d="M 540 102 L 140 160" class="edge"/>
+  <path d="M 540 102 L 320 160" class="edge"/>
+  <path d="M 540 102 L 500 160" class="edge"/>
+  <path d="M 540 102 L 680 160" class="edge"/>
+  <path d="M 540 102 L 860 160" class="edge"/>
+  <path d="M 540 102 L 140 220" class="edge"/>
+  <path d="M 540 102 L 320 220" class="edge"/>
+  <path d="M 540 102 L 500 220" class="edge"/>
+  <path d="M 540 102 L 680 220" class="edge"/>
+  <path d="M 540 102 L 860 220" class="edge"/>
+
+  <!-- Worker pods: 5 workers per orchestrator, 50 total. We show 3 example pods in detail and indicate the rest. -->
+  <!-- Pod 1: orch-ava -->
+  <rect x="40" y="320" width="220" height="200" class="pod-rect"/>
+  <text x="150" y="338" text-anchor="middle" class="pod-label">orch-ava pod (5 workers)</text>
+  <rect x="60" y="350" width="180" height="28" class="worker"/>
+  <text x="150" y="368" text-anchor="middle" class="title">worker-ava-sops</text>
+  <rect x="60" y="386" width="180" height="28" class="worker"/>
+  <text x="150" y="404" text-anchor="middle" class="title">worker-ava-research</text>
+  <rect x="60" y="422" width="180" height="28" class="worker"/>
+  <text x="150" y="440" text-anchor="middle" class="title">worker-ava-prospecting</text>
+  <rect x="60" y="458" width="180" height="28" class="worker"/>
+  <text x="150" y="476" text-anchor="middle" class="title">worker-ava-deck</text>
+  <rect x="60" y="494" width="180" height="20" class="worker"/>
+  <text x="150" y="509" text-anchor="middle" class="sub">+ 1 more</text>
+
+  <!-- Pod 2: orch-cipher -->
+  <rect x="290" y="320" width="220" height="200" class="pod-rect"/>
+  <text x="400" y="338" text-anchor="middle" class="pod-label">orch-cipher pod (5 workers)</text>
+  <rect x="310" y="350" width="180" height="28" class="worker"/>
+  <text x="400" y="368" text-anchor="middle" class="title">worker-cipher-fpna</text>
+  <rect x="310" y="386" width="180" height="28" class="worker"/>
+  <text x="400" y="404" text-anchor="middle" class="title">worker-cipher-ar</text>
+  <rect x="310" y="422" width="180" height="28" class="worker"/>
+  <text x="400" y="440" text-anchor="middle" class="title">worker-cipher-ap</text>
+  <rect x="310" y="458" width="180" height="28" class="worker"/>
+  <text x="400" y="476" text-anchor="middle" class="title">worker-cipher-treasury</text>
+  <rect x="310" y="494" width="180" height="20" class="worker"/>
+  <text x="400" y="509" text-anchor="middle" class="sub">+ 1 more</text>
+
+  <!-- Pod 3: orch-audit -->
+  <rect x="540" y="320" width="220" height="200" class="pod-rect"/>
+  <text x="650" y="338" text-anchor="middle" class="pod-label">orch-audit pod (5 workers)</text>
+  <rect x="560" y="350" width="180" height="28" class="worker"/>
+  <text x="650" y="368" text-anchor="middle" class="title">worker-audit-rga</text>
+  <rect x="560" y="386" width="180" height="28" class="worker"/>
+  <text x="650" y="404" text-anchor="middle" class="title">worker-audit-controls</text>
+  <rect x="560" y="422" width="180" height="28" class="worker"/>
+  <text x="650" y="440" text-anchor="middle" class="title">worker-audit-evidence</text>
+  <rect x="560" y="458" width="180" height="28" class="worker"/>
+  <text x="650" y="476" text-anchor="middle" class="title">worker-audit-policy</text>
+  <rect x="560" y="494" width="180" height="20" class="worker"/>
+  <text x="650" y="509" text-anchor="middle" class="sub">+ 1 more</text>
+
+  <!-- Pod 4 (placeholder): orch-luna -->
+  <rect x="790" y="320" width="220" height="200" class="pod-rect"/>
+  <text x="900" y="338" text-anchor="middle" class="pod-label">orch-luna pod (5 workers)</text>
+  <text x="900" y="380" text-anchor="middle" class="sub">5 worker agents:</text>
+  <text x="900" y="400" text-anchor="middle" class="sub">worker-luna-campaign</text>
+  <text x="900" y="418" text-anchor="middle" class="sub">worker-luna-content</text>
+  <text x="900" y="436" text-anchor="middle" class="sub">worker-luna-seo</text>
+  <text x="900" y="454" text-anchor="middle" class="sub">worker-luna-analytics</text>
+  <text x="900" y="472" text-anchor="middle" class="sub">+ 1 more</text>
+
+  <!-- Edges from orchestrators to pods -->
+  <path d="M 140 210 L 150 320" class="edge"/>
+  <path d="M 680 210 L 400 320" class="edge"/>
+  <path d="M 500 270 L 650 320" class="edge"/>
+  <path d="M 140 270 L 900 320" class="edge"/>
+
+  <!-- Invariant box -->
+  <rect x="40" y="560" width="1000" height="130" class="pod-rect"/>
+  <text x="540" y="586" text-anchor="middle" class="inv">Invariant asserted in agents/src/core/registry.test.ts</text>
+  <text x="540" y="612" text-anchor="middle" class="sub">1 ceo + 10 orchestrators + 50 workers (5 per orchestrator)</text>
+  <text x="540" y="630" text-anchor="middle" class="sub">Every orchestrator reports to ceo; every worker reports to exactly one orchestrator.</text>
+  <text x="540" y="648" text-anchor="middle" class="sub">Adding an orchestrator requires updating both the test and agents/runtime_config.yaml.</text>
+  <text x="540" y="666" text-anchor="middle" class="sub">The full registry is enumerated in agents/src/core/registry.ts.</text>
+</svg>

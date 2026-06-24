@@ -1,0 +1,57 @@
+# .dockerignore — keep image builds small and deterministic.
+
+# VCS + history
+.git
+.gitignore
+.gitattributes
+
+# Build outputs that the Dockerfile rebuilds anyway
+**/dist/
+**/build/
+**/.tsbuildinfo
+**/node_modules/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+**/.venv/
+**/venv/
+agents/python/dist/
+agents/python/*.egg-info/
+
+# Env + secrets
+.env
+.env.*
+!.env.example
+**/secrets/
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+nul
+
+# Tests + coverage reports (CI runs them separately)
+**/coverage/
+**/htmlcov/
+**/.nyc_output/
+
+# Docs and assets (not needed at runtime)
+docs/posts/
+docs/EVALS/latest.json
+docs/EVALS/ci-latest.json
+**/*.md
+!agents/python/README.md
+
+# Notebooks are authoring surfaces; not in the runtime image
+notebooks/
+
+# This file itself
+.dockerignore
+Dockerfile*
+docker-compose*.yml

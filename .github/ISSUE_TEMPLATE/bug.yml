@@ -1,0 +1,76 @@
+name: Bug Report
+description: File a bug against the TechTideAI platform.
+title: "[bug] "
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Please fill out the sections below so we can reproduce and fix it quickly.
+
+  - type: input
+    id: version
+    attributes:
+      label: TechTideAI version
+      description: What version did you see this on? (Run `git rev-parse --short HEAD` or check the latest release.)
+      placeholder: "v0.2.0 or commit hash"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: workspace
+    attributes:
+      label: Affected workspace
+      description: Which workspace shows the bug?
+      options:
+        - frontend
+        - backend
+        - agents (TypeScript)
+        - agents (Python / LangGraph)
+        - apis
+        - database (Supabase / Weaviate)
+        - ci
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps that reliably trigger the bug.
+      placeholder: |
+        1. `pnpm run dev:backend`
+        2. `curl -X POST http://localhost:4050/api/agents/ceo/run -d ...`
+        3. See error.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Paste error output verbatim.
+    validations:
+      required: true
+
+  - type: input
+    id: run_id
+    attributes:
+      label: Run id (if applicable)
+      description: If the bug involves agent execution, paste the run id from `/api/runs`.
+      placeholder: "uuid"
+
+  - type: textarea
+    id: verify
+    attributes:
+      label: `pnpm run verify` output
+      description: Paste the output of `pnpm run verify` on a clean checkout. If you didn't run it, please run it.

@@ -1,0 +1,23 @@
+# syntax=docker/dockerfile:1.6
+# TechTideAI agents image (Mastra dev console).
+# Optional surface; not the production runtime (that's the backend).
+# Run with:  docker run -p 4052:4052 techtideai-agents
+
+FROM node:20-alpine
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+RUN corepack enable && corepack prepare pnpm@9 --activate
+
+WORKDIR /repo
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY agents/package.json ./agents/package.json
+COPY apis/package.json   ./apis/package.json
+RUN pnpm install --frozen-lockfile --filter @techtide/agents... --filter @techtide/apis...
+COPY tsconfig.base.json ./
+COPY apis/        ./apis/
+COPY agents/      ./agents/
+RUN pnpm -C apis build
+RUN pnpm -C agents build
+
+EXPOSE 4052
+CMD ["pnpm", "-C", "agents", "dev"]

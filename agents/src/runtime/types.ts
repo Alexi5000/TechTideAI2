@@ -12,7 +12,14 @@ export interface AgentRunRequest {
 }
 
 export interface AgentEvent {
-  type: "tool_call" | "tool_result" | "message" | "error";
+  type:
+    | "tool_call"
+    | "tool_result"
+    | "message"
+    | "error"
+    | "approval_requested"
+    | "approval_granted"
+    | "approval_denied";
   timestamp: string;
   payload: Record<string, unknown>;
 }
@@ -22,6 +29,7 @@ export interface AgentRunResult {
   output: Record<string, unknown>;
   events: AgentEvent[];
   error?: string;
+  approvalId?: string;
 }
 
 /**

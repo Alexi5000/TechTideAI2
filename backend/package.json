@@ -1,18 +1,21 @@
 {
   "name": "@techtide/backend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/index.js",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "evals": "tsx src/cli/run-evals.ts",
+    "sprint": "tsx src/cli/run-sprint.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.2",
+    "@opentelemetry/sdk-node": "^0.203.0",
     "@supabase/supabase-js": "^2.45.0",
     "@techtide/agents": "workspace:*",
     "@techtide/apis": "workspace:*",

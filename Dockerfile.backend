@@ -1,0 +1,57 @@
+# syntax=docker/dockerfile:1.6
+# TechTideAI backend image.
+# Multi-stage build: pnpm install + workspace builds, then a slim runtime.
+# Non-root, healthcheck, port 4050. Image is ~250MB on alpine:3.20.
+
+# ---- Stage 1: deps + build ----
+FROM node:20-alpine AS builder
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+RUN corepack enable && corepack prepare pnpm@9 --activate
+
+WORKDIR /repo
+# Copy lockfile + package manifests first for a deterministic install.
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY backend/package.json ./backend/package.json
+COPY apis/package.json   ./apis/package.json
+COPY agents/package.json  ./agents/package.json
+COPY frontend/package.json ./frontend/package.json
+RUN pnpm install --frozen-lockfile --filter @techtide/backend... --filter @techtide/agents... --filter @techtide/apis...
+
+COPY tsconfig.base.json ./
+COPY apis/        ./apis/
+COPY agents/src/  ./agents/src/
+COPY agents/package.json ./agents/package.json
+COPY agents/tsconfig.json ./agents/tsconfig.json
+COPY agents/tsconfig.build.json ./agents/tsconfig.build.json
+COPY backend/src/ ./backend/src/
+COPY backend/tsconfig.json ./backend/tsconfig.json
+COPY backend/tsconfig.build.json ./backend/tsconfig.build.json
+COPY contracts/   ./contracts/
+
+RUN pnpm -C apis build
+RUN pnpm -C agents build
+RUN pnpm -C backend build
+
+# Use 'pnpm deploy' to produce a self-contained deployment of the backend
+# workspace with production-only deps laid out flat. This avoids pnpm's
+# .pnpm/ virtual-store symlinks, which Docker COPY breaks (the reason the
+# backend was crashing at boot with: Cannot find package 'fastify').
+WORKDIR /repo/backend
+RUN pnpm deploy --filter @techtide/backend --prod /deploy/backend
+
+# ---- Stage 2: runtime ----
+FROM node:20-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=4050
+RUN addgroup -S app && adduser -S app -G app
+
+# Copy the deployed backend (dist + flat node_modules) into /app.
+COPY --from=builder /deploy/backend/ /app/
+
+USER app
+EXPOSE 4050
+HEALTHCHECK --interval=15s --timeout=3s --start-period=20s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:4050/health || exit 1
+CMD ["node", "dist/index.js"]

@@ -1,7 +1,26 @@
 {
   "name": "techtideai",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.1",
+  "description": "Company-scale AI agent operating system. Typed Mastra (TypeScript) and LangGraph (Python) runtimes, 1 CEO + 10 orchestrators + 50 workers, three-agent adversarial harness, four-axis grader, plateau scorer, human-in-the-loop approval gate, OpenTelemetry traces, and a 33-task golden eval suite.",
+  "homepage": "https://github.com/Alexi5000/TechTideAI2#readme",
+  "keywords": [
+    "agent-operating-system",
+    "multi-agent",
+    "mastra",
+    "langgraph",
+    "fastify",
+    "react",
+    "opentelemetry",
+    "human-in-the-loop",
+    "evaluation-harness",
+    "approval-gate",
+    "typescript",
+    "python",
+    "supabase",
+    "weaviate",
+    "production-agents"
+  ],
   "workspaces": [
     "frontend",
     "backend",
@@ -9,7 +28,8 @@
     "agents"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=20",
+    "pnpm": ">=9"
   },
   "scripts": {
     "dev:frontend": "pnpm -C frontend dev",
@@ -21,6 +41,7 @@
     "verify": "pnpm run lint && pnpm run test && pnpm run build"
   },
   "devDependencies": {
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "tsx": "^4.21.0"
   }
 }

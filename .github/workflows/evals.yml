@@ -1,0 +1,87 @@
+# Eval workflow — runs the eval suite on a schedule and on manual dispatch.
+# Does NOT run on pull_request events (cost guard — see docs/EVALS.md).
+
+name: evals
+
+on:
+  schedule:
+    # Weeknights at 06:00 UTC. Cheap enough at ~$0.30-0.80 per run; schedule is
+    # staggered to avoid colliding with other workflows on shared runners.
+    - cron: "0 6 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Suite id to run (default golden-tasks.v1)"
+        required: false
+        default: "golden-tasks.v1"
+      baseline:
+        description: "Baseline run id, 'latest', or 'none'"
+        required: false
+        default: "latest"
+      concurrency:
+        description: "Task concurrency (1 = deterministic replay)"
+        required: false
+        default: "1"
+      judge_model:
+        description: "LLM judge model id"
+        required: false
+        default: "gpt-4o"
+
+concurrency:
+  group: evals-${{ github.event.inputs.suite || 'golden-tasks.v1' }}
+  cancel-in-progress: true
+
+jobs:
+  run-evals:
+    name: Run eval suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pull-requests: write # for posting PR comments when triggered on PR
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build dependencies (agents + apis)
+        run: |
+          pnpm -C apis build
+          pnpm -C agents build
+
+      - name: Run eval suite
+        id: evals
+        env:
+          EVAL_DEFAULT_JUDGE_MODEL: ${{ github.event.inputs.judge_model || 'gpt-4o' }}
+        run: |
+          set -e
+          SUITE="${{ github.event.inputs.suite || 'golden-tasks.v1' }}"
+          BASELINE="${{ github.event.inputs.baseline || 'latest' }}"
+          CONCURRENCY="${{ github.event.inputs.concurrency || '1' }}"
+          mkdir -p docs/EVALS
+          pnpm -C backend evals --suite "$SUITE" --baseline "$BASELINE" --concurrency "$CONCURRENCY" --judge-model "${EVAL_DEFAULT_JUDGE_MODEL}" --write-docs --json > docs/EVALS/ci-latest.json || EXIT=$?
+          # Exit code 3 = regression detected (still capture artifact, fail the job)
+          echo "exit=$EXIT" >> "$GITHUB_OUTPUT" || true
+          exit ${EXIT:-0}
+
+      - name: Upload eval artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evals-latest
+          path: docs/EVALS/ci-latest.json
+          if-no-files-found: warn
+          retention-days: 30

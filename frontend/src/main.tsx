@@ -9,6 +9,9 @@ import { DashboardHome } from "./pages/dashboard-home.js";
 import { AgentsPage } from "./pages/agents.js";
 import { ConsolePage } from "./pages/console.js";
 import { RunsPage } from "./pages/runs.js";
+import { EvalsPage } from "./pages/evals.js";
+import { ApprovalsPage } from "./pages/approvals.js";
+import { SprintsPage } from "./pages/sprints.js";
 import { NotFoundPage } from "./pages/not-found.js";
 import "./index.css";
 
@@ -27,12 +30,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="agents" element={<AgentsPage />} />
             <Route path="console/:agentId" element={<ConsolePage />} />
             <Route path="runs" element={<RunsPage />} />
+            <Route path="evals" element={<EvalsPage />} />
+            <Route path="approvals" element={<ApprovalsPage />} />
+            <Route path="sprints" element={<SprintsPage />} />
           </Route>
 
           {/* Redirects from old routes */}
           <Route path="/agents" element={<Navigate to="/dashboard/agents" replace />} />
           <Route path="/console/:agentId" element={<Navigate to="/dashboard/console/:agentId" replace />} />
           <Route path="/runs" element={<Navigate to="/dashboard/runs" replace />} />
+          <Route path="/evals" element={<Navigate to="/dashboard/evals" replace />} />
+          <Route path="/approvals" element={<Navigate to="/dashboard/approvals" replace />} />
+          <Route path="/sprints" element={<Navigate to="/dashboard/sprints" replace />} />
 
           {/* 404 - Not Found */}
           <Route path="*" element={<NotFoundPage />} />

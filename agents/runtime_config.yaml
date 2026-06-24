@@ -1,0 +1,24 @@
+version: 1
+
+# Per-tier default. Orchestrators route to Python (graph-heavy control flow,
+# conditional HITL gates, deterministic compute layer). Workers stay on Mastra
+# (fast tool-call hot path).
+tiers:
+  ceo: mastra
+  orchestrator: langgraph
+  worker: mastra
+
+# Per-agent overrides win over tier defaults. Add entries here when an
+# orchestrator has been backported to a simpler Mastra prompt, or when a
+# worker graduates to a graph.
+agents:
+  orch-cipher: langgraph
+  orch-audit: langgraph
+  orch-veronica: langgraph
+  orch-ava: langgraph
+  orch-finn: langgraph
+  orch-axel: langgraph
+  orch-luna: langgraph
+  orch-ellie: langgraph
+  orch-veronica-lite: langgraph
+  orch-content: langgraph

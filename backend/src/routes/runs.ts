@@ -10,6 +10,7 @@ import { z } from "zod";
 import { createRunRepository } from "../repositories/index.js";
 import { createRunService } from "../services/run-service.js";
 import { supabase } from "../services/supabase.js";
+import { traceService } from "../services/trace-service.js";
 import {
   PersistenceUnavailableError,
   InvalidStatusTransitionError,
@@ -117,6 +118,47 @@ export async function registerRunRoutes(app: FastifyInstance) {
         return reply.send(run);
       } catch (error) {
         // Domain errors handled centrally
+        return handleDomainError(error, reply);
+      }
+    },
+  );
+
+  // GET /api/runs/:id/events - Phase 2.1 evidence-plane surface.
+  app.get<{ Params: { id: string } }>(
+    "/api/runs/:id/events",
+    async (request, reply) => {
+      try {
+        const { id } = request.params;
+        const uuidSchema = z.string().uuid();
+        const validatedId = uuidSchema.parse(id);
+
+        const events = await repository.findEventsByRunId(validatedId);
+        return reply.send(events);
+      } catch (error) {
+        return handleDomainError(error, reply);
+      }
+    },
+  );
+
+  // GET /api/runs/:id/trace - Phase 8.7 enriched trace tree (eval.* attributes).
+  // Resolves the runId via the trace service's runId→traceId index; the
+  // originating span (e.g. the agent-execution-service or three-agent-harness
+  // root span) binds runId at startSpan() time.
+  app.get<{ Params: { id: string } }>(
+    "/api/runs/:id/trace",
+    async (request, reply) => {
+      try {
+        const { id } = request.params;
+        const validatedId = z.string().uuid().parse(id);
+        const tree = traceService.getTraceTreeForRun(validatedId);
+        if (!tree) {
+          return reply.status(404).send({
+            error: "Not Found",
+            message: `no trace for run ${id}; either the run never executed or trace buffering was reset.`,
+          });
+        }
+        return reply.send(tree);
+      } catch (error) {
         return handleDomainError(error, reply);
       }
     },

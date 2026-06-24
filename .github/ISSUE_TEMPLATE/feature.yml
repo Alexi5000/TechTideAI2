@@ -1,0 +1,55 @@
+name: Feature Request
+description: Propose a new capability for the TechTideAI platform.
+title: "[feature] "
+labels: ["feature"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a feature request, please skim the [ADRs](docs/adr/) — many "ideas" are already filed as decisions.
+
+  - type: dropdown
+    id: plane
+    attributes:
+      label: Which plane does this touch?
+      description: |
+        Control plane (CEO / orchestrators / routing), execution plane (workers / tools / workflow runs),
+        evidence plane (events / traces / memory / evals), or product plane (operator console UI)?
+      options:
+        - control
+        - execution
+        - evidence
+        - product
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem does this solve? Why does it matter for the agent OS?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Sketch the design. Which contracts change? Which ADRs might need to be written or updated?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else did you consider? Why is this approach better?
+
+  - type: textarea
+    id: eval
+    attributes:
+      label: How will we measure this?
+      description: |
+        TechTideAI ships an eval harness. New capabilities need to come with at least one golden task
+        that proves they work and a regression detector that catches breakage.

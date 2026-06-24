@@ -1,0 +1,23 @@
+# TechTideAI local dev overrides (Phase 8.8).
+# Copy to `docker-compose.override.yml` and edit to mount source for live reload.
+# Example: mount the backend/src/ directory so edits are visible without a rebuild.
+
+services:
+  backend:
+    volumes:
+      - ./backend/src:/app/src:ro
+      - ./evals:/app/../evals:ro
+      - ./docs/EVALS:/app/../docs/EVALS
+
+  frontend:
+    # Mount the Vite-built dist for hot-reload via the dev script:
+    # `docker compose exec frontend pnpm -C frontend dev`
+    # We don't auto-rebuild on the host because the prod nginx is serving
+    # the static dist.
+    command: ["nginx", "-g", "daemon off;"]
+
+  agents-python:
+    # Mount source for live Python reload via:
+    # `docker compose exec agents-python uvicorn --reload techtide_agents.server:app --host 0.0.0.0 --port 4051`
+    volumes:
+      - ./agents/python/src:/app/src:ro

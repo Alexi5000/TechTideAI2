@@ -13,6 +13,7 @@ import type {
   RunEvent,
   CreateRunInput,
   UpdateRunStatusInput,
+  AddRunEventInput,
   DbRun,
   DbRunEvent,
 } from "./types.js";
@@ -165,17 +166,22 @@ export function createRunRepository(
       orgId: string,
       eventType: string,
       payload: Record<string, unknown>,
+      meta?: AddRunEventInput,
     ): Promise<RunEvent> {
       const client = requireSupabase();
 
+      const insertPayload: Record<string, unknown> = {
+        run_id: runId,
+        org_id: orgId,
+        event_type: eventType,
+        payload: payload,
+      };
+      if (meta?.correlationId) insertPayload["correlation_id"] = meta.correlationId;
+      if (meta?.severity) insertPayload["severity"] = meta.severity;
+
       const { data, error } = await client
         .from("run_events")
-        .insert({
-          run_id: runId,
-          org_id: orgId,
-          event_type: eventType,
-          payload: payload,
-        })
+        .insert(insertPayload)
         .select()
         .single();
 
@@ -184,6 +190,19 @@ export function createRunRepository(
       }
 
       return mapDbRunEventToRunEvent(data as DbRunEvent);
+    },
+
+    async findEventsByRunId(runId: string): Promise<RunEvent[]> {
+      const client = requireSupabase();
+      const { data, error } = await client
+        .from("run_events")
+        .select()
+        .eq("run_id", runId)
+        .order("occurred_at", { ascending: true });
+      if (error) {
+        throw new Error(`Failed to list run events: ${error.message}`);
+      }
+      return (data as DbRunEvent[]).map(mapDbRunEventToRunEvent);
     },
   };
 }

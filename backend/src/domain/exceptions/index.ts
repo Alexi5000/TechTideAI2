@@ -57,3 +57,61 @@ export class EmbeddingProviderUnavailableError extends DomainError {
     this.name = "EmbeddingProviderUnavailableError";
   }
 }
+
+export class EvalSuiteNotFoundError extends DomainError {
+  constructor(public readonly suiteId: string) {
+    super(`Eval suite not found: ${suiteId}`);
+    this.name = "EvalSuiteNotFoundError";
+  }
+}
+
+export class EvalRunNotFoundError extends DomainError {
+  constructor(public readonly runId: string) {
+    super(`Eval run not found: ${runId}`);
+    this.name = "EvalRunNotFoundError";
+  }
+}
+
+export class ScorerUnavailableError extends DomainError {
+  constructor(public readonly scorerKind: string) {
+    super(`Scorer unavailable: ${scorerKind}`);
+    this.name = "ScorerUnavailableError";
+  }
+}
+
+export class EvalRegressionDetectedError extends DomainError {
+  constructor(
+    public readonly baselinePassRate: number,
+    public readonly currentPassRate: number,
+    public readonly thresholdPct: number,
+  ) {
+    super(
+      `Eval regression detected: pass rate ${(currentPassRate * 100).toFixed(1)}% vs baseline ${(baselinePassRate * 100).toFixed(1)}% exceeds -${thresholdPct}% threshold`,
+    );
+    this.name = "EvalRegressionDetectedError";
+  }
+}
+
+export class ApprovalNotFoundError extends DomainError {
+  constructor(public readonly approvalId: string) {
+    super(`Approval not found: ${approvalId}`);
+    this.name = "ApprovalNotFoundError";
+  }
+}
+
+export class ApprovalAlreadyDecidedError extends DomainError {
+  constructor(
+    public readonly approvalId: string,
+    public readonly status: string,
+  ) {
+    super(`Approval ${approvalId} already decided (status=${status})`);
+    this.name = "ApprovalAlreadyDecidedError";
+  }
+}
+
+export class ApprovalExpiredError extends DomainError {
+  constructor(public readonly approvalId: string) {
+    super(`Approval ${approvalId} has expired`);
+    this.name = "ApprovalExpiredError";
+  }
+}
