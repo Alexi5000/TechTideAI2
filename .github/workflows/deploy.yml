@@ -156,9 +156,7 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-  # ──────────────────────────────────────────────
-  # Single deployment record per workflow run
-  # ──────────────────────────────────────────────
+  # Single deployment record per workflow run.
   # Each of migrate / deploy-backend / deploy-frontend above has its own
   # environment: key, which means each creates a separate GitHub
   # Deployment record. To produce exactly one record per push (which is
@@ -168,7 +166,7 @@ jobs:
   publish:
     name: "Publish deployment → ${{ github.event.inputs.environment || 'staging' }}"
     needs: [build, deploy-backend, deploy-frontend]
-    if: ${{ always() && (needs.deploy-backend.result == 'success' || needs.deploy-frontend.result == 'success' || (needs.deploy-backend.result == 'skipped' && needs.deploy-frontend.result == 'skipped' && needs.migrate.result == 'skipped')) }}
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
     steps:
