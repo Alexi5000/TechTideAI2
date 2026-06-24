@@ -30,7 +30,7 @@ jobs:
     name: Build artifacts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v4
         with:
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: supabase/setup-cli@v1
         with:
@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v7
         with:
@@ -123,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v7
         with:
