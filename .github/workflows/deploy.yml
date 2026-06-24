@@ -23,9 +23,9 @@ env:
   PNPM_VERSION: "9"
 
 jobs:
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   # Build all artifacts
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   build:
     name: Build artifacts
     runs-on: ubuntu-latest
@@ -62,9 +62,9 @@ jobs:
           path: frontend/dist/
           retention-days: 7
 
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   # Deploy database migrations
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   migrate:
     name: "Migrate DB"
     needs: build
@@ -92,9 +92,9 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   # Deploy backend
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   deploy-backend:
     name: "Deploy backend"
     needs: [build, migrate]
@@ -109,7 +109,7 @@ jobs:
           name: backend-dist
           path: backend/
 
-      # ─── Railway deploy (swap for Fly.io / AWS ECS / Docker as needed) ───
+      # --- Railway deploy (swap for Fly.io / AWS ECS / Docker as needed) ---
       # Required secrets: RAILWAY_TOKEN (set per-environment)
       # Required vars:    RAILWAY_SERVICE_ID (set per-environment)
       - name: Install Railway CLI
@@ -120,9 +120,9 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   # Deploy frontend
-  # ──────────────────────────────────────────────
+  # ----------------------------------------------
   deploy-frontend:
     name: "Deploy frontend"
     needs: build
@@ -137,7 +137,7 @@ jobs:
           name: frontend-dist
           path: frontend/dist/
 
-      # ─── Vercel deploy (swap for Cloudflare Pages / Netlify / S3 as needed) ───
+      # --- Vercel deploy (swap for Cloudflare Pages / Netlify / S3 as needed) ---
       # Required secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
@@ -164,7 +164,7 @@ jobs:
   # when at least one deploy step ran, and is the single source of truth
   # for the per-push deployment status.
   publish:
-    name: "Publish deployment → ${{ github.event.inputs.environment || 'staging' }}"
+    name: "Publish deployment -> ${{ github.event.inputs.environment || 'staging' }}"
     needs: [build, deploy-backend, deploy-frontend]
     if: ${{ always() }}
     runs-on: ubuntu-latest
