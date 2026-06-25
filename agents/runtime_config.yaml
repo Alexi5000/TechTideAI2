@@ -12,13 +12,13 @@ tiers:
 # orchestrator has been backported to a simpler Mastra prompt, or when a
 # worker graduates to a graph.
 agents:
-  orch-cipher: langgraph
-  orch-audit: langgraph
-  orch-veronica: langgraph
-  orch-ava: langgraph
-  orch-finn: langgraph
-  orch-axel: langgraph
-  orch-luna: langgraph
-  orch-ellie: langgraph
-  orch-veronica-lite: langgraph
-  orch-content: langgraph
+  orch-centaurus-a: langgraph
+  orch-cartwheel: langgraph
+  orch-andromeda: langgraph
+  orch-milky-way: langgraph
+  orch-triangulum: langgraph
+  orch-m87: langgraph
+  orch-whirlpool: langgraph
+  orch-sombrero: langgraph
+  orch-pinwheel: langgraph
+  orch-circinus: langgraph

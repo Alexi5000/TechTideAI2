@@ -24,43 +24,43 @@
   <!-- Orchestrators row -->
   <g>
     <rect x="60" y="160" width="160" height="50" class="orch"/>
-    <text x="140" y="182" text-anchor="middle" class="title">orch-ava</text>
+    <text x="140" y="182" text-anchor="middle" class="title">orch-milky-way</text>
     <text x="140" y="198" text-anchor="middle" class="sub">product + GTM</text>
 
     <rect x="240" y="160" width="160" height="50" class="orch"/>
-    <text x="320" y="182" text-anchor="middle" class="title">orch-finn</text>
+    <text x="320" y="182" text-anchor="middle" class="title">orch-triangulum</text>
     <text x="320" y="198" text-anchor="middle" class="sub">sales ops</text>
 
     <rect x="420" y="160" width="160" height="50" class="orch"/>
-    <text x="500" y="182" text-anchor="middle" class="title">orch-veronica</text>
+    <text x="500" y="182" text-anchor="middle" class="title">orch-andromeda</text>
     <text x="500" y="198" text-anchor="middle" class="sub">customer success</text>
 
     <rect x="600" y="160" width="160" height="50" class="orch"/>
-    <text x="680" y="182" text-anchor="middle" class="title">orch-cipher</text>
+    <text x="680" y="182" text-anchor="middle" class="title">orch-centaurus-a</text>
     <text x="680" y="198" text-anchor="middle" class="sub">finance + analytics</text>
 
     <rect x="780" y="160" width="160" height="50" class="orch"/>
-    <text x="860" y="182" text-anchor="middle" class="title">orch-axel</text>
+    <text x="860" y="182" text-anchor="middle" class="title">orch-m87</text>
     <text x="860" y="198" text-anchor="middle" class="sub">engineering</text>
 
     <rect x="60" y="220" width="160" height="50" class="orch"/>
-    <text x="140" y="242" text-anchor="middle" class="title">orch-luna</text>
+    <text x="140" y="242" text-anchor="middle" class="title">orch-whirlpool</text>
     <text x="140" y="258" text-anchor="middle" class="sub">marketing</text>
 
     <rect x="240" y="220" width="160" height="50" class="orch"/>
-    <text x="320" y="242" text-anchor="middle" class="title">orch-ellie</text>
+    <text x="320" y="242" text-anchor="middle" class="title">orch-sombrero</text>
     <text x="320" y="258" text-anchor="middle" class="sub">people ops</text>
 
     <rect x="420" y="220" width="160" height="50" class="orch"/>
-    <text x="500" y="242" text-anchor="middle" class="title">orch-audit</text>
+    <text x="500" y="242" text-anchor="middle" class="title">orch-cartwheel</text>
     <text x="500" y="258" text-anchor="middle" class="sub">compliance</text>
 
     <rect x="600" y="220" width="160" height="50" class="orch"/>
-    <text x="680" y="242" text-anchor="middle" class="title">orch-veronica-lite</text>
+    <text x="680" y="242" text-anchor="middle" class="title">orch-pinwheel</text>
     <text x="680" y="258" text-anchor="middle" class="sub">CS triage</text>
 
     <rect x="780" y="220" width="160" height="50" class="orch"/>
-    <text x="860" y="242" text-anchor="middle" class="title">orch-content</text>
+    <text x="860" y="242" text-anchor="middle" class="title">orch-circinus</text>
     <text x="860" y="258" text-anchor="middle" class="sub">content + docs</text>
   </g>
 
@@ -77,11 +77,11 @@
   <path d="M 540 102 L 860 220" class="edge"/>
 
   <!-- Worker pods: 5 workers per orchestrator, 50 total. We show 3 example pods in detail and indicate the rest. -->
-  <!-- Pod 1: orch-ava -->
+  <!-- Pod 1: orch-milky-way -->
   <rect x="40" y="320" width="220" height="200" class="pod-rect"/>
-  <text x="150" y="338" text-anchor="middle" class="pod-label">orch-ava pod (5 workers)</text>
+  <text x="150" y="338" text-anchor="middle" class="pod-label">orch-milky-way pod (5 workers)</text>
   <rect x="60" y="350" width="180" height="28" class="worker"/>
-  <text x="150" y="368" text-anchor="middle" class="title">worker-ava-sops</text>
+  <text x="150" y="368" text-anchor="middle" class="title">worker-sgr-a</text>
   <rect x="60" y="386" width="180" height="28" class="worker"/>
   <text x="150" y="404" text-anchor="middle" class="title">worker-ava-research</text>
   <rect x="60" y="422" width="180" height="28" class="worker"/>
@@ -91,11 +91,11 @@
   <rect x="60" y="494" width="180" height="20" class="worker"/>
   <text x="150" y="509" text-anchor="middle" class="sub">+ 1 more</text>
 
-  <!-- Pod 2: orch-cipher -->
+  <!-- Pod 2: orch-centaurus-a -->
   <rect x="290" y="320" width="220" height="200" class="pod-rect"/>
-  <text x="400" y="338" text-anchor="middle" class="pod-label">orch-cipher pod (5 workers)</text>
+  <text x="400" y="338" text-anchor="middle" class="pod-label">orch-centaurus-a pod (5 workers)</text>
   <rect x="310" y="350" width="180" height="28" class="worker"/>
-  <text x="400" y="368" text-anchor="middle" class="title">worker-cipher-fpna</text>
+  <text x="400" y="368" text-anchor="middle" class="title">worker-cena</text>
   <rect x="310" y="386" width="180" height="28" class="worker"/>
   <text x="400" y="404" text-anchor="middle" class="title">worker-cipher-ar</text>
   <rect x="310" y="422" width="180" height="28" class="worker"/>
@@ -105,9 +105,9 @@
   <rect x="310" y="494" width="180" height="20" class="worker"/>
   <text x="400" y="509" text-anchor="middle" class="sub">+ 1 more</text>
 
-  <!-- Pod 3: orch-audit -->
+  <!-- Pod 3: orch-cartwheel -->
   <rect x="540" y="320" width="220" height="200" class="pod-rect"/>
-  <text x="650" y="338" text-anchor="middle" class="pod-label">orch-audit pod (5 workers)</text>
+  <text x="650" y="338" text-anchor="middle" class="pod-label">orch-cartwheel pod (5 workers)</text>
   <rect x="560" y="350" width="180" height="28" class="worker"/>
   <text x="650" y="368" text-anchor="middle" class="title">worker-audit-rga</text>
   <rect x="560" y="386" width="180" height="28" class="worker"/>
@@ -119,14 +119,14 @@
   <rect x="560" y="494" width="180" height="20" class="worker"/>
   <text x="650" y="509" text-anchor="middle" class="sub">+ 1 more</text>
 
-  <!-- Pod 4 (placeholder): orch-luna -->
+  <!-- Pod 4 (placeholder): orch-whirlpool -->
   <rect x="790" y="320" width="220" height="200" class="pod-rect"/>
-  <text x="900" y="338" text-anchor="middle" class="pod-label">orch-luna pod (5 workers)</text>
+  <text x="900" y="338" text-anchor="middle" class="pod-label">orch-whirlpool pod (5 workers)</text>
   <text x="900" y="380" text-anchor="middle" class="sub">5 worker agents:</text>
-  <text x="900" y="400" text-anchor="middle" class="sub">worker-luna-campaign</text>
-  <text x="900" y="418" text-anchor="middle" class="sub">worker-luna-content</text>
+  <text x="900" y="400" text-anchor="middle" class="sub">worker-m51b</text>
+  <text x="900" y="418" text-anchor="middle" class="sub">worker-ngc-5195</text>
   <text x="900" y="436" text-anchor="middle" class="sub">worker-luna-seo</text>
-  <text x="900" y="454" text-anchor="middle" class="sub">worker-luna-analytics</text>
+  <text x="900" y="454" text-anchor="middle" class="sub">worker-ic-4278</text>
   <text x="900" y="472" text-anchor="middle" class="sub">+ 1 more</text>
 
   <!-- Edges from orchestrators to pods -->

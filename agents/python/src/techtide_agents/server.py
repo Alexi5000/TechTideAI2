@@ -19,7 +19,7 @@ from techtide_agents.contracts import AgentRunRequest, AgentRunResult
 from techtide_agents.runtime.dispatcher import Dispatcher, RuntimeTarget
 from techtide_agents.runtime.langgraph_runtime import LangGraphRuntime
 
-app = FastAPI(title="TechTideAI Python Sidecar", version="0.3.0")
+app = FastAPI(title="TechTideAI Python Sidecar", version="0.5.0")
 _runtime: LangGraphRuntime | None = None
 _dispatcher: Dispatcher | None = None
 

@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-06-25
+
+### Brand: galaxy map
+TechTideAI is now themed around the Local Group. The 1 CEO + 10 orchestrators + 50 workers are named after real galaxies and the star clusters / named sources inside them. The mental model is "a company of stars, structured the way the actual universe is structured."
+
+- CEO: `ceo` (display name: **Local Group Director**)
+- Orchestrators (10): `orch-andromeda` (Andromeda, M31), `orch-milky-way` (Milky Way), `orch-triangulum` (Triangulum, M33), `orch-centaurus-a` (Centaurus A), `orch-m87` (M87, Virgo A), `orch-whirlpool` (Whirlpool, M51), `orch-sombrero` (Sombrero, M104), `orch-pinwheel` (Pinwheel, M101), `orch-cartwheel` (Cartwheel, ESO 350-40), `orch-circinus` (Circinus)
+- Workers (50): five real star clusters / named sources per galaxy (e.g. `worker-m32`, `worker-m110`, `worker-orion`, `worker-pleiades`, `worker-cena`, `worker-cenb`, `worker-m87-jet`, `worker-wheel-ring`, `worker-circinus-x1`)
+
+### Changed
+- All agent IDs, orchestrator display names + domains, eval task IDs, sprint contract IDs, runtime_config.yaml orchestrators, frontend display names, and doc prose renamed to the galaxy map. 164 substitutions across 30 files.
+- The eval fixtures (`evals/fixtures/golden-tasks.v1.json`) and sprint contracts (`evals/sprints/well-scoped-sprint.v1.json`) renamed in place. The 33-task golden suite + 4-scorer grading surface is unchanged.
+- The README Mermaid diagrams updated to reference the new orchestrator IDs and worker names.
+- The `assets/techtideai_hero_2026.svg` (new) is now the canonical hero image. The old `techtideai_hero_2026.png` is kept for any external links but no longer referenced from the README.
+- Frontend `App.tsx` / `App.js` orchestrator array: titles + descriptions updated to galaxy-themed names and the matching domain language.
+- The 6 inline SVGs (`assets/techtideai_architecture.svg`, `techtideai_control_plane.svg`, `techtideai_three_agent_loop.svg`, `techtideai_run_lifecycle.svg`, `techtideai_contract_sync.svg`) and the 6 walkthrough SVGs under `assets/walkthrough/` already carried orchestrator names; all references were renamed in the same pass.
+
+### Added
+- New `assets/techtideai_hero_2026.svg`: a galaxy-themed hero with a starfield background, the Local Group Director at the center, the ten galaxies in a ring, and worker counts beneath each. The old PNG hero is preserved for any external links.
+
+### Verified
+- `pnpm run verify` green (backend / agents / apis / frontend).
+- `pytest`: 20 tests pass.
+- `ruff check` + `ruff format`: clean.
+- `pnpm -C backend evals --suite golden-tasks.v1 --write-docs` runs end-to-end on 33 tasks and emits `docs/EVALS/latest.json`.
+- `pnpm -C agents test` (registry test, skills, types): 14/14 pass with the new CEO name `Local Group Director`.
+- Zero em-dashes anywhere in the repo.
+- All 5 version surfaces (package.json, pyproject.toml, `__init__.py`, `server.py`, README callout) report `0.5.0`.
+
 ## [0.3.0] - 2026-06-24
 
 ### Added

@@ -23,7 +23,7 @@ def test_runtime_rejects_unknown_agent(runtime: LangGraphRuntime) -> None:
 
 def test_cipher_graph_produces_financial_numbers(runtime: LangGraphRuntime) -> None:
     request = AgentRunRequest(
-        agent_id="orch-cipher",
+        agent_id="orch-centaurus-a",
         input={
             "currentMRR": 120000,
             "growthRate": 0.08,
@@ -40,7 +40,7 @@ def test_cipher_graph_produces_financial_numbers(runtime: LangGraphRuntime) -> N
 
 def test_cipher_graph_gates_cost_optimization(runtime: LangGraphRuntime) -> None:
     request = AgentRunRequest(
-        agent_id="orch-cipher",
+        agent_id="orch-centaurus-a",
         input={"action": "cost_optimization"},
     )
     result = runtime.execute(request)
@@ -51,7 +51,7 @@ def test_cipher_graph_gates_cost_optimization(runtime: LangGraphRuntime) -> None
 
 def test_generic_synthesis_graph_returns_plan_and_synthesis(runtime: LangGraphRuntime) -> None:
     request = AgentRunRequest(
-        agent_id="orch-ava",
+        agent_id="orch-milky-way",
         input={"prompt": "audit the SOPs"},
     )
     result = runtime.execute(request)
@@ -62,7 +62,7 @@ def test_generic_synthesis_graph_returns_plan_and_synthesis(runtime: LangGraphRu
 
 def test_high_risk_action_returns_approval(runtime: LangGraphRuntime) -> None:
     request = AgentRunRequest(
-        agent_id="orch-ava",
+        agent_id="orch-milky-way",
         input={"action": "delete_record"},
     )
     result = runtime.execute(request)

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 480" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <title>TechTideAI hero — galaxy map brand</title>
+  <desc>The TechTideAI agent operating system. The hero shows the Local Group galaxy cluster: the Local Group Director at the center, with ten surrounding galaxies (Andromeda, Milky Way, Triangulum, Centaurus A, M87, Whirlpool, Sombrero, Pinwheel, Cartwheel, Circinus), each with five star-cluster agents in its pod. The composition evokes a "company of stars" — one central director, ten executive orchestrators, fifty worker agents.</desc>
+
+  <defs>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef3c7" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#b45309" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="andromeda" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#dbeafe" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#1d4ed8" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="milkyway" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef9c3" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#a16207" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="triangulum" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c7d2fe" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#4338ca" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="centaurus" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fde68a" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#92400e" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="m87" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a5f3fc" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#0e7490" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="whirlpool" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#bae6fd" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#0369a1" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sombrero" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fbcfe8" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#9d174d" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pinwheel" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#bef264" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#3f6212" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cartwheel" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fcd34d" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#b45309" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="circinus" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e9d5ff" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#6b21a8" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="480" fill="#020617"/>
+
+  <!-- Star field -->
+  <g fill="#cbd5e1" opacity="0.4">
+    <circle cx="80"   cy="60"  r="1"/>
+    <circle cx="160"  cy="120" r="0.8"/>
+    <circle cx="240"  cy="80"  r="1.2"/>
+    <circle cx="320"  cy="180" r="0.6"/>
+    <circle cx="400"  cy="40"  r="1"/>
+    <circle cx="480"  cy="220" r="0.8"/>
+    <circle cx="540"  cy="100" r="1"/>
+    <circle cx="600"  cy="320" r="0.6"/>
+    <circle cx="700"  cy="60"  r="1.2"/>
+    <circle cx="780"  cy="240" r="0.8"/>
+    <circle cx="860"  cy="80"  r="1"/>
+    <circle cx="940"  cy="160" r="0.6"/>
+    <circle cx="1020" cy="100" r="0.8"/>
+    <circle cx="1100" cy="60"  r="1"/>
+    <circle cx="1180" cy="180" r="0.6"/>
+    <circle cx="1220" cy="80"  r="1.2"/>
+    <circle cx="60"   cy="280" r="0.8"/>
+    <circle cx="160"  cy="360" r="1"/>
+    <circle cx="280"  cy="420" r="0.6"/>
+    <circle cx="380"  cy="380" r="0.8"/>
+    <circle cx="480"  cy="440" r="1.2"/>
+    <circle cx="580"  cy="380" r="0.6"/>
+    <circle cx="680"  cy="440" r="1"/>
+    <circle cx="800"  cy="380" r="0.8"/>
+    <circle cx="900"  cy="440" r="0.6"/>
+    <circle cx="1000" cy="380" r="1"/>
+    <circle cx="1100" cy="440" r="0.8"/>
+    <circle cx="1200" cy="380" r="1"/>
+  </g>
+
+  <!-- CEO / Local Group Director at center -->
+  <circle cx="640" cy="240" r="80" fill="url(#core)"/>
+  <text x="640" y="235" text-anchor="middle" font-weight="700" font-size="20" fill="#0f172a">Local Group</text>
+  <text x="640" y="258" text-anchor="middle" font-size="13" fill="#0f172a">Director (CEO)</text>
+
+  <!-- 10 orchestrators arranged in a ring around the CEO -->
+  <!-- Top row -->
+  <circle cx="240" cy="120" r="40" fill="url(#andromeda)"/>
+  <text x="240" y="118" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Andromeda</text>
+  <text x="240" y="132" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="400" cy="80" r="40" fill="url(#milkyway)"/>
+  <text x="400" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Milky Way</text>
+  <text x="400" y="92" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="560" cy="60" r="40" fill="url(#triangulum)"/>
+  <text x="560" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Triangulum</text>
+  <text x="560" y="72" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="720" cy="60" r="40" fill="url(#centaurus)"/>
+  <text x="720" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Centaurus A</text>
+  <text x="720" y="72" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="880" cy="80" r="40" fill="url(#m87)"/>
+  <text x="880" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">M87</text>
+  <text x="880" y="92" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="1040" cy="120" r="40" fill="url(#whirlpool)"/>
+  <text x="1040" y="118" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Whirlpool</text>
+  <text x="1040" y="132" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <!-- Bottom row -->
+  <circle cx="240" cy="360" r="40" fill="url(#sombrero)"/>
+  <text x="240" y="358" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Sombrero</text>
+  <text x="240" y="372" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="400" cy="400" r="40" fill="url(#pinwheel)"/>
+  <text x="400" y="398" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Pinwheel</text>
+  <text x="400" y="412" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="560" cy="420" r="40" fill="url(#cartwheel)"/>
+  <text x="560" y="418" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Cartwheel</text>
+  <text x="560" y="432" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <circle cx="720" cy="420" r="40" fill="url(#circinus)"/>
+  <text x="720" y="418" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Circinus</text>
+  <text x="720" y="432" text-anchor="middle" font-size="9" fill="#1e293b">5 workers</text>
+
+  <!-- Wordmark -->
+  <text x="640" y="60" text-anchor="middle" font-weight="700" font-size="36" fill="#f1f5f9" letter-spacing="2">TechTideAI</text>
+  <text x="640" y="84" text-anchor="middle" font-size="14" fill="#94a3b8" letter-spacing="1">company-scale agent operating system</text>
+
+  <!-- Footer line -->
+  <text x="640" y="460" text-anchor="middle" font-size="11" fill="#64748b">v0.5.0  ·  1 Local Group Director  ·  10 galaxies  ·  50 star-cluster agents  ·  all green</text>
+</svg>

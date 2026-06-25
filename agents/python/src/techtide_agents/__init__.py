@@ -14,4 +14,4 @@ runtime module imports them lazily so cold-start stays cheap.
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.5.0"

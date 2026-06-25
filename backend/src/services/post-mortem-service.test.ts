@@ -84,7 +84,7 @@ afterEach(async () => {
 describe("PostMortemService", () => {
   it("writes a markdown post-mortem for a completed run", async () => {
     const repo = new FakeRunRepo();
-    const run = await repo.create({ orgId: "00000000-0000-0000-0000-000000000001", agentId: "orch-cipher", input: { prompt: "Q3 forecast" } });
+    const run = await repo.create({ orgId: "00000000-0000-0000-0000-000000000001", agentId: "orch-centaurus-a", input: { prompt: "Q3 forecast" } });
     await repo.updateStatus(run.id, { status: "running", startedAt: new Date().toISOString() });
     await repo.addEvent(run.id, run.orgId, "agent.tool_call", { tool: "finance-ledger" });
     await repo.addEvent(run.id, run.orgId, "agent.message", { role: "assistant" });

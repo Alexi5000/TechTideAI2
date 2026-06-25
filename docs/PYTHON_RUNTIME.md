@@ -39,8 +39,8 @@ tiers:
   worker: mastra
 
 agents:
-  orch-cipher: langgraph
-  orch-audit: langgraph
+  orch-centaurus-a: langgraph
+  orch-cartwheel: langgraph
   ...
 ```
 
@@ -80,7 +80,7 @@ LANGGRAPH_SIDECAR_URL=http://localhost:4051
 
 # 4. Run an orchestrator agent, it'll route to Python
 pnpm -C backend dev:backend
-curl -X POST http://localhost:4050/api/agents/orch-cipher/run \
+curl -X POST http://localhost:4050/api/agents/orch-centaurus-a/run \
   -H "Content-Type: application/json" \
   -d '{"input": {"currentMRR": 120000, "growthRate": 0.08, "horizonMonths": 12}}'
 ```

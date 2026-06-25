@@ -6,7 +6,7 @@
 
 TechTideAI is a **company-scale agent operating system**: a typed, observable, testable harness for building and operating production agent teams. It is a portfolio piece, not a SaaS product. The success criterion is "a senior reviewer can read the repo end-to-end in one sitting and understand every architectural choice."
 
-The mental model is a working company modelled as an agent system: 1 CEO + 10 orchestrators + 50 workers (5 per orchestrator). Tools, memory, evals, approvals, and traces are the harness around them.
+The mental model is a working company modelled as an agent system: 1 CEO + 10 orchestrators + 50 workers (5 per orchestrator). The brand is a galaxy: the CEO is the **Local Group Director**, the orchestrators are ten real galaxies in the Local Group (Andromeda, Milky Way, Triangulum, Centaurus A, M87, Whirlpool, Sombrero, Pinwheel, Cartwheel, Circinus), and the workers are the star clusters and named sources inside each galaxy. Tools, memory, evals, approvals, and traces are the harness around them.
 
 ## The four planes
 
@@ -53,7 +53,7 @@ A drift-check hash is embedded in both generated files. The Python test `tests/t
 
 ## The 61 agents
 
-`agents/src/core/registry.ts` exports `agentRegistry` (the canonical 1 CEO + 10 orchestrators + 50 workers) and `getAgentById(id)`. The 10 orchestrators are: `orch-veronica`, `orch-ava`, `orch-finn`, `orch-cipher`, `orch-axel`, `orch-luna`, `orch-ellie`, `orch-veronica-lite`, `orch-audit`, `orch-content`. The CEO is `ceo`. Workers are named `worker-<orchestrator-short>-<role>` (e.g. `worker-ava-sops`, `worker-cipher-fpna`, `worker-luna-campaign`) and `reportsTo` their orchestrator. Five per orchestrator; the registry test (`agents/src/core/registry.test.ts`) asserts the invariant.
+`agents/src/core/registry.ts` exports `agentRegistry` (the canonical 1 CEO + 10 orchestrators + 50 workers) and `getAgentById(id)`. The 10 orchestrators are: `orch-andromeda`, `orch-milky-way`, `orch-triangulum`, `orch-centaurus-a`, `orch-m87`, `orch-whirlpool`, `orch-sombrero`, `orch-pinwheel`, `orch-cartwheel`, `orch-circinus`. The CEO is `ceo`. Workers are named `worker-<orchestrator-short>-<role>` (e.g. `worker-sgr-a`, `worker-cena`, `worker-m51b`) and `reportsTo` their orchestrator. Five per orchestrator; the registry test (`agents/src/core/registry.test.ts`) asserts the invariant.
 
 ## The "do not touch" zones
 

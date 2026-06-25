@@ -87,13 +87,13 @@
     },
     {
       "id": "veronica-escalation-routing",
-      "agentId": "orch-veronica",
+      "agentId": "orch-andromeda",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
       "input": {
         "scenario": "A worker reports a customer-facing outage. The CEO is asleep. Two orchestrators are reachable.",
-        "reachable": ["orch-cipher", "orch-ava"]
+        "reachable": ["orch-centaurus-a", "orch-milky-way"]
       },
       "expected": {
         "jsonSchema": {
@@ -113,7 +113,7 @@
     },
     {
       "id": "veronica-priority-stack",
-      "agentId": "orch-veronica",
+      "agentId": "orch-andromeda",
       "tier": "orchestrator",
       "category": "format-compliance",
       "difficulty": 1,
@@ -141,7 +141,7 @@
     },
     {
       "id": "veronica-strategy-brief",
-      "agentId": "orch-veronica",
+      "agentId": "orch-andromeda",
       "tier": "orchestrator",
       "category": "multi-step",
       "difficulty": 3,
@@ -164,7 +164,7 @@
     },
     {
       "id": "ava-sop-format",
-      "agentId": "orch-ava",
+      "agentId": "orch-milky-way",
       "tier": "orchestrator",
       "category": "format-compliance",
       "difficulty": 1,
@@ -193,7 +193,7 @@
     },
     {
       "id": "ava-process-drift-detection",
-      "agentId": "orch-ava",
+      "agentId": "orch-milky-way",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -220,13 +220,13 @@
     },
     {
       "id": "ava-task-routing",
-      "agentId": "orch-ava",
+      "agentId": "orch-milky-way",
       "tier": "orchestrator",
       "category": "tool-use",
       "difficulty": 2,
       "input": {
         "task": "Renew the annual SOC 2 report",
-        "availableAgents": ["orch-cipher", "orch-audit", "orch-finn"]
+        "availableAgents": ["orch-centaurus-a", "orch-cartwheel", "orch-triangulum"]
       },
       "expected": {
         "jsonSchema": {
@@ -244,7 +244,7 @@
     },
     {
       "id": "finn-hiring-pipeline-status",
-      "agentId": "orch-finn",
+      "agentId": "orch-triangulum",
       "tier": "orchestrator",
       "category": "format-compliance",
       "difficulty": 1,
@@ -268,7 +268,7 @@
     },
     {
       "id": "finn-policy-update-summary",
-      "agentId": "orch-finn",
+      "agentId": "orch-triangulum",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -290,7 +290,7 @@
     },
     {
       "id": "finn-culture-pulse",
-      "agentId": "orch-finn",
+      "agentId": "orch-triangulum",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 3,
@@ -316,7 +316,7 @@
     },
     {
       "id": "cipher-forecast-format",
-      "agentId": "orch-cipher",
+      "agentId": "orch-centaurus-a",
       "tier": "orchestrator",
       "category": "format-compliance",
       "difficulty": 1,
@@ -341,7 +341,7 @@
     },
     {
       "id": "cipher-margin-analysis",
-      "agentId": "orch-cipher",
+      "agentId": "orch-centaurus-a",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -366,7 +366,7 @@
     },
     {
       "id": "cipher-cost-optimization",
-      "agentId": "orch-cipher",
+      "agentId": "orch-centaurus-a",
       "tier": "orchestrator",
       "category": "multi-step",
       "difficulty": 3,
@@ -394,7 +394,7 @@
     },
     {
       "id": "axel-lead-scoring",
-      "agentId": "orch-axel",
+      "agentId": "orch-m87",
       "tier": "orchestrator",
       "category": "format-compliance",
       "difficulty": 2,
@@ -420,7 +420,7 @@
     },
     {
       "id": "axel-outbound-sequence",
-      "agentId": "orch-axel",
+      "agentId": "orch-m87",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -443,7 +443,7 @@
     },
     {
       "id": "axel-pipeline-coverage",
-      "agentId": "orch-axel",
+      "agentId": "orch-m87",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -472,7 +472,7 @@
     },
     {
       "id": "luna-content-brief",
-      "agentId": "orch-luna",
+      "agentId": "orch-whirlpool",
       "tier": "orchestrator",
       "category": "format-compliance",
       "difficulty": 1,
@@ -496,7 +496,7 @@
     },
     {
       "id": "luna-tone-check",
-      "agentId": "orch-luna",
+      "agentId": "orch-whirlpool",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -518,7 +518,7 @@
     },
     {
       "id": "luna-headline-options",
-      "agentId": "orch-luna",
+      "agentId": "orch-whirlpool",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -541,7 +541,7 @@
     },
     {
       "id": "ellie-market-scan",
-      "agentId": "orch-ellie",
+      "agentId": "orch-sombrero",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 3,
@@ -564,7 +564,7 @@
     },
     {
       "id": "ellie-competitor-profile",
-      "agentId": "orch-ellie",
+      "agentId": "orch-sombrero",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -587,7 +587,7 @@
     },
     {
       "id": "ellie-trend-summary",
-      "agentId": "orch-ellie",
+      "agentId": "orch-sombrero",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -612,7 +612,7 @@
     },
     {
       "id": "veronica-lite-triage",
-      "agentId": "orch-veronica-lite",
+      "agentId": "orch-pinwheel",
       "tier": "orchestrator",
       "category": "format-compliance",
       "difficulty": 1,
@@ -638,7 +638,7 @@
     },
     {
       "id": "veronica-lite-summarization",
-      "agentId": "orch-veronica-lite",
+      "agentId": "orch-pinwheel",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 1,
@@ -654,7 +654,7 @@
     },
     {
       "id": "audit-compliance-check",
-      "agentId": "orch-audit",
+      "agentId": "orch-cartwheel",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 3,
@@ -682,7 +682,7 @@
     },
     {
       "id": "audit-incident-postmortem",
-      "agentId": "orch-audit",
+      "agentId": "orch-cartwheel",
       "tier": "orchestrator",
       "category": "multi-step",
       "difficulty": 3,
@@ -705,7 +705,7 @@
     },
     {
       "id": "audit-policy-versioning",
-      "agentId": "orch-audit",
+      "agentId": "orch-cartwheel",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -726,7 +726,7 @@
     },
     {
       "id": "content-distribution-plan",
-      "agentId": "orch-content",
+      "agentId": "orch-circinus",
       "tier": "orchestrator",
       "category": "multi-step",
       "difficulty": 2,
@@ -748,7 +748,7 @@
     },
     {
       "id": "content-repurposing",
-      "agentId": "orch-content",
+      "agentId": "orch-circinus",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,
@@ -771,7 +771,7 @@
     },
     {
       "id": "content-narrative-arc",
-      "agentId": "orch-content",
+      "agentId": "orch-circinus",
       "tier": "orchestrator",
       "category": "domain-reasoning",
       "difficulty": 2,

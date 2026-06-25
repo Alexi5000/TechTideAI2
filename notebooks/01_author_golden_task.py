@@ -20,7 +20,7 @@ for s in suites:
 
 new_task = {
     "id": "<your-task-id>",
-    "agentId": "orch-cipher",
+    "agentId": "orch-centaurus-a",
     "tier": "orchestrator",
     "category": "domain-reasoning",
     "difficulty": 2,
