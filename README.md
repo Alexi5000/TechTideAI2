@@ -7,7 +7,7 @@
 > v0.5.0 · MIT · 1 Local Group Director + 10 galaxies + 50 star-cluster agents · 33-task golden suite · 124 TS tests + 20 Python tests · all green.
 
 <p align="center">
-  <a href="#why-techtideai">Why TechTideAI</a> · <a href="#hero">Hero</a> · <a href="#agent-roster">Roster</a> · <a href="#architecture">Architecture</a> · <a href="#how-to-run">Run it</a> · <a href="#contributing">Contributing</a> · <a href="#license">License</a>
+  <a href="#why-techtideai">Why TechTideAI</a> · <a href="#hero">Hero</a> · <a href="#agent-roster">Roster</a> · <a href="#architecture">Architecture</a> · <a href="#how-to-verify">Run it</a> · <a href="#contributing">Contributing</a> · <a href="#license">License</a>
 </p>
 
 <p align="center">
