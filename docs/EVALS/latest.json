@@ -1,10 +1,10 @@
 {
-  "id": "2d32187a-4e7b-4083-906b-aac0cdd1fff9",
+  "id": "ddf6d739-0adc-4199-936a-08449065050d",
   "suiteId": "golden-tasks",
   "suiteVersion": "v1.0.0",
   "status": "failed",
-  "startedAt": "2026-06-25T11:00:39.064Z",
-  "completedAt": "2026-06-25T11:00:39.277Z",
+  "startedAt": "2026-06-25T11:02:45.153Z",
+  "completedAt": "2026-06-25T11:02:45.385Z",
   "baselineId": null,
   "modelVersions": {
     "openai": "unconfigured",
@@ -28,15 +28,28 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 82,
+      "latencyMs": 92,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.147Z"
+      "observedAt": "2026-06-25T11:02:45.246Z"
     },
     {
       "taskId": "ceo-prioritization-trace",
+      "agentId": "ceo",
+      "agentOutput": {},
+      "score": 0,
+      "passed": false,
+      "latencyMs": 7,
+      "tokensUsed": 0,
+      "estimatedCostUsd": 0,
+      "scorers": [],
+      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
+      "observedAt": "2026-06-25T11:02:45.253Z"
+    },
+    {
+      "taskId": "ceo-decision-log",
       "agentId": "ceo",
       "agentOutput": {},
       "score": 0,
@@ -46,20 +59,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.152Z"
-    },
-    {
-      "taskId": "ceo-decision-log",
-      "agentId": "ceo",
-      "agentOutput": {},
-      "score": 0,
-      "passed": false,
-      "latencyMs": 4,
-      "tokensUsed": 0,
-      "estimatedCostUsd": 0,
-      "scorers": [],
-      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.156Z"
+      "observedAt": "2026-06-25T11:02:45.258Z"
     },
     {
       "taskId": "veronica-escalation-routing",
@@ -72,7 +72,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.160Z"
+      "observedAt": "2026-06-25T11:02:45.262Z"
     },
     {
       "taskId": "veronica-priority-stack",
@@ -85,7 +85,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.164Z"
+      "observedAt": "2026-06-25T11:02:45.266Z"
     },
     {
       "taskId": "veronica-strategy-brief",
@@ -98,7 +98,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.168Z"
+      "observedAt": "2026-06-25T11:02:45.270Z"
     },
     {
       "taskId": "ava-sop-format",
@@ -106,12 +106,12 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 25,
+      "latencyMs": 23,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.193Z"
+      "observedAt": "2026-06-25T11:02:45.293Z"
     },
     {
       "taskId": "ava-process-drift-detection",
@@ -124,24 +124,11 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.197Z"
+      "observedAt": "2026-06-25T11:02:45.297Z"
     },
     {
       "taskId": "ava-task-routing",
       "agentId": "orch-milky-way",
-      "agentOutput": {},
-      "score": 0,
-      "passed": false,
-      "latencyMs": 3,
-      "tokensUsed": 0,
-      "estimatedCostUsd": 0,
-      "scorers": [],
-      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.200Z"
-    },
-    {
-      "taskId": "finn-hiring-pipeline-status",
-      "agentId": "orch-triangulum",
       "agentOutput": {},
       "score": 0,
       "passed": false,
@@ -150,7 +137,20 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.204Z"
+      "observedAt": "2026-06-25T11:02:45.301Z"
+    },
+    {
+      "taskId": "finn-hiring-pipeline-status",
+      "agentId": "orch-triangulum",
+      "agentOutput": {},
+      "score": 0,
+      "passed": false,
+      "latencyMs": 3,
+      "tokensUsed": 0,
+      "estimatedCostUsd": 0,
+      "scorers": [],
+      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
+      "observedAt": "2026-06-25T11:02:45.304Z"
     },
     {
       "taskId": "finn-policy-update-summary",
@@ -163,24 +163,11 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.207Z"
+      "observedAt": "2026-06-25T11:02:45.307Z"
     },
     {
       "taskId": "finn-culture-pulse",
       "agentId": "orch-triangulum",
-      "agentOutput": {},
-      "score": 0,
-      "passed": false,
-      "latencyMs": 3,
-      "tokensUsed": 0,
-      "estimatedCostUsd": 0,
-      "scorers": [],
-      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.210Z"
-    },
-    {
-      "taskId": "cipher-forecast-format",
-      "agentId": "orch-centaurus-a",
       "agentOutput": {},
       "score": 0,
       "passed": false,
@@ -189,7 +176,20 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.212Z"
+      "observedAt": "2026-06-25T11:02:45.309Z"
+    },
+    {
+      "taskId": "cipher-forecast-format",
+      "agentId": "orch-centaurus-a",
+      "agentOutput": {},
+      "score": 0,
+      "passed": false,
+      "latencyMs": 4,
+      "tokensUsed": 0,
+      "estimatedCostUsd": 0,
+      "scorers": [],
+      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
+      "observedAt": "2026-06-25T11:02:45.313Z"
     },
     {
       "taskId": "cipher-margin-analysis",
@@ -197,12 +197,12 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 17,
+      "latencyMs": 18,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.229Z"
+      "observedAt": "2026-06-25T11:02:45.331Z"
     },
     {
       "taskId": "cipher-cost-optimization",
@@ -215,23 +215,10 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.232Z"
+      "observedAt": "2026-06-25T11:02:45.334Z"
     },
     {
       "taskId": "axel-lead-scoring",
-      "agentId": "orch-m87",
-      "agentOutput": {},
-      "score": 0,
-      "passed": false,
-      "latencyMs": 4,
-      "tokensUsed": 0,
-      "estimatedCostUsd": 0,
-      "scorers": [],
-      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.236Z"
-    },
-    {
-      "taskId": "axel-outbound-sequence",
       "agentId": "orch-m87",
       "agentOutput": {},
       "score": 0,
@@ -241,10 +228,10 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.239Z"
+      "observedAt": "2026-06-25T11:02:45.337Z"
     },
     {
-      "taskId": "axel-pipeline-coverage",
+      "taskId": "axel-outbound-sequence",
       "agentId": "orch-m87",
       "agentOutput": {},
       "score": 0,
@@ -254,7 +241,20 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.241Z"
+      "observedAt": "2026-06-25T11:02:45.339Z"
+    },
+    {
+      "taskId": "axel-pipeline-coverage",
+      "agentId": "orch-m87",
+      "agentOutput": {},
+      "score": 0,
+      "passed": false,
+      "latencyMs": 4,
+      "tokensUsed": 0,
+      "estimatedCostUsd": 0,
+      "scorers": [],
+      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
+      "observedAt": "2026-06-25T11:02:45.343Z"
     },
     {
       "taskId": "luna-content-brief",
@@ -267,7 +267,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.244Z"
+      "observedAt": "2026-06-25T11:02:45.346Z"
     },
     {
       "taskId": "luna-tone-check",
@@ -275,12 +275,12 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 2,
+      "latencyMs": 3,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.246Z"
+      "observedAt": "2026-06-25T11:02:45.349Z"
     },
     {
       "taskId": "luna-headline-options",
@@ -288,12 +288,12 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 2,
+      "latencyMs": 4,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.248Z"
+      "observedAt": "2026-06-25T11:02:45.353Z"
     },
     {
       "taskId": "ellie-market-scan",
@@ -306,7 +306,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.251Z"
+      "observedAt": "2026-06-25T11:02:45.356Z"
     },
     {
       "taskId": "ellie-competitor-profile",
@@ -319,7 +319,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.254Z"
+      "observedAt": "2026-06-25T11:02:45.359Z"
     },
     {
       "taskId": "ellie-trend-summary",
@@ -327,12 +327,12 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 3,
+      "latencyMs": 2,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.257Z"
+      "observedAt": "2026-06-25T11:02:45.361Z"
     },
     {
       "taskId": "veronica-lite-triage",
@@ -340,16 +340,29 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 2,
+      "latencyMs": 3,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.259Z"
+      "observedAt": "2026-06-25T11:02:45.364Z"
     },
     {
       "taskId": "veronica-lite-summarization",
       "agentId": "orch-pinwheel",
+      "agentOutput": {},
+      "score": 0,
+      "passed": false,
+      "latencyMs": 4,
+      "tokensUsed": 0,
+      "estimatedCostUsd": 0,
+      "scorers": [],
+      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
+      "observedAt": "2026-06-25T11:02:45.368Z"
+    },
+    {
+      "taskId": "audit-compliance-check",
+      "agentId": "orch-cartwheel",
       "agentOutput": {},
       "score": 0,
       "passed": false,
@@ -358,20 +371,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.262Z"
-    },
-    {
-      "taskId": "audit-compliance-check",
-      "agentId": "orch-cartwheel",
-      "agentOutput": {},
-      "score": 0,
-      "passed": false,
-      "latencyMs": 2,
-      "tokensUsed": 0,
-      "estimatedCostUsd": 0,
-      "scorers": [],
-      "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.264Z"
+      "observedAt": "2026-06-25T11:02:45.371Z"
     },
     {
       "taskId": "audit-incident-postmortem",
@@ -384,7 +384,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.267Z"
+      "observedAt": "2026-06-25T11:02:45.374Z"
     },
     {
       "taskId": "audit-policy-versioning",
@@ -397,7 +397,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.270Z"
+      "observedAt": "2026-06-25T11:02:45.377Z"
     },
     {
       "taskId": "content-distribution-plan",
@@ -410,7 +410,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.272Z"
+      "observedAt": "2026-06-25T11:02:45.379Z"
     },
     {
       "taskId": "content-repurposing",
@@ -423,7 +423,7 @@
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.275Z"
+      "observedAt": "2026-06-25T11:02:45.382Z"
     },
     {
       "taskId": "content-narrative-arc",
@@ -431,12 +431,12 @@
       "agentOutput": {},
       "score": 0,
       "passed": false,
-      "latencyMs": 2,
+      "latencyMs": 3,
       "tokensUsed": 0,
       "estimatedCostUsd": 0,
       "scorers": [],
       "failureReason": "Could not find API key process.env.OPENAI_API_KEY for model id openai/gpt-4o",
-      "observedAt": "2026-06-25T11:00:39.277Z"
+      "observedAt": "2026-06-25T11:02:45.385Z"
     }
   ],
   "summary": {
@@ -445,7 +445,7 @@
     "passRate": 0,
     "meanScore": 0,
     "p50LatencyMs": 3,
-    "p95LatencyMs": 25,
+    "p95LatencyMs": 23,
     "totalCostUsd": 0,
     "regressionDeltaPct": null
   },
