@@ -203,7 +203,7 @@ function printTable(run: EvalRun): void {
 }
 
 async function writeLatestJson(run: EvalRun): Promise<void> {
-  const docsDir = resolve(process.cwd(), "../../docs/EVALS");
+  const docsDir = resolve(import.meta.dirname!, "../../../docs/EVALS");
   await mkdir(docsDir, { recursive: true });
   const path = resolve(docsDir, `${run.id}.json`);
   await writeFile(path, JSON.stringify(run, null, 2));

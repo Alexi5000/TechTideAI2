@@ -29,3 +29,7 @@ agents/python/src/techtide_agents.egg-info/
 .DS_Store
 Thumbs.db
 nul
+
+# Per-run eval artifacts (keep docs/EVALS/latest.json as the frozen baseline)
+docs/EVALS/*.json
+!docs/EVALS/latest.json

@@ -30,6 +30,7 @@
 
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { spawn } from "node:child_process";
 
 interface JsonSchema {
   type?: string;
@@ -271,6 +272,13 @@ async function main(): Promise<void> {
 
   await writeFile(tsTarget, emitTypeScript(schema));
   await writeFile(pyTarget, emitPython(schema));
+
+  // Format the generated Python with ruff so re-runs are idempotent.
+  await new Promise<void>((resolve, reject) => {
+    const proc = spawn("python", ["-m", "ruff", "format", pyTarget], { stdio: "inherit" });
+    proc.on("exit", (code) => (code === 0 ? resolve() : reject(new Error(`ruff format exited ${code}`))));
+    proc.on("error", reject);
+  });
 
   process.stdout.write(`Wrote ${tsTarget}\n`);
   process.stdout.write(`Wrote ${pyTarget}\n`);
