@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 480" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <title>TechTideAI harness flow</title>
+  <desc>The end-to-end harness flow: the operator console on the left sends a request, the Fastify backend orchestrates the run, the agent runtime executes through the contract, the policy gate decides whether to pause, the eval harness runs nightly, the trace surface captures every transition.</desc>
+
+  <style>
+    .io      { fill: #0f172a; stroke: #1d4ed8; stroke-width: 1.4; rx: 8; }
+    .core    { fill: #0f172a; stroke: #b45309; stroke-width: 1.4; rx: 8; }
+    .gate    { fill: #fef3c7; stroke: #b45309; stroke-width: 2; rx: 8; }
+    .sink    { fill: #0f172a; stroke: #15803d; stroke-width: 1.4; rx: 8; }
+    .text    { fill: #f1f5f9; font-weight: 700; }
+    .sub     { fill: #94a3b8; font-size: 12px; }
+    .arrow   { fill: #64748b; }
+    .arrow-w { fill: #b45309; }
+    .edge    { stroke: #475569; stroke-width: 1.4; fill: none; }
+    .edge-w  { stroke: #b45309; stroke-width: 1.6; fill: none; }
+  </style>
+
+  <rect width="1280" height="480" fill="#020617"/>
+
+  <text x="640" y="40" text-anchor="middle" class="text" font-size="22">The harness flow</text>
+  <text x="640" y="62" text-anchor="middle" class="sub">Operator request to operator console to audit replay, every arrow typed</text>
+
+  <!-- Operator -->
+  <rect x="60"  y="180" width="180" height="100" class="io"/>
+  <text x="150" y="208" text-anchor="middle" class="text">Operator</text>
+  <text x="150" y="226" text-anchor="middle" class="sub">reads dashboard,</text>
+  <text x="150" y="240" text-anchor="middle" class="sub">decides on gate,</text>
+  <text x="150" y="254" text-anchor="middle" class="sub">approves agent run.</text>
+
+  <!-- Operator console -->
+  <rect x="290" y="180" width="180" height="100" class="io"/>
+  <text x="380" y="208" text-anchor="middle" class="text">Operator console</text>
+  <text x="380" y="226" text-anchor="middle" class="sub">React + Vite + Tailwind</text>
+  <text x="380" y="240" text-anchor="middle" class="sub">on :5180</text>
+  <text x="380" y="254" text-anchor="middle" class="sub">SSE-traced runs</text>
+
+  <!-- Fastify backend -->
+  <rect x="520" y="180" width="200" height="100" class="core"/>
+  <text x="620" y="208" text-anchor="middle" class="text">Fastify backend</text>
+  <text x="620" y="226" text-anchor="middle" class="sub">TypeScript on :4050</text>
+  <text x="620" y="240" text-anchor="middle" class="sub">Zod schemas everywhere</text>
+  <text x="620" y="254" text-anchor="middle" class="sub">StatusTransitionPolicy</text>
+
+  <!-- Mastra runtime -->
+  <rect x="770" y="100" width="170" height="100" class="io"/>
+  <text x="855" y="128" text-anchor="middle" class="text">Mastra runtime</text>
+  <text x="855" y="146" text-anchor="middle" class="sub">TypeScript</text>
+  <text x="855" y="160" text-anchor="middle" class="sub">61-agent roster</text>
+  <text x="855" y="174" text-anchor="middle" class="sub">tool calls, skills</text>
+
+  <!-- LangGraph sidecar -->
+  <rect x="770" y="260" width="170" height="100" class="io"/>
+  <text x="855" y="288" text-anchor="middle" class="text">LangGraph sidecar</text>
+  <text x="855" y="306" text-anchor="middle" class="sub">Python</text>
+  <text x="855" y="320" text-anchor="middle" class="sub">graphs for graph-heavy</text>
+  <text x="855" y="334" text-anchor="middle" class="sub">orchestrators</text>
+
+  <!-- Approval gate (the human checkpoint) -->
+  <rect x="980" y="100" width="240" height="260" class="gate"/>
+  <text x="1100" y="128" text-anchor="middle" class="text">Approval gate</text>
+  <text x="1100" y="146" text-anchor="middle" class="sub">Classifies action by</text>
+  <text x="1100" y="160" text-anchor="middle" class="sub">name + payload.</text>
+  <text x="1100" y="180" text-anchor="middle" class="sub">High-risk tiers:</text>
+  <text x="1100" y="200" text-anchor="middle" class="sub">- external</text>
+  <text x="1100" y="216" text-anchor="middle" class="sub">- destructive</text>
+  <text x="1100" y="232" text-anchor="middle" class="sub">- billing</text>
+  <text x="1100" y="254" text-anchor="middle" class="sub">Pauses run,</text>
+  <text x="1100" y="268" text-anchor="middle" class="sub">stamps policyVersion.</text>
+  <text x="1100" y="290" text-anchor="middle" class="sub">Operator grants or</text>
+  <text x="1100" y="304" text-anchor="middle" class="sub">denies in console.</text>
+  <text x="1100" y="320" text-anchor="middle" class="sub">Decision is auditable.</text>
+  <text x="1100" y="340" text-anchor="middle" class="sub">Replay is one SQL</text>
+  <text x="1100" y="354" text-anchor="middle" class="sub">query away.</text>
+
+  <!-- Bottom row: storage and observability -->
+  <rect x="60"  y="380" width="200" height="80" class="sink"/>
+  <text x="160" y="408" text-anchor="middle" class="text">Supabase</text>
+  <text x="160" y="426" text-anchor="middle" class="sub">run_events (append-only)</text>
+  <text x="160" y="440" text-anchor="middle" class="sub">EvalRun, ApprovalRequest</text>
+  <text x="160" y="454" text-anchor="middle" class="sub">RLS per-org reads</text>
+
+  <rect x="290" y="380" width="200" height="80" class="sink"/>
+  <text x="390" y="408" text-anchor="middle" class="text">Weaviate</text>
+  <text x="390" y="426" text-anchor="middle" class="sub">vector memory</text>
+  <text x="390" y="440" text-anchor="middle" class="sub">per-agent knowledge</text>
+  <text x="390" y="454" text-anchor="middle" class="sub">BYO embedder</text>
+
+  <rect x="520" y="380" width="200" height="80" class="sink"/>
+  <text x="620" y="408" text-anchor="middle" class="text">OpenTelemetry</text>
+  <text x="620" y="426" text-anchor="middle" class="sub">per-span eval.* attrs</text>
+  <text x="620" y="440" text-anchor="middle" class="sub">OTLP to Jaeger / Tempo</text>
+  <text x="620" y="454" text-anchor="middle" class="sub">trace-driven regression</text>
+
+  <rect x="750" y="380" width="200" height="80" class="sink"/>
+  <text x="850" y="408" text-anchor="middle" class="text">Eval harness</text>
+  <text x="850" y="426" text-anchor="middle" class="sub">33-task golden suite</text>
+  <text x="850" y="440" text-anchor="middle" class="sub">frozen baseline</text>
+  <text x="850" y="454" text-anchor="middle" class="sub">5% regression threshold</text>
+
+  <rect x="980" y="380" width="240" height="80" class="sink"/>
+  <text x="1100" y="408" text-anchor="middle" class="text">Post-mortem</text>
+  <text x="1100" y="426" text-anchor="middle" class="sub">docs/EVALS/post-mortems/&lt;run-id&gt;.md</text>
+  <text x="1100" y="440" text-anchor="middle" class="sub">per-task rationale + score</text>
+  <text x="1100" y="454" text-anchor="middle" class="sub">the review surface</text>
+
+  <!-- Arrows: Operator -> Console -> Backend -> Mastra / LangGraph -->
+  <path d="M 240 230 L 290 230" class="edge"/>
+  <polygon points="284,224 294,230 284,236" class="arrow"/>
+  <path d="M 470 230 L 520 230" class="edge"/>
+  <polygon points="514,224 524,230 514,236" class="arrow"/>
+
+  <!-- Backend to Mastra + LangGraph -->
+  <path d="M 720 220 L 770 160" class="edge"/>
+  <polygon points="768,166 776,154 778,166" class="arrow"/>
+  <path d="M 720 240 L 770 300" class="edge"/>
+  <polygon points="768,294 776,306 778,294" class="arrow"/>
+
+  <!-- Mastra / LangGraph to Approval gate -->
+  <path d="M 940 150 L 980 200" class="edge-w"/>
+  <polygon points="978,194 988,204 974,202" class="arrow-w"/>
+  <text x="950" y="180" class="sub" fill="#fcd34d">high-risk</text>
+  <path d="M 940 320 L 980 280" class="edge-w"/>
+  <polygon points="978,286 988,276 974,278" class="arrow-w"/>
+
+  <!-- Approval gate back to backend (decision) -->
+  <path d="M 980 220 L 720 250" class="edge"/>
+  <polygon points="726,246 716,254 730,254" class="arrow"/>
+  <text x="840" y="252" class="sub">granted / denied</text>
+
+  <!-- Backend to storage row -->
+  <path d="M 620 280 L 160 380" class="edge"/>
+  <path d="M 620 280 L 390 380" class="edge"/>
+  <path d="M 620 280 L 620 380" class="edge"/>
+  <path d="M 620 280 L 850 380" class="edge"/>
+  <path d="M 620 280 L 1100 380" class="edge"/>
+</svg>
