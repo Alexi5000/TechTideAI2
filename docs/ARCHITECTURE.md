@@ -3,7 +3,7 @@
 ![TechTideAI agent operating system](../assets/techtideai_hero_2026.png)
 
 ## Control plane
-- Brian Cozy (CEO) + Veronica Cozy (Agent 0) + domain orchestrators define objectives, risks, and resource allocations.
+- Andromeda (CEO) (CEO) + Andromeda Director + domain orchestrators define objectives, risks, and resource allocations.
 - Decision logs map to measurable KPIs and dependencies.
 
 ## Execution plane

@@ -15,7 +15,7 @@ afterEach(() => {
 
 describe("LangGraphBridge", () => {
   it("POSTs the request and unwraps the result", async () => {
-    const request: AgentRunRequest = { agentId: "orch-cipher", input: { prompt: "Q3 forecast" } };
+    const request: AgentRunRequest = { agentId: "orch-centaurus-a", input: { prompt: "Q3 forecast" } };
     const fakeResult: AgentRunResult = {
       success: true,
       output: { numbers: { projectedMRR: 304678 } },
@@ -34,7 +34,7 @@ describe("LangGraphBridge", () => {
     const result = await bridge.execute(request);
 
     expect(received!.url).toBe("http://localhost:4051/run");
-    expect((received!.body as { request: AgentRunRequest }).request.agentId).toBe("orch-cipher");
+    expect((received!.body as { request: AgentRunRequest }).request.agentId).toBe("orch-centaurus-a");
     expect(result.success).toBe(true);
     expect((result.output as { numbers: { projectedMRR: number } }).numbers.projectedMRR).toBe(304678);
   });
@@ -44,7 +44,7 @@ describe("LangGraphBridge", () => {
       new Response("upstream broken", { status: 502 })) as typeof fetch;
     const bridge = createLangGraphBridge({ sidecarUrl: "http://localhost:4051" });
     await expect(
-      bridge.execute({ agentId: "orch-cipher", input: {} }),
+      bridge.execute({ agentId: "orch-centaurus-a", input: {} }),
     ).rejects.toBeInstanceOf(LangGraphBridgeError);
   });
 

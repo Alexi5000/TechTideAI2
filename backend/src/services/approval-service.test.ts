@@ -22,7 +22,7 @@ describe("ApprovalService", () => {
     const approval = await svc.request({
       orgId: "00000000-0000-0000-0000-000000000001",
       runId: "00000000-0000-0000-0000-000000000002",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       action: "issue_payment",
       payload: { amountUsd: 5000 },
       riskTier: "billing",
@@ -37,7 +37,7 @@ describe("ApprovalService", () => {
     const approval = await svc.request({
       orgId: "00000000-0000-0000-0000-000000000001",
       runId: "00000000-0000-0000-0000-000000000002",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       action: "issue_payment",
       payload: { amountUsd: 5000 },
       riskTier: "billing",
@@ -53,7 +53,7 @@ describe("ApprovalService", () => {
     const approval = await svc.request({
       orgId: "00000000-0000-0000-0000-000000000001",
       runId: "00000000-0000-0000-0000-000000000002",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       action: "delete_customer_record",
       payload: {},
       riskTier: "destructive",
@@ -68,7 +68,7 @@ describe("ApprovalService", () => {
     const approval = await svc.request({
       orgId: "00000000-0000-0000-0000-000000000001",
       runId: "00000000-0000-0000-0000-000000000002",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       action: "delete_customer_record",
       payload: {},
       riskTier: "destructive",
@@ -92,7 +92,7 @@ describe("ApprovalService", () => {
     const approval = await svc.request({
       orgId: "00000000-0000-0000-0000-000000000001",
       runId: "00000000-0000-0000-0000-000000000002",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       action: "issue_payment",
       payload: {},
       riskTier: "billing",
@@ -109,7 +109,7 @@ describe("ApprovalService", () => {
     await svc.request({
       orgId: "00000000-0000-0000-0000-000000000001",
       runId: "00000000-0000-0000-0000-000000000002",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       action: "issue_payment",
       payload: {},
       riskTier: "billing",

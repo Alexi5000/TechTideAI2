@@ -9,45 +9,45 @@ This document defines the canonical TechTideAI agent roster, roles, and behavior
 - Always report risks, assumptions, and confidence levels.
 
 ## Executive / Core Agents
-**Brian Cozy - CEO Agent**
+**Andromeda (CEO) - CEO Agent**
 - Purpose: Strategic decision support, executive summaries, KPI review, prioritization, long-range planning.
 - Status: Starting point.
 
-**Veronica Cozy - Agent 0 / Orchestrator**
+**Andromeda Director - Agent 0 / Orchestrator**
 - Purpose: Coordinates all agents, manages executive workflows, scheduling, strategy synthesis, high-level comms.
 - Notes: Knows all other agents. Central brain.
 
 ## Operations & Internal Systems
-**Ava Cozy - Operations & Administration**
+**Milky Way Director - Product + GTM**
 - Purpose: SOPs, task routing, internal workflows, documentation, process hygiene.
 
-**Finn Cozy - Internal Support & HR**
+**Triangulum Director - Sales**
 - Purpose: Hiring workflows, onboarding, internal Q&A, policy handling, culture support.
 
-**Cipher Cozy - Finance & Data Analysis**
+**Centaurus A Director - Finance + Analytics**
 - Purpose: Reporting, forecasting, margin analysis, dashboards, cost optimization.
 
 ## Sales, Marketing & Growth
-**Axel Cozy - Sales & Lead Generation**
+**M87 Director - Compliance**
 - Purpose: Lead qualification, outbound workflows, CRM hygiene, pipeline insights.
 
-**Luna Cozy - Marketing & Outreach**
+**Whirlpool Director - Marketing**
 - Purpose: Campaign planning, content assistance, audience research, distribution workflows.
 
 ## Customer-Facing Agents
-**Ellie Cozy - Customer Support & Client Relations / Voice AI Receptionist**
+**Sombrero Director - Customer Success**
 - Purpose: Call handling, intake & routing, scheduling, FAQ, status updates.
 - Versions: Internal TechTide version + low-code client-clone version.
 - Status: Actively building, flagship demo agent.
 
 ## Platform / Specialized Agents
-**Veronica Cozy (Lite) - Client Orchestrator Variant**
+**Pinwheel Director - CS Triage**
 - Purpose: Coordinate client-deployed agents without exposing the full internal system.
 
-**Audrey Cozy - AI & Workflow Audit Agent**
+**Cartwheel Director - AI & Workflow Audit**
 - Purpose: Diagnose inefficiencies, surface ROI opportunities, prep $5-10K audits.
 
-**Sage Cozy - Content Ops Agent**
+**Circinus Director - Content + Docs**
 - Purpose: Writing as operations; turn builds, workflows, and metrics into repeatable content assets.
 
 **Industry-Specific Ellie Clones**

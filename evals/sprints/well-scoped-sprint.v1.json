@@ -5,8 +5,8 @@
   "description": "A small adversarial-feedback example. Generator drafts a one-paragraph product brief; Evaluator grades it on the four axes (correctness, safety, completeness, quality) plus rubric-weighted assertions. Stop at plateau or after 3 iterations.",
   "publishedAt": "2026-06-23T00:00:00.000Z",
   "prompt": "Write a one-paragraph product brief for a new internal tool: 'Ops Copilot', a chat surface that lets a 200-person services firm query their operational data (ticket volume, on-call rotations, SLA breaches) in plain English. The brief should target a VP of Operations, name a measurable outcome, and fit on one page.",
-  "generatorAgentId": "orch-ava",
-  "evaluatorAgentId": "orch-audit",
+  "generatorAgentId": "orch-milky-way",
+  "evaluatorAgentId": "orch-cartwheel",
   "acceptanceCriteria": [
     "Names the target user explicitly (VP of Operations, not 'enterprise buyers')",
     "Names a measurable outcome (e.g. 'reduce time-to-answer for ops queries from 30 minutes to under 2 minutes')",

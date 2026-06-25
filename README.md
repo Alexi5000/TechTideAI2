@@ -1,12 +1,16 @@
 # TechTideAI
 
-![TechTideAI agent operating system](assets/techtideai_hero_2026.png)
+![TechTideAI agent operating system](assets/techtideai_hero_2026.svg)
 
-> **v0.3.0**. A company-scale agent operating system, built and operated in the open. 1 CEO + 10 orchestrators + 50 workers, three-agent adversarial harness, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack, nine ADRs, 124 TS tests + 20 Python tests + a 33-task golden suite, all green. See [CHANGELOG.md](CHANGELOG.md).
+> **v0.5.0**. A company-scale agent operating system, built and operated in the open. The mental model is a galaxy: 1 Local Group Director, 10 galaxy orchestrators, 50 star-cluster agents, three-agent adversarial harness, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack, nine ADRs, 124 TS tests + 20 Python tests + a 33-task golden suite, all green. See [CHANGELOG.md](CHANGELOG.md).
 
 TechTideAI is the harness an FDE ships into a customer environment, that the customer's operators monitor, and that an auditor can replay. It is a typed, observable, testable, reviewable surface for production agent teams: a React operator console, a Fastify orchestration API, a TypeScript Mastra runtime, a Python LangGraph runtime, OpenAI and Anthropic provider adapters, a Supabase-backed evidence plane with an append-only `run_events` audit log, an in-process eval harness with regression detection, a human-in-the-loop approval gate that stamps the policy version on every decision, an OpenTelemetry trace surface, and a notebook authoring flow for new golden tasks.
 
 The standard: **agent systems that ship.** Every major surface is typed end-to-end, observable through the trace plane, testable through the eval suite, and reviewable through the ADR set.
+
+### Brand: the Local Group
+
+The 61 agents are named after real galaxies and the star clusters inside them. The CEO is the **Local Group Director**. The 10 orchestrators are 10 galaxies (Andromeda, Milky Way, Triangulum, Centaurus A, M87, Whirlpool, Sombrero, Pinwheel, Cartwheel, Circinus). The 50 workers are the real star clusters, nebulae, and named sources inside each galaxy (e.g. `worker-m32`, `worker-orion`, `worker-ngc-595`, `worker-circinus-x1`). The mental model is: a company of stars, structured the way the actual universe is structured.
 
 ## TL;DR
 
@@ -41,25 +45,38 @@ Looking for the 15-minute walkthrough script (6 diagrams, run-of-show dialogue, 
 
 ```mermaid
 graph TD
-  CEO[CEO agent<br/>orch-cipher + orch-axel + ...<br/>10 orchestrators] --> Orch1[orch-cipher<br/>finance + analytics]
-  CEO --> Orch2[orch-axel<br/>engineering]
-  CEO --> Orch3[orch-ava<br/>product + GTM]
-  CEO --> Orch4[orch-audit<br/>compliance]
-  Orch1 --> P1[worker-cipher-fpna]
-  Orch1 --> P2[worker-cipher-ar]
-  Orch1 --> P3[worker-cipher-ap]
-  Orch1 --> P4[worker-cipher-treasury]
-  Orch1 --> P5[worker-cipher +1]
-  Orch2 --> Q1[worker-axel x5]
-  Orch3 --> R1[worker-ava x5]
-  Orch4 --> S1[worker-audit x5]
+  CEO[Local Group Director<br/>orch-andromeda + orch-milky-way + ...<br/>10 orchestrators] --> Andromeda[orch-andromeda<br/>product + GTM]
+  CEO --> MilkyWay[orch-milky-way<br/>finance + analytics]
+  CEO --> Triangulum[orch-triangulum<br/>sales]
+  CEO --> CentaurusA[orch-centaurus-a<br/>engineering]
+  CEO --> M87[orch-m87<br/>compliance]
+  CEO --> Whirlpool[orch-whirlpool<br/>marketing]
+  CEO --> Sombrero[orch-sombrero<br/>customer success]
+  CEO --> Pinwheel[orch-pinwheel<br/>HR + people ops]
+  CEO --> Cartwheel[orch-cartwheel<br/>content + docs]
+  CEO --> Circinus[orch-circinus<br/>CS triage]
+  Andromeda --> P1[worker-m32]
+  Andromeda --> P2[worker-m110]
+  Andromeda --> P3[worker-ngc-205]
+  Andromeda --> P4[worker-ngc-221]
+  Andromeda --> P5[worker-pa-1]
+  MilkyWay --> Q1[worker-sgr-a]
+  MilkyWay --> Q2[worker-orion]
+  MilkyWay --> Q3[worker-pleiades]
+  MilkyWay --> Q4[worker-cygnus-x1]
+  MilkyWay --> Q5[worker-vela]
+  Cartwheel --> R1[worker-wheel-ring]
+  Cartwheel --> R2[worker-wheel-spoke]
+  Cartwheel --> R3[worker-wheel-core]
+  Cartwheel --> R4[worker-wheel-companion]
+  Cartwheel --> R5[worker-wheel-tail]
 ```
 
 ![TechTideAI control plane](assets/techtideai_control_plane.svg)
 
 - **One CEO agent** at the top, delegating to the orchestrators. The CEO is a routine, not a person: "given a 33-task suite, decide which orchestrator handles which task." The routine lives in the harness.
 - **Ten orchestrators** coordinating pods of workers and reviewing their output. Each owns a domain (engineering, finance, compliance, GTM, etc.).
-- **Fifty workers** (five per orchestrator) doing the actual tool-calling work. Workers are named after real tools, not abstractions: `worker-cipher-fpna` is a real financial-planning job.
+- **Fifty workers** (five per orchestrator) doing the actual tool-calling work. Workers are named after real tools, not abstractions: `worker-cena` is a real financial-planning job.
 
 The 61-agent invariant is asserted in `agents/src/core/registry.test.ts` and fails the test suite the moment a worker is added without a sibling.
 

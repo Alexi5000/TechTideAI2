@@ -67,6 +67,16 @@ Open diagram 2 (`assets/walkthrough/02_mental_model.svg`). Stay on it.
 > workers. Five workers per orchestrator. The CEO delegates. The
 > orchestrators coordinate. The workers do the tool calls.
 >
+> "The brand is a galaxy. The CEO is the **Local Group Director**.
+> The ten orchestrators are ten real galaxies, named after the
+> actual structure of the Local Group: Andromeda, Milky Way,
+> Triangulum, Centaurus A, M87, Whirlpool, Sombrero, Pinwheel,
+> Cartwheel, Circinus. The fifty workers are the star clusters
+> and named sources inside each galaxy. `worker-m32` and
+> `worker-m110` for Andromeda. `worker-orion` and `worker-pleiades`
+> for the Milky Way. `worker-ngc-5195` and `worker-m51a` for
+> Whirlpool. The harness is a company of stars.
+>
 > "Why a leverage pyramid? Because the failure mode of a flat agent
 > system is coordination collapse. Fifty agents talking to each other
 > in a flat graph: O(n^2) calls, O(n^2) failures, O(n^2) bills. A
@@ -78,13 +88,13 @@ Open diagram 2 (`assets/walkthrough/02_mental_model.svg`). Stay on it.
 > orchestrators, fifty workers. If I add an eleventh orchestrator
 > without a sibling, the test fails. The test is the spec.
 >
-> "Notice the names. The CEO is Brian Cozy. The orchestrators are
-> named after real jobs. The workers are named after real tools.
-> `worker-cipher-fpna` does financial planning and analysis for the
-> finance orchestrator. `worker-ava-sops` runs standard operating
-> procedures for the operations orchestrator. These are not
-> abstractions. They are jobs. The harness hires them the way you
-> would hire a person."
+> "Notice the names. The CEO is the Local Group Director. The
+> orchestrators are named after real galaxies. The workers are
+> named after real star clusters and named sources inside their
+> galaxy. `worker-cena` is in the Centaurus A pod and runs the
+> engineering workflows. `worker-orion` is in the Milky Way pod
+> and runs the analytics surface. These are not abstractions. They
+> are jobs. The harness hires them the way you would hire a person."
 
 If the audience is technical, drop to the shell and show the test:
 
@@ -106,7 +116,7 @@ Open diagram 3 (`assets/walkthrough/03_human_gate.svg`). Stay on it.
 > going to say no, and I am going to show you why.
 >
 > "Here is the run. It starts queued. It transitions to running. The
-> orchestrator `orch-cipher` issues a `vendor-payment` action. The
+> orchestrator `orch-centaurus-a` issues a `vendor-payment` action. The
 > action classifier looks at the action string, the payload, and the
 > orchestrator. It returns the risk tier: read, write, external,
 > destructive, billing. Vendor payment is billing. Billing is in
@@ -201,7 +211,7 @@ Open diagram 5 (`assets/walkthrough/05_audit_replay.svg`). Stay on it.
 > `run_events` table, filter to that run, and read five rows.
 >
 > "The first row says: `run.created`. The orchestrator was
-> `orch-cipher`. The policy version was `approval-policy-v1`. The
+> `orch-centaurus-a`. The policy version was `approval-policy-v1`. The
 > second row says: `approval.requested`. The amount was $900. The
 > risk tier was billing. The third row says: `approval.granted`. The
 > operator was `operator-7`. The fourth row says: `run.succeeded`.

@@ -37,7 +37,7 @@
   <text x="60" y="192" class="sub">e-1</text>
   <text x="120" y="192" class="sub">r-9001</text>
   <text x="220" y="192" class="sub">run.created</text>
-  <text x="370" y="192" class="sub">{orch: "orch-cipher"}</text>
+  <text x="370" y="192" class="sub">{orch: "orch-centaurus-a"}</text>
   <text x="700" y="192" class="sub">approval-policy-v1</text>
   <text x="900" y="192" class="sub">2026-06-23T17:55Z</text>
 

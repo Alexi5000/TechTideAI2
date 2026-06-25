@@ -6,44 +6,44 @@ import { SectionHeader } from "@/components/section-header";
 
 const orchestrators = [
   {
-    title: "Veronica Cozy (Agent 0)",
-    description: "Executive orchestration, scheduling, and strategy synthesis.",
+    title: "Andromeda Director",
+    description: "Product strategy, GTM, and cross-domain synthesis.",
   },
   {
-    title: "Ava Cozy",
-    description: "Operations, SOPs, task routing, and process hygiene.",
+    title: "Milky Way Director",
+    description: "Finance, forecasting, analytics, and cost optimization.",
   },
   {
-    title: "Finn Cozy",
-    description: "Internal support, onboarding, policy, and culture care.",
-  },
-  {
-    title: "Cipher Cozy",
-    description: "Finance, forecasting, dashboards, and cost optimization.",
-  },
-  {
-    title: "Axel Cozy",
+    title: "Triangulum Director",
     description: "Sales execution, lead generation, and CRM hygiene.",
   },
   {
-    title: "Luna Cozy",
-    description: "Marketing campaigns, outreach, and distribution workflows.",
+    title: "Centaurus A Director",
+    description: "Engineering workflows, infra, and platform ops.",
   },
   {
-    title: "Ellie Cozy",
-    description: "Customer support, intake, scheduling, and voice concierge.",
+    title: "M87 Director",
+    description: "Compliance reviews, audits, and remediation plans.",
   },
   {
-    title: "Veronica Cozy (Lite)",
-    description: "Client-side orchestration without exposing internal systems.",
+    title: "Whirlpool Director",
+    description: "Marketing campaigns, outreach, and distribution.",
   },
   {
-    title: "Audrey Cozy",
-    description: "AI and workflow audits, ROI discovery, and remediation plans.",
+    title: "Sombrero Director",
+    description: "Customer success, intake, scheduling, and voice concierge.",
   },
   {
-    title: "Sage Cozy",
-    description: "Content operations that turn workflows into reusable assets.",
+    title: "Pinwheel Director",
+    description: "Client orchestration without exposing internal systems.",
+  },
+  {
+    title: "Cartwheel Director",
+    description: "AI and workflow audits, ROI discovery, remediation.",
+  },
+  {
+    title: "Circinus Director",
+    description: "CS triage, content ops, and reusable knowledge assets.",
   },
 ];
 

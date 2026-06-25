@@ -22,7 +22,7 @@ import json
 fixture_path = Path(__file__).resolve().parents[1] / "evals" / "fixtures" / "golden-tasks.v1.json"
 fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
 for t in fixture["tasks"]:
-    if t["agentId"] == "orch-cipher" and t["category"] == "domain-reasoning":
+    if t["agentId"] == "orch-centaurus-a" and t["category"] == "domain-reasoning":
         target_task = t
         break
 print(f"Target task: {target_task['id']} ({target_task['agentId']})")

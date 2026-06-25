@@ -29,8 +29,8 @@ const baseContract: SprintContract = {
   version: "v1.0.0",
   description: "",
   prompt: "Write a one-paragraph product brief.",
-  generatorAgentId: "orch-ava",
-  evaluatorAgentId: "orch-audit",
+  generatorAgentId: "orch-milky-way",
+  evaluatorAgentId: "orch-cartwheel",
   rubric: "Score along the four canonical axes; pass when all axes are above their thresholds.",
   acceptanceCriteria: ["a", "b", "c"],
   scorers: [
@@ -53,8 +53,8 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     // → run is "succeeded".
     const runtime = makeRuntime(
       {
-        "orch-ava": { success: true, output: { text: "yes" }, events: [] },
-        "orch-audit": { success: true, output: { axes: { correctness: 0.9, safety: 0.95, completeness: 0.85, quality: 0.8 } }, events: [] },
+        "orch-milky-way": { success: true, output: { text: "yes" }, events: [] },
+        "orch-cartwheel": { success: true, output: { axes: { correctness: 0.9, safety: 0.95, completeness: 0.85, quality: 0.8 } }, events: [] },
       },
       callLog,
     );
@@ -75,7 +75,7 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     let iter = 0;
     const runtime: IAgentRuntime = {
       async execute(req: AgentRunRequest): Promise<AgentRunResult> {
-        if (req.agentId === "orch-ava") {
+        if (req.agentId === "orch-milky-way") {
           return { success: true, output: { text: `iter-${iter}` }, events: [] };
         }
         iter += 1;
@@ -99,8 +99,8 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     // iteration; the four-axis score is constant 0 across all iterations
     // → plateau on the 2nd sample.
     const runtime = makeRuntime({
-      "orch-ava": { success: true, output: { text: "nope" }, events: [] },
-      "orch-audit": { success: true, output: { axes: { correctness: 0.0, safety: 0.0, completeness: 0.0, quality: 0.0 } }, events: [] },
+      "orch-milky-way": { success: true, output: { text: "nope" }, events: [] },
+      "orch-cartwheel": { success: true, output: { axes: { correctness: 0.0, safety: 0.0, completeness: 0.0, quality: 0.0 } }, events: [] },
     });
     const harness = new ThreeAgentHarness({ agentRuntime: runtime });
     const result = await harness.runSprint({ contract: baseContract });
@@ -134,7 +134,7 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     let callCount = 0;
     const runtime: IAgentRuntime = {
       async execute(req: AgentRunRequest): Promise<AgentRunResult> {
-        if (req.agentId === "orch-ava") {
+        if (req.agentId === "orch-milky-way") {
           callCount += 1;
           return {
             success: true,
@@ -153,8 +153,8 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
 
   it("respects contractVersion on the result", async () => {
     const runtime = makeRuntime({
-      "orch-ava": { success: true, output: { text: "yes" }, events: [] },
-      "orch-audit": { success: true, output: { axes: { correctness: 0.9, safety: 0.95, completeness: 0.85, quality: 0.8 } }, events: [] },
+      "orch-milky-way": { success: true, output: { text: "yes" }, events: [] },
+      "orch-cartwheel": { success: true, output: { axes: { correctness: 0.9, safety: 0.95, completeness: 0.85, quality: 0.8 } }, events: [] },
     });
     const harness = new ThreeAgentHarness({ agentRuntime: runtime });
     const result = await harness.runSprint({ contract: baseContract });
@@ -167,8 +167,8 @@ describe("ThreeAgentHarness (Phase 8.4)", () => {
     // both times, so the plateau detector should fire on the second sample.
     const runtime = makeRuntime(
       {
-        "orch-ava": { success: true, output: { text: "nope" }, events: [] },
-        "orch-audit": { success: true, output: { axes: { correctness: 0.0, safety: 0.0, completeness: 0.0, quality: 0.0 } }, events: [] },
+        "orch-milky-way": { success: true, output: { text: "nope" }, events: [] },
+        "orch-cartwheel": { success: true, output: { axes: { correctness: 0.0, safety: 0.0, completeness: 0.0, quality: 0.0 } }, events: [] },
       },
       callLog,
     );

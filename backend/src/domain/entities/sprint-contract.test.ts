@@ -8,8 +8,8 @@ const valid = {
   version: "v1.0.0",
   description: "tiny",
   prompt: "Produce a one-paragraph product brief.",
-  generatorAgentId: "orch-ava",
-  evaluatorAgentId: "orch-audit",
+  generatorAgentId: "orch-milky-way",
+  evaluatorAgentId: "orch-cartwheel",
   acceptanceCriteria: [
     "Mentions a target user",
     "Mentions a measurable outcome",

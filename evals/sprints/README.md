@@ -12,8 +12,8 @@ Versioned, JSON-form sprint contracts that drive the **three-agent harness** (Pl
   "description": "A small adversarial-feedback example. ...",
   "publishedAt": "2026-06-23T00:00:00.000Z",
   "prompt": "Write a one-paragraph product brief for ...",
-  "generatorAgentId": "orch-ava",
-  "evaluatorAgentId": "orch-audit",
+  "generatorAgentId": "orch-milky-way",
+  "evaluatorAgentId": "orch-cartwheel",
   "acceptanceCriteria": [
     "Names the target user explicitly",
     "Names a measurable outcome",

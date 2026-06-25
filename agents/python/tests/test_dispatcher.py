@@ -7,7 +7,7 @@ from techtide_agents.runtime.dispatcher import Dispatcher, RuntimeTarget
 
 def test_defaults_route_orchestrator_to_langgraph() -> None:
     dispatcher = Dispatcher()
-    decision = dispatcher.decide("orch-cipher", "orchestrator")
+    decision = dispatcher.decide("orch-centaurus-a", "orchestrator")
     assert decision.target is RuntimeTarget.LANGGRAPH
 
 
@@ -22,10 +22,10 @@ def test_agent_override_wins_over_tier() -> None:
         {
             "version": 1,
             "tiers": {"orchestrator": "mastra"},
-            "agents": {"orch-cipher": "langgraph"},
+            "agents": {"orch-centaurus-a": "langgraph"},
         }
     )
-    decision = dispatcher.decide("orch-cipher", "orchestrator")
+    decision = dispatcher.decide("orch-centaurus-a", "orchestrator")
     assert decision.target is RuntimeTarget.LANGGRAPH
     assert "explicitly mapped" in decision.reason
 
@@ -38,7 +38,7 @@ def test_unknown_tier_defaults_to_mastra() -> None:
 
 def test_extend_returns_new_dispatcher() -> None:
     base = Dispatcher({"version": 1, "tiers": {"worker": "mastra"}, "agents": {}})
-    extended = base.extend({"orch-cipher": "mastra"})
-    assert extended.decide("orch-cipher", "orchestrator").target is RuntimeTarget.MASTRA
+    extended = base.extend({"orch-centaurus-a": "mastra"})
+    assert extended.decide("orch-centaurus-a", "orchestrator").target is RuntimeTarget.MASTRA
     # Original unchanged.
-    assert base.decide("orch-cipher", "orchestrator").target is RuntimeTarget.LANGGRAPH
+    assert base.decide("orch-centaurus-a", "orchestrator").target is RuntimeTarget.LANGGRAPH

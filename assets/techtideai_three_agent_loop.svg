@@ -27,21 +27,21 @@
   <!-- Generator -->
   <rect x="220" y="60" width="220" height="100" class="generator"/>
   <text x="330" y="86" text-anchor="middle" class="title">Generator agent</text>
-  <text x="330" y="104" text-anchor="middle" class="sub">orch-ava / orch-finn /</text>
-  <text x="330" y="120" text-anchor="middle" class="sub">orch-content / orch-cipher</text>
+  <text x="330" y="104" text-anchor="middle" class="sub">orch-milky-way / orch-triangulum /</text>
+  <text x="330" y="120" text-anchor="middle" class="sub">orch-circinus / orch-centaurus-a</text>
   <text x="330" y="138" text-anchor="middle" class="sub">produces candidate output</text>
 
   <!-- Evaluator -->
   <rect x="500" y="60" width="220" height="100" class="evaluator"/>
   <text x="610" y="86" text-anchor="middle" class="title">Evaluator agent</text>
-  <text x="610" y="104" text-anchor="middle" class="sub">orch-audit (default)</text>
+  <text x="610" y="104" text-anchor="middle" class="sub">orch-cartwheel (default)</text>
   <text x="610" y="120" text-anchor="middle" class="sub">grades candidate along</text>
   <text x="610" y="138" text-anchor="middle" class="sub">the four axes</text>
 
   <!-- Judge (optional, only for high-risk sprints) -->
   <rect x="780" y="60" width="240" height="100" class="judge"/>
   <text x="900" y="86" text-anchor="middle" class="title">Judge agent (optional)</text>
-  <text x="900" y="104" text-anchor="middle" class="sub">orch-audit / orch-veronica</text>
+  <text x="900" y="104" text-anchor="middle" class="sub">orch-cartwheel / orch-andromeda</text>
   <text x="900" y="120" text-anchor="middle" class="sub">second-opinion review</text>
   <text x="900" y="138" text-anchor="middle" class="sub">on destructive / billing</text>
 

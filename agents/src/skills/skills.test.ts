@@ -61,7 +61,7 @@ describe("Skills (Phase 8.2)", () => {
   });
 
   it("loadSkillPromptSections for an orchestrator returns all three", () => {
-    const orch = agentFixture({ id: "orch-cipher", tier: "orchestrator" });
+    const orch = agentFixture({ id: "orch-centaurus-a", tier: "orchestrator" });
     expect(loadSkillPromptSections(orch)).toHaveLength(3);
   });
 

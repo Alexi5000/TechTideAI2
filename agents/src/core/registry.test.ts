@@ -14,7 +14,7 @@ describe("agentRegistry", () => {
   it("keeps agent ids unique and routable", () => {
     const ids = agentRegistry.all.map((agent) => agent.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(getAgentById("ceo")?.name).toBe("Brian Cozy");
+    expect(getAgentById("ceo")?.name).toBe("Local Group Director");
     expect(getAgentById("missing-agent")).toBeNull();
   });
 

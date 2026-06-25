@@ -84,7 +84,7 @@ describe("RunService event wiring (Phase 2.1)", () => {
     const { service, repo } = makeService();
     await service.createRun({
       orgId: "00000000-0000-0000-0000-000000000001",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       input: { prompt: "Q3 forecast" },
     });
     expect(repo.events).toHaveLength(1);
@@ -95,7 +95,7 @@ describe("RunService event wiring (Phase 2.1)", () => {
     const { service, repo } = makeService();
     const run = await service.createRun({
       orgId: "00000000-0000-0000-0000-000000000001",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       input: {},
     });
     repo.events.length = 0; // reset
@@ -109,7 +109,7 @@ describe("RunService event wiring (Phase 2.1)", () => {
     const { service, repo } = makeService();
     const run = await service.createRun({
       orgId: "00000000-0000-0000-0000-000000000001",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       input: {},
     });
     await service.startRun(run.id);
@@ -124,7 +124,7 @@ describe("RunService event wiring (Phase 2.1)", () => {
     const { service, repo } = makeService();
     const run = await service.createRun({
       orgId: "00000000-0000-0000-0000-000000000001",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       input: {},
     });
     await service.startRun(run.id);
@@ -139,7 +139,7 @@ describe("RunService event wiring (Phase 2.1)", () => {
     const { service } = makeService();
     const run = await service.createRun({
       orgId: "00000000-0000-0000-0000-000000000001",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       input: {},
     });
     // queued → succeeded is illegal in the default policy.
@@ -157,7 +157,7 @@ describe("RunService event wiring (Phase 2.1)", () => {
     const { service, repo } = makeService();
     const run = await service.createRun({
       orgId: "00000000-0000-0000-0000-000000000001",
-      agentId: "orch-cipher",
+      agentId: "orch-centaurus-a",
       input: {},
     });
     repo.events.length = 0;

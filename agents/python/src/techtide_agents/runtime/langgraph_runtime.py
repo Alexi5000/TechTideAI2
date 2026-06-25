@@ -86,16 +86,16 @@ class LangGraphRuntime:
 def default_orchestrator_graphs(llm: LlmClient) -> dict[str, Callable[[AgentRunRequest], AgentRunResult]]:
     """Build the default graph for every orchestrator id in the registry."""
     graphs: dict[str, Callable[[AgentRunRequest], AgentRunResult]] = {
-        "orch-veronica": make_synthesis_graph("Executive Orchestration", llm),
-        "orch-ava": make_synthesis_graph("Operations & Administration", llm),
-        "orch-finn": make_synthesis_graph("Internal Support & HR", llm),
-        "orch-cipher": make_cipher_graph(llm),
-        "orch-axel": make_synthesis_graph("Sales & Lead Generation", llm),
-        "orch-luna": make_synthesis_graph("Content & Communications", llm),
-        "orch-ellie": make_synthesis_graph("Market Intelligence", llm),
-        "orch-veronica-lite": make_synthesis_graph("Lightweight Triage", llm),
-        "orch-audit": make_synthesis_graph("Audit & Compliance", llm),
-        "orch-content": make_synthesis_graph("Content Distribution", llm),
+        "orch-andromeda": make_synthesis_graph("Executive Orchestration", llm),
+        "orch-milky-way": make_synthesis_graph("Operations & Administration", llm),
+        "orch-triangulum": make_synthesis_graph("Internal Support & HR", llm),
+        "orch-centaurus-a": make_cipher_graph(llm),
+        "orch-m87": make_synthesis_graph("Sales & Lead Generation", llm),
+        "orch-whirlpool": make_synthesis_graph("Content & Communications", llm),
+        "orch-sombrero": make_synthesis_graph("Market Intelligence", llm),
+        "orch-pinwheel": make_synthesis_graph("Lightweight Triage", llm),
+        "orch-cartwheel": make_synthesis_graph("Audit & Compliance", llm),
+        "orch-circinus": make_synthesis_graph("Content Distribution", llm),
     }
     return graphs
 
@@ -239,75 +239,75 @@ def _suggest_delegations(agent_id: str, inputs: dict[str, Any]) -> list[str]:
     to an existing orchestrator, replace the placeholder `unknown-{n}`.
     """
     pod_map: dict[str, list[str]] = {
-        "orch-veronica": [
-            "worker-research",
-            "worker-qa",
-            "worker-data",
-            "worker-automation",
-            "worker-ux",
+        "orch-andromeda": [
+            "worker-m32",
+            "worker-m110",
+            "worker-ngc-205",
+            "worker-ngc-221",
+            "worker-pa-1",
         ],
-        "orch-ava": [
-            "worker-ava-sops",
-            "worker-ava-routing",
-            "worker-ava-docs",
-            "worker-ava-procurement",
-            "worker-ava-quality",
+        "orch-milky-way": [
+            "worker-sgr-a",
+            "worker-orion",
+            "worker-pleiades",
+            "worker-cygnus-x1",
+            "worker-vela",
         ],
-        "orch-finn": [
-            "worker-finn-recruiting",
-            "worker-finn-onboarding",
-            "worker-finn-policy",
-            "worker-finn-culture",
-            "worker-finn-support",
+        "orch-triangulum": [
+            "worker-ngc-588",
+            "worker-ngc-592",
+            "worker-ngc-595",
+            "worker-ngc-598",
+            "worker-ic-133",
         ],
-        "orch-cipher": [
-            "worker-cipher-fpna",
-            "worker-cipher-billing",
-            "worker-cipher-cost",
-            "worker-cipher-dashboard",
-            "worker-cipher-risk",
+        "orch-centaurus-a": [
+            "worker-cena",
+            "worker-cenb",
+            "worker-pscen",
+            "worker-mol001",
+            "worker-mol002",
         ],
-        "orch-axel": [
-            "worker-axel-prospecting",
-            "worker-axel-outbound",
-            "worker-axel-crm",
-            "worker-axel-proposals",
-            "worker-axel-enablement",
+        "orch-m87": [
+            "worker-m87-jet",
+            "worker-m87-stellar",
+            "worker-m87-globular",
+            "worker-m87-halo",
+            "worker-m87-cusp",
         ],
-        "orch-luna": [
-            "worker-luna-audience",
-            "worker-luna-campaign",
-            "worker-luna-content",
-            "worker-luna-distribution",
-            "worker-luna-analytics",
+        "orch-whirlpool": [
+            "worker-m51a",
+            "worker-m51b",
+            "worker-ngc-5195",
+            "worker-ic-4277",
+            "worker-ic-4278",
         ],
-        "orch-ellie": [
-            "worker-ellie-intake",
-            "worker-ellie-scheduling",
-            "worker-ellie-knowledge",
-            "worker-ellie-voice",
-            "worker-ellie-accounts",
+        "orch-sombrero": [
+            "worker-m104-halo",
+            "worker-m104-disk",
+            "worker-m104-bulge",
+            "worker-m104-globular",
+            "worker-m104-hii",
         ],
-        "orch-veronica-lite": [
-            "worker-vlite-onboarding",
-            "worker-vlite-config",
-            "worker-vlite-security",
-            "worker-vlite-success",
-            "worker-vlite-support",
+        "orch-pinwheel": [
+            "worker-ngc-5447",
+            "worker-ngc-5455",
+            "worker-ngc-5461",
+            "worker-ngc-5462",
+            "worker-hii-101",
         ],
-        "orch-audit": [
-            "worker-audit-process",
-            "worker-audit-roi",
-            "worker-audit-compliance",
-            "worker-audit-instrumentation",
-            "worker-audit-remediation",
+        "orch-cartwheel": [
+            "worker-wheel-ring",
+            "worker-wheel-spoke",
+            "worker-wheel-core",
+            "worker-wheel-companion",
+            "worker-wheel-tail",
         ],
-        "orch-content": [
-            "worker-content-case",
-            "worker-content-playbooks",
-            "worker-content-metrics",
-            "worker-content-repurpose",
-            "worker-content-distribution",
+        "orch-circinus": [
+            "worker-eso-97-g13",
+            "worker-circinus-x1",
+            "worker-circinus-hii",
+            "worker-circinus-circumnuclear",
+            "worker-circinus-dust",
         ],
     }
     if agent_id in pod_map:
