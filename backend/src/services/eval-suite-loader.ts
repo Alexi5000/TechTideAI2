@@ -7,12 +7,19 @@
  */
 
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { parseEvalSuite, type EvalSuite } from "../domain/entities/eval-suite.js";
 import { EvalSuiteNotFoundError } from "../domain/index.js";
 
-const DEFAULT_FIXTURES_DIR = resolve(process.cwd(), "../../evals/fixtures");
+// Compute the default fixtures dir from this source file's location so the
+// path is independent of process.cwd(). The loader lives at
+// backend/src/services/eval-suite-loader.ts; the fixtures live at
+// evals/fixtures/. Three levels up from the source file lands on the repo
+// root, then `evals/fixtures` resolves to the canonical fixtures dir.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const DEFAULT_FIXTURES_DIR = resolve(HERE, "..", "..", "..", "evals", "fixtures");
 
 export interface LoadSuiteOptions {
   fixturesDir?: string | undefined;

@@ -30,7 +30,7 @@
 | OpenTelemetry trace surface with per-span attributes | ✓ | partial | partial | ✓ (enriched with `eval.*` attrs, Phase 8.7) | **match** |
 | Post-mortem auto-generation | ✗ | ✗ | ✗ | ✓ (`backend/src/services/post-mortem-service.ts`) | **match** |
 | Dual runtime (TypeScript + Python via shared contract) | partial | ✗ | partial | ✓ (Mastra + LangGraph, dispatcher in `agents/runtime_config.yaml`) | **match** |
-| `AGENTS.md` (or `CLAUDE.md`) at repo root | partial (per-package) | ✓ | partial | ✓ (`AGENTS.md`, the operator's procedural memory) | **match** |
+| `AGENTS.md` at repo root | partial (per-package) | ✓ | partial | ✓ (`AGENTS.md`, the operator's procedural memory) | **match** |
 | Notebook authoring surface + .py conversion | ✗ | ✗ | ✗ | ✓ (`notebooks/`, `scripts/convert-notebooks.py`, CI smoke test) | **match** |
 | Containerized local stack (Dockerfile per service + compose) | partial | ✗ | ✗ | ✓ (`Dockerfile.{backend,frontend,agents,python}`, `docker-compose.yml`) | **match** |
 | Public chat / Slack / Discord adapter | ✓ | ✗ | ✗ | ✗ | **differs-on-purpose**, out of scope (see "What we don't have" below) |

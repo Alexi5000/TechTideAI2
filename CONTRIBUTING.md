@@ -77,8 +77,8 @@ python -m ruff format --check .
 
 ### 5. Code review
 
-- One approval is required.
-- CODEOWNERS is enforced by branch protection.
+- The CI Gate is the only required check. The ruleset on `main` (id `12503875`) requires `CI Gate` (which runs `pnpm run verify` and the Python pytest + ruff suite) and zero approving reviews. CODEOWNERS is informational on this repo.
+- A maintainer reviews on the cadence of the change: a one-line doc fix lands on first review; an eval-regenerating prompt change gets the eval harness maintainer plus the relevant orchestrator owner.
 - Reviewers will check: contracts, tests, audit records, and (where applicable) eval impact.
 
 ## Reporting bugs
