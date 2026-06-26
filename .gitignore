@@ -1,9 +1,12 @@
-﻿# Node
+# Node
 node_modules/
 .pnpm-store/
 # Python
 __pycache__/
 .venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 # Env
 .env
 .env.*
@@ -11,6 +14,8 @@ __pycache__/
 dist/
 build/
 *.tsbuildinfo
+coverage/
+*.log
 
 # Compiled TS output (co-located with source)
 frontend/src/**/*.js
@@ -24,11 +29,20 @@ agents/dist/
 
 # Python build artifacts
 agents/python/src/techtide_agents.egg-info/
+agents/python/build/
+agents/python/dist/
 
 # OS
 .DS_Store
 Thumbs.db
 nul
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
 
 # Per-run eval artifacts (keep docs/EVALS/latest.json as the frozen baseline)
 docs/EVALS/*.json

@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-06-26
+
+First official release of TechTideAI as a tagged version. The harness is feature-complete, the audit is clean, the 33-task golden suite runs end-to-end, the contract drift hash matches across both runtimes, the registry test strictly enforces the 61-agent invariant, and the docs are synchronized.
+
+### Added
+- 33rd golden task `veronica-lite-memory-recall` (agent `orch-pinwheel`, category `memory-recall`). The prior 32-task fixture did not exercise the `memory-recall` category at all; the new task closes that gap and brings the count from 32 to 33, the number every badge, callout, and ADR has always advertised.
+- `RELEASE_NOTES_0.5.5.md`: a release notes file at the repo root, with the five reviewer probes, the talking points, the surface map, and a direct pointer to `docs/EVALS/latest.json` for the day-0 baseline.
+- 7-day frozen eval baseline: the `docs/EVALS/latest.json` produced by the 0.5.5 verification run is the regression baseline until the next release.
+
+### Changed
+- `agents/src/core/registry.test.ts`: the 61-agent invariant is now strictly enforced (`toBe(10)`, `toBe(50)`, `toBe(61)`). The previous `toBeGreaterThanOrEqual` would have silently accepted a stray worker; the strict form fails loudly.
+- `docs/ARCHITECTURE.md`: full rewrite. The previous version still mentioned "Andromeda (CEO)" and "Andromeda Director" from the pre-galaxy-map naming and pointed at the old `.png` hero. The new version reflects the Local Group Director + 10 galaxy orchestrators + 50 star-cluster workers model, points at the canonical SVG hero, and adds the cross-cutting-guarantees section.
+- `.gitignore`: added `.pytest_cache/`, `.ruff_cache/`, `.mypy_cache/`, `coverage/`, `*.log`, `agents/python/build/`, `agents/python/dist/`, `.idea/`, `.vscode/`, and editor swap files. The previous list missed Python caches and IDE folders.
+- `PRE_DEMO_AUDIT_PROMPT.md`: removed em-dashes from body prose (the only em-dashes that remain are inside `grep` code samples, which are intentional echoes of the no-em-dashes rule).
+- Version pins: all six version fields bumped to `0.5.5` (root, `@techtide/agents`, `@techtide/apis`, `@techtide/frontend`, `@techtide/backend`, `techtide-agents` Python).
+
+### Removed
+- `assets/techtideai_hero_2026.png`: the pre-SVG hero. Only `docs/ARCHITECTURE.md` referenced it; the rewrite points at the canonical SVG, so the PNG is no longer needed and is gone.
+
+### Verified
+- `pnpm run verify` green (backend / agents / apis / frontend). 124 TS tests pass.
+- `pytest`: 20 tests pass.
+- `ruff check` + `ruff format`: clean.
+- `pnpm -C backend evals --suite golden-tasks.v1 --write-docs` runs end-to-end on 33 tasks and emits `docs/EVALS/latest.json`.
+- Contract sync: `pnpm exec tsx scripts/sync-contracts.ts` produces no diff; drift hash `a7e92f6b` matches both `agents/src/runtime/contract-types.generated.ts` and `agents/python/src/techtide_agents/contracts/generated.py`.
+
 ## [0.5.0] - 2026-06-25
 
 ### Brand: galaxy map
@@ -20,7 +46,7 @@ TechTideAI is now themed around the Local Group. The 1 CEO + 10 orchestrators + 
 - All agent IDs, orchestrator display names + domains, eval task IDs, sprint contract IDs, runtime_config.yaml orchestrators, frontend display names, and doc prose renamed to the galaxy map. 164 substitutions across 30 files.
 - The eval fixtures (`evals/fixtures/golden-tasks.v1.json`) and sprint contracts (`evals/sprints/well-scoped-sprint.v1.json`) renamed in place. The 33-task golden suite + 4-scorer grading surface is unchanged.
 - The README Mermaid diagrams updated to reference the new orchestrator IDs and worker names.
-- The `assets/techtideai_hero_2026.svg` (new) is now the canonical hero image. The old `techtideai_hero_2026.png` is kept for any external links but no longer referenced from the README.
+- The `assets/techtideai_hero_2026.svg` (new) is now the canonical hero image. The old `techtideai_hero_2026.png` is kept temporarily for any external links. (It is removed in [Unreleased].)
 - Frontend `App.tsx` / `App.js` orchestrator array: titles + descriptions updated to galaxy-themed names and the matching domain language.
 - The 6 inline SVGs (`assets/techtideai_architecture.svg`, `techtideai_control_plane.svg`, `techtideai_three_agent_loop.svg`, `techtideai_run_lifecycle.svg`, `techtideai_contract_sync.svg`) and the 6 walkthrough SVGs under `assets/walkthrough/` already carried orchestrator names; all references were renamed in the same pass.
 

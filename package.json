@@ -1,7 +1,7 @@
 {
   "name": "techtideai",
   "private": true,
-  "version": "0.5.0",
+  "version": "0.5.5",
   "description": "Company-scale AI agent operating system. Typed Mastra (TypeScript) and LangGraph (Python) runtimes, 1 CEO + 10 orchestrators + 50 workers, three-agent adversarial harness, four-axis grader, plateau scorer, human-in-the-loop approval gate, OpenTelemetry traces, and a 33-task golden eval suite.",
   "homepage": "https://github.com/Alexi5000/TechTideAI2#readme",
   "keywords": [

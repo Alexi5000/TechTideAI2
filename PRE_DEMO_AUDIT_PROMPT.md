@@ -84,7 +84,7 @@ cd ../..
 # docs/EVALS/latest.json. The summary section is non-empty.
 # If OPENAI_API_KEY is set, scores are real numbers. If not,
 # the harness correctly reports unconfigured providers and
-# score is 0 across the board — that is honest, not a bug.
+# score is 0 across the board. That is honest, not a bug.
 
 # 5. Mermaid + SVG validation
 python -c "
@@ -143,7 +143,7 @@ pass rate.
 
 Pass signal: `pnpm -C backend evals --suite golden-tasks.v1`
 exits cleanly and writes `docs/EVALS/latest.json` with a
-non-empty `summary`. The pass rate is whatever it is — honest
+non-empty `summary`. The pass rate is whatever it is. Honest
 numbers, not aspirational.
 
 Open in the editor: `backend/src/services/eval-harness.ts`. The
@@ -395,7 +395,7 @@ The CEO here is a routine, not a person. The routine is
 "given a 33-task suite, decide which orchestrator handles
 which task." That routine belongs in the harness, not in
 someone's head. If a human wants to override the CEO, they
-can — the policy says so. The CEO is a placeholder for the
+can. The policy says so. The CEO is a placeholder for the
 operator's strategic direction, not a replacement for it.
 
 ### Why an approval gate and not a smarter agent?
