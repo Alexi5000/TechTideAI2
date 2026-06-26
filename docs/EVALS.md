@@ -36,7 +36,7 @@ We deliberately did not pull in `ajv` to keep the eval path dependency-light and
 
 ## Fixtures
 
-Fixtures live in `evals/fixtures/*.json` and are validated against the Zod schema in `backend/src/domain/entities/eval-task.ts` and `eval-suite.ts`. The canonical suite today is `golden-tasks.v1.json`, **33 tasks** spanning the CEO + all 10 orchestrators. Difficulty is 1-3; category is `format-compliance`, `domain-reasoning`, `tool-use`, `memory-recall`, or `multi-step`.
+Fixtures live in `evals/fixtures/*.json` and are validated against the Zod schema in `backend/src/domain/entities/eval-task.ts` and `eval-suite.ts`. The canonical suite today is `golden-tasks.v1.json`, **33 tasks** spanning the CEO + all 10 orchestrators (three tasks per agent). Difficulty is 1-3; category is `format-compliance`, `domain-reasoning`, `tool-use`, `memory-recall`, or `multi-step`. Every category in the enum is exercised at least once; the lone `memory-recall` task is `veronica-lite-memory-recall` on `orch-pinwheel`.
 
 To add a task:
 
@@ -85,5 +85,5 @@ When `passRate` drops by more than `EVAL_REGRESSION_THRESHOLD_PCT` (default 5%),
 ## What we don't do (yet)
 
 - **Adversarial test generation.** Rubrics and assertions are hand-written. Worth adding when the suite crosses ~100 tasks.
-- **Statistical significance checks.** With ~30 tasks per suite, run-to-run variance from the judge dominates. We treat any regression ≥ 5% as actionable.
+- **Statistical significance checks.** With ~33 tasks per suite, run-to-run variance from the judge dominates. We treat any regression of 5% or more as actionable.
 - **Production-traffic replay.** The harness runs fixtures; we don't yet sample real agent traffic and grade it after the fact. Roadmap item for 0.4.
