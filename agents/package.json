@@ -33,6 +33,6 @@
     "globals": "^15.5.0",
     "mastra": "1.2.0",
     "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
+    "vitest": "^4.1.9"
   }
 }
