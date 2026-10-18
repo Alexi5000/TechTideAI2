@@ -123,7 +123,7 @@ export const llmRouterTool = createTool({
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown LLM error";
-      throw new Error(`LLM Router failed: ${errorMessage}`);
+      throw new Error(`LLM Router failed: ${errorMessage}`, { cause: error });
     }
   },
 });

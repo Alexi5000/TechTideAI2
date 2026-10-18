@@ -4,7 +4,6 @@
     "noEmit": true,
     "types": ["node"],
     "moduleResolution": "NodeNext",
-    "baseUrl": ".",
     "paths": {
       "@techtide/apis": ["../apis/src/index.ts"]
     }

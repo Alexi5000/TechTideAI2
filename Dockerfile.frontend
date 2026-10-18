@@ -4,13 +4,14 @@
 # nginx.conf reverse-proxies /api/* to the backend service.
 
 # ---- Stage 1: build ----
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable && corepack prepare pnpm@9 --activate
 
 WORKDIR /repo
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY vendor/ ./vendor/
 COPY frontend/package.json ./frontend/package.json
 COPY frontend/tsconfig.json ./frontend/tsconfig.json
 COPY frontend/tsconfig.app.json ./frontend/tsconfig.app.json

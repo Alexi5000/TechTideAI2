@@ -3,9 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "types": ["node"],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@techtide/agents": ["../agents/src/index.ts"],
       "@techtide/apis": ["../apis/src/index.ts"]
     }
