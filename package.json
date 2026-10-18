@@ -28,20 +28,28 @@
     "agents"
   ],
   "engines": {
-    "node": ">=20",
+    "node": ">=22.12",
     "pnpm": ">=9"
   },
   "scripts": {
     "dev:frontend": "pnpm -C frontend dev",
     "dev:backend": "pnpm -C backend dev",
     "dev:agents": "pnpm -C agents dev",
-    "build": "pnpm -r build",
+    "build": "node scripts/verify-braces.cjs && pnpm -r build",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "verify": "pnpm run lint && pnpm run test && pnpm run build"
+    "verify": "pnpm run lint && pnpm run test && pnpm run build",
+    "security:backport": "node scripts/verify-braces.cjs"
   },
   "devDependencies": {
-    "prettier": "^3.2.5",
-    "tsx": "^4.21.0"
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "braces": "file:vendor/braces-3.0.3.tgz"
+  },
+  "pnpm": {
+    "overrides": {
+      "braces": "file:vendor/braces-3.0.3.tgz",
+      "gray-matter": "npm:@11ty/gray-matter@^3.0.0"
+    }
   }
 }
