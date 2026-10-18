@@ -13,14 +13,14 @@
     "sprint": "tsx src/cli/run-sprint.ts"
   },
   "dependencies": {
-    "@fastify/cors": "^11.2.0",
-    "@fastify/helmet": "^13.0.2",
+    "@fastify/cors": "^11.3.0",
+    "@fastify/helmet": "^13.1.0",
     "@opentelemetry/sdk-node": "^0.203.0",
     "@supabase/supabase-js": "^2.45.0",
     "@techtide/agents": "workspace:*",
     "@techtide/apis": "workspace:*",
     "dotenv": "^16.4.5",
-    "fastify": "^5.7.4",
+    "fastify": "^5.10.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
