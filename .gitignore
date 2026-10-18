@@ -26,6 +26,7 @@ apis/src/**/*.js
 apis/src/**/*.d.ts
 apis/src/**/*.map
 agents/dist/
+agents/.mastra/
 
 # Python build artifacts
 agents/python/src/techtide_agents.egg-info/
