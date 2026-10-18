@@ -19,7 +19,7 @@ interface TooltipProps {
   /** The content to display in the tooltip */
   content: React.ReactNode;
   /** The element that triggers the tooltip */
-  children: React.ReactElement;
+  children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;
   /** Which side to show the tooltip */
   side?: "top" | "right" | "bottom" | "left";
   /** Delay before showing tooltip in ms */
@@ -114,19 +114,19 @@ export function Tooltip({
   // Clone child with event handlers
   const trigger = React.cloneElement(children, {
     ref: triggerRef,
-    onMouseEnter: (e: React.MouseEvent) => {
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
       children.props.onMouseEnter?.(e);
       showTooltip();
     },
-    onMouseLeave: (e: React.MouseEvent) => {
+    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
       children.props.onMouseLeave?.(e);
       hideTooltip();
     },
-    onFocus: (e: React.FocusEvent) => {
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
       children.props.onFocus?.(e);
       showTooltip();
     },
-    onBlur: (e: React.FocusEvent) => {
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
       children.props.onBlur?.(e);
       hideTooltip();
     },
