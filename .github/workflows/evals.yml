@@ -38,11 +38,17 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
-      pull-requests: write # for posting PR comments when triggered on PR
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
+      - name: Validate provider configuration
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::Configure the OPENAI_API_KEY repository secret before running live evaluations."
+            exit 1
+          fi
+
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
       - name: Setup pnpm
@@ -68,15 +74,15 @@ jobs:
         id: evals
         env:
           EVAL_DEFAULT_JUDGE_MODEL: ${{ github.event.inputs.judge_model || 'gpt-4o' }}
+          SUITE: ${{ github.event.inputs.suite || 'golden-tasks.v1' }}
+          BASELINE: ${{ github.event.inputs.baseline || 'latest' }}
+          CONCURRENCY: ${{ github.event.inputs.concurrency || '1' }}
         run: |
           set -e
-          SUITE="${{ github.event.inputs.suite || 'golden-tasks.v1' }}"
-          BASELINE="${{ github.event.inputs.baseline || 'latest' }}"
-          CONCURRENCY="${{ github.event.inputs.concurrency || '1' }}"
+          EXIT=0
           mkdir -p docs/EVALS
-          pnpm -C backend evals --suite "$SUITE" --baseline "$BASELINE" --concurrency "$CONCURRENCY" --judge-model "${EVAL_DEFAULT_JUDGE_MODEL}" --write-docs --json > docs/EVALS/ci-latest.json || EXIT=$?
-          # Exit code 3 = regression detected (still capture artifact, fail the job)
-          echo "exit=$EXIT" >> "$GITHUB_OUTPUT" || true
+          pnpm --silent -C backend evals --suite "$SUITE" --baseline "$BASELINE" --concurrency "$CONCURRENCY" --judge-model "${EVAL_DEFAULT_JUDGE_MODEL}" --write-docs --json > docs/EVALS/ci-latest.json || EXIT=$?
+          echo "exit=$EXIT" >> "$GITHUB_OUTPUT"
           exit ${EXIT:-0}
 
       - name: Upload eval artifact

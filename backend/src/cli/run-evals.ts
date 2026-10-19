@@ -1,6 +1,7 @@
 #!/usr/bin/env tsx
 /**
- * Eval CLI, runs a suite, prints a summary table, exits non-zero on regression.
+ * Eval CLI, runs a suite, prints a summary table, exits non-zero on regression
+ * (3) or when the run itself failed (4).
  *
  * Usage:
  *   pnpm -C backend evals [--suite golden-tasks.v1] [--baseline latest] [--json]
@@ -27,6 +28,7 @@ import { EvalHarness } from "../services/eval-harness.js";
 import { loadSuite, loadDefaultSuite } from "../services/eval-suite-loader.js";
 import { createInMemoryEvalRunRepository } from "../repositories/eval-run-repository.js";
 import type { EvalRun } from "../domain/entities/eval-run.js";
+import { resolveEvalExit } from "./eval-exit-code.js";
 
 interface ParsedArgs {
   suite: string;
@@ -151,13 +153,12 @@ async function main(): Promise<void> {
     printTable(run);
   }
 
-  if (run.summary?.regressionDeltaPct !== null && run.summary?.regressionDeltaPct !== undefined) {
-    if (run.summary.regressionDeltaPct < -5) {
-      process.stderr.write(
-        `\nRegression: pass rate dropped ${(-run.summary.regressionDeltaPct).toFixed(1)}% vs baseline.\n`,
-      );
-      process.exit(3);
-    }
+  const decision = resolveEvalExit(run);
+  if (decision.message) {
+    process.stderr.write(`\n${decision.message}\n`);
+  }
+  if (decision.code !== 0) {
+    process.exit(decision.code);
   }
 }
 
