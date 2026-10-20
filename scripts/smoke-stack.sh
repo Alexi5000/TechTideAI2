@@ -5,6 +5,7 @@
 
 set -eu
 
+export BACKEND_API_TOKEN="$(openssl rand -hex 32)"
 COMPOSE="docker compose"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"

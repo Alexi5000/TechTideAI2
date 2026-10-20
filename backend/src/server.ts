@@ -1,3 +1,4 @@
+import { registerApiAuth } from "./utils/api-auth.js";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
@@ -16,6 +17,8 @@ export async function buildServer() {
   const app = Fastify({
     logger: env.NODE_ENV !== "test",
   });
+
+  registerApiAuth(app, env);
 
   await app.register(cors, {
     origin: parseOrigins(env.CORS_ORIGIN),

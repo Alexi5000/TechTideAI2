@@ -5,7 +5,7 @@
  * All API calls go through this module for consistency.
  */
 
-const API_BASE = import.meta.env["VITE_API_BASE_URL"] ?? "http://localhost:4050";
+const API_BASE = import.meta.env["VITE_API_BASE_URL"] ?? "";
 
 export type AgentTier = "ceo" | "orchestrator" | "worker";
 

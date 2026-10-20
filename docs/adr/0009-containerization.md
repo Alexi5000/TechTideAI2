@@ -74,3 +74,9 @@ Negative:
 - **A single monorepo Dockerfile.** Rejected: image bloat, no layer sharing, every change rebuilds the world.
 - **A Kubernetes + Helm chart out of the box.** Rejected: pre-judges the customer's orchestrator.
 - **A "production" compose file with auth + TLS + registry push.** Rejected: scope creep. The PDF is right that containerization matters, but production is a different decision than local dev.
+
+## Security amendment, October 20, 2026
+
+The development stack publishes ports on loopback only. Backend HTTP APIs allow credential-free access only in non-production mode from loopback peers with a loopback Host and an allowed Origin. All other API requests require a server-only `BACKEND_API_TOKEN` of at least 32 characters. Missing configuration returns 503. Health remains public. This is an operator boundary, not multi-tenant identity; deployment still requires an authenticated gateway that verifies users and their organization.
+
+For Compose, generate `BACKEND_API_TOKEN` with `openssl rand -hex 32` and export it before starting. The loopback-only nginx gateway passes that token server-side, accepts only localhost/127.0.0.1 hostnames, and the backend checks Origin. Never publish this gateway on an external interface without adding user authentication. The token is never part of the Vite bundle. Smoke tests create an ephemeral token. Ordinary local Vite uses its loopback proxy without a token. Direct API clients in production must supply the bearer token. LLM requests cap output at 8192 tokens with a 1024-token default and bounded prompt sizes; operator/provider quotas remain needed for aggregate budgets.

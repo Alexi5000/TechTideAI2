@@ -588,3 +588,13 @@ This repo is a portfolio piece, but it is not a solo one. The shape of TechTideA
 <a id="license"></a>
 
 [MIT](LICENSE).
+
+## Local HTTP security setup
+
+Development servers and Compose published ports bind to loopback. Before `docker compose up --build`, export a fresh
+`BACKEND_API_TOKEN` using `openssl rand -hex 32`. The local nginx gateway adds this server-only token to API requests;
+the browser uses same-origin `/api` URLs. Vite local development also proxies `/api`, passing the token when configured.
+Without a token, only non-production loopback requests with a local Host and allowed Origin can access backend APIs.
+Production API access fails closed without a token of at least 32 characters. Keep these local gateways on loopback;
+network deployments require an authenticated user gateway and TLS. This operator token does not provide tenant isolation.
+See ADR 0009's security amendment for configuration, health probes, and generation limits.

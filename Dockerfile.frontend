@@ -25,7 +25,7 @@ RUN pnpm -C frontend build
 # ---- Stage 2: runtime ----
 FROM nginx:alpine AS runtime
 COPY --from=builder /repo/frontend/dist /usr/share/nginx/html
-COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/nginx.conf /etc/nginx/templates/default.conf.template
 EXPOSE 5180
 HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
   CMD wget -qO- http://127.0.0.1:5180/ || exit 1

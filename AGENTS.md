@@ -106,3 +106,7 @@ The build order is `apis → agents → backend`. To keep that DAG acyclic, any 
 - Don't bypass the approval gate. The HITL surface is the safety net; bypassing it is a security regression.
 - Don't write aspirational README copy. Every line points to a file or CLI command.
 - Don't merge without a green `pnpm run verify`. The gate exists for a reason.
+
+## HTTP operator access
+
+Read ADR 0009's security amendment before exposing the stack. Local development is loopback-only; production API requests require the server-only BACKEND_API_TOKEN. The local Compose nginx gateway injects it at runtime and must remain loopback-only unless an authenticated gateway is added. This is not multi-tenant identity.
