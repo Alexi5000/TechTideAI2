@@ -7,11 +7,11 @@
 > v0.5.5 · MIT · 1 Local Group Director + 10 galaxies + 50 star-cluster agents · 33-task golden suite · 124 TS tests + 20 Python tests · all green.
 
 <p align="center">
-  <a href="#why-techtideai">Why TechTideAI</a> · <a href="#hero">Hero</a> · <a href="#agent-roster">Roster</a> · <a href="#architecture">Architecture</a> · <a href="#how-to-verify">Run it</a> · <a href="#contributing">Contributing</a> · <a href="#license">License</a>
+  <a href="#why-techtideai">Why this exists</a> · <a href="#hero">Hero</a> · <a href="#agent-roster">Roster</a> · <a href="#architecture">Architecture</a> · <a href="#how-to-verify">Run it</a> · <a href="#contributing">Contributing</a> · <a href="#license">License</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Alexi5000/TechTideAI2/actions"><img alt="CI" src="https://img.shields.io/badge/CI-passing-15803d?style=flat-square"/></a>
+  <a href="https://github.com/Alexi5000/TechTideAI2/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Alexi5000/TechTideAI2/ci.yml?branch=main&style=flat-square&label=CI"/></a>
   <a href="https://github.com/Alexi5000/TechTideAI2/releases/tag/v0.5.5"><img alt="version" src="https://img.shields.io/badge/version-0.5.5-1d4ed8?style=flat-square"/></a>
   <a href="#license"><img alt="license" src="https://img.shields.io/badge/license-MIT-22c55e?style=flat-square"/></a>
   <a href="#how-to-verify"><img alt="tests" src="https://img.shields.io/badge/tests-124_TS+%2B_20_Py-0ea5e9?style=flat-square"/></a>
@@ -23,7 +23,7 @@
 
 <a id="contents"></a>
 
-- [Why TechTideAI](#why-techtideai)
+- [Why this exists](#why-techtideai)
 - [Release 0.5.5](#release-055)
 - [The hero](#hero)
 - [Agent roster](#agent-roster)
@@ -45,6 +45,7 @@
 - [Architecture decisions](#architecture-decisions)
 - [Engineering blog](#engineering-blog)
 - [Quality gates](#quality-gates)
+- [Security](#security)
 - [Contributing](#contributing)
 - [Maintainers](#maintainers)
 - [Roadmap](#roadmap)
@@ -53,11 +54,22 @@
 
 ---
 
-## Why TechTideAI
+## Why this exists
 
 <a id="why-techtideai"></a>
+<a id="why-this-exists"></a>
 
 > **TL;DR.** TechTideAI is a typed, observable, testable harness for building and operating production agent teams. The mental model is a company. The brand is a galaxy.
+
+**What it does.** TechTideAI is a pnpm monorepo that runs a 61-agent roster (1 director, 10 orchestrators, 50 workers) behind one Fastify API, with a Mastra (TypeScript) runtime and an optional LangGraph (Python) sidecar sharing a single JSON contract. Every run emits append-only `run_events`, high-risk actions (`external`, `destructive`, `billing`) pause at a policy-stamped approval gate, and a 33-task golden suite with four scorers acts as the regression dashboard.
+
+**Who it serves.** The forward-deployed engineer (FDE) who has to ship an agent harness into a customer environment, the operator who has to monitor and defend its decisions, and the auditor who has to replay what happened and under which policy. All three should agree on what happened.
+
+**Why Alex built it.** The repository was created on 2026-02-05 as a single monorepo (initial commit `63fcec5`, "feat: initial monorepo", which added the backend, frontend, agents, apis, database, and CI/CD workspaces). `AGENTS.md` records the intent: "It is a portfolio piece, not a SaaS product. The success criterion is 'a senior reviewer can read the repo end-to-end in one sitting and understand every architectural choice.'" ADR 0002 (2026-06-22) records the engineering motivation: "Production agent systems drift... Without a harness, the only signal is 'the dashboard looks slower' or 'a customer complained', by which point the damage is done." The demo script was added for the same audience (commit `fccda29`, 2026-06-24: "docs: 15-minute Human Walkthrough Demo for phone and interview calls"). Alex Cinovoj, Founder & CTO of TechTide AI, is the sole maintainer.
+
+**Real-world use case (2025-2026 evidence).** **Proposed use case.** A platform team wires the 33-task golden suite into a nightly job and routes every `billing`, `destructive`, or `external` tool call through the approval gate, so a model or prompt change that drops the pass rate by more than 5% fails the job, and every approval decision is replayable against the policy version in force. The mechanics are covered by unit tests in this repository (`backend/src/services/eval-harness.test.ts`, `backend/src/services/approval-service.test.ts`, `backend/src/domain/policies/approval-policy.test.ts`) and the schedule exists in `.github/workflows/evals.yml`, but no live-provider eval run or customer deployment is recorded in the repository: the committed `docs/EVALS/latest.json` is a 2026-06-26 run that failed on a missing `OPENAI_API_KEY`, and the repository has no provider secret configured as of 2026-10-20. The pattern itself is current practice: Anthropic's January 2026 guidance on agent evals defines the task/trial/grader/transcript vocabulary this harness uses and recommends running evals as regression gates in CI[^1]; LangChain's 1.0 release (October 2025) ships human-in-the-loop middleware that pauses agent execution so a person can approve, edit, or reject tool calls before they execute, the same shape as the approval gate here[^2]; and the OWASP Top 10 for Agentic Applications 2026 (December 2025) lists tool misuse and cascading failures among the top risks that approval gates and audit logs are meant to contain[^3].
+
+The customer scenario below is illustrative, not a recorded deployment.
 
 A 200-person services firm runs hundreds of operational questions a week: ticket volume, on-call rotations, SLA breaches, customer escalations, vendor payments. The answers are scattered across three dashboards, a ticketing system, and a Slack channel. The answers are not auditable. They are not replayable. There is no policy. There is no receipt.
 
@@ -309,7 +321,13 @@ graph LR
   E --> F[Post-mortem to docs/EVALS/post-mortems/&lt;run-id&gt;.md]
 ```
 
-The eval harness is the regression dashboard. 33-task golden suite, four scorers, frozen baseline, 5% threshold, post-mortem auto-gen. A drop in pass rate is the only signal the FDE needs to know something broke.
+The eval harness is the regression dashboard. 33-task golden suite, four scorers, frozen baseline, 5% threshold, post-mortem auto-gen. A drop in pass rate is the only signal the FDE needs to know something broke. The percentages in the diagram are illustrative.
+
+Current state (2026-10-20): the scheduled run in `.github/workflows/evals.yml` requires an `OPENAI_API_KEY` repository secret, and the repository does not have one configured, so the scheduled job stops at its provider-configuration check by design (PR #73 made that failure explicit instead of reporting success). The committed `docs/EVALS/latest.json` records a 2026-06-26 run of all 33 tasks that failed for the same reason. To produce a live baseline, run the suite locally with a provider key:
+
+```powershell
+pnpm -C backend evals --suite golden-tasks.v1 --write-docs
+```
 
 ## Success metrics we track
 
@@ -524,6 +542,12 @@ python -m ruff format --check .
 
 See [Quality Gates](docs/QUALITY_GATES.md) for the full review standard.
 
+## Security
+
+<a id="security"></a>
+
+Report vulnerabilities through [SECURITY.md](SECURITY.md), not public issues. As of 2026-10-20 the repository has 0 open Dependabot alerts, 0 open code-scanning alerts, and 0 secret-scanning alerts. CodeQL runs on every push and pull request, workflow actions are pinned to commit SHAs, and workflow tokens default to `contents: read` (PR #72).
+
 ## Contributing
 
 <a id="contributing"></a>
@@ -544,7 +568,7 @@ Use the issue templates under [`.github/ISSUE_TEMPLATE/`](.github/) for bug repo
 
 TechTideAI is maintained by:
 
-- **@Alexi5000**, repo owner, architecture, and release cuts.
+- **Alex Cinovoj** (@Alexi5000), Founder & CTO of TechTide AI: repo owner, architecture, and release cuts.
 
 The current CODEOWNERS is the single writer: every workspace has the same owner, with comments pointing at where team handles go once the repo is under an org. See [`.github/CODEOWNERS`](.github/CODEOWNERS).
 
@@ -554,7 +578,7 @@ The current CODEOWNERS is the single writer: every workspace has the same owner,
 
 The repo follows the ADR set as the canonical roadmap. Each ADR is a durable decision. Recent major moves:
 
-- **0.5.0**, galaxy map rebrand (this release). Real galaxies, real star clusters, real named sources.
+- **0.5.0**, galaxy map rebrand. Real galaxies, real star clusters, real named sources.
 - **0.4.0**, repo hygiene + README overhaul with Mermaid diagrams. Quality gates all green.
 - **0.3.0**, green deploy gate, repo-wide em-dash sweep, 33-task golden suite.
 - **0.2.0**, three-agent harness, four-axis grader, plateau scorer, notebook authoring surface, containerized local stack, nine ADRs.
@@ -588,3 +612,7 @@ This repo is a portfolio piece, but it is not a solo one. The shape of TechTideA
 <a id="license"></a>
 
 [MIT](LICENSE).
+
+[^1]: Anthropic, "Demystifying evals for AI agents", published 2026-01-09. https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
+[^2]: LangChain, "LangChain and LangGraph Agent Frameworks Reach v1.0 Milestones", published 2025-10-22. https://blog.langchain.com/langchain-langgraph-1dot0/
+[^3]: OWASP GenAI Security Project, "OWASP Top 10 for Agentic Applications for 2026", published 2025-12-09. https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026
