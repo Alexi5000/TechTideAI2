@@ -546,7 +546,7 @@ See [Quality Gates](docs/QUALITY_GATES.md) for the full review standard.
 
 <a id="security"></a>
 
-Report vulnerabilities through [SECURITY.md](SECURITY.md), not public issues. As of 2026-10-20 the repository has 0 open Dependabot alerts, 0 open code-scanning alerts, and 0 secret-scanning alerts. CodeQL runs on every push and pull request, workflow actions are pinned to commit SHAs, and workflow tokens default to `contents: read` (PR #72).
+Report vulnerabilities through [SECURITY.md](SECURITY.md), not public issues. As of 2026-10-20 the repository has 0 open Dependabot alerts, 0 open code-scanning alerts, and 0 secret-scanning alerts. CodeQL default setup (extended query suite; actions, JavaScript/TypeScript, and Python) runs on pushes to `main`, on pull requests, and on a weekly schedule; workflow actions are pinned to commit SHAs, and workflow tokens default to `contents: read` (PR #72).
 
 ## Contributing
 
