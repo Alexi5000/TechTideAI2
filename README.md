@@ -4,7 +4,7 @@
 
 > **The harness an FDE ships into a customer environment, the customer's operators monitor, and an auditor can replay.**
 >
-> v0.5.5 · MIT · 1 Local Group Director + 10 galaxies + 50 star-cluster agents · 33-task golden suite · 124 TS tests + 20 Python tests · all green.
+> v0.5.5 · MIT · 1 Local Group Director + 10 galaxies + 50 star-cluster agents · 33-task golden suite · 131 TS tests + 20 Python tests on `main` (124 TS at the v0.5.5 cut) · all green.
 
 <p align="center">
   <a href="#why-techtideai">Why this exists</a> · <a href="#hero">Hero</a> · <a href="#agent-roster">Roster</a> · <a href="#architecture">Architecture</a> · <a href="#how-to-verify">Run it</a> · <a href="#contributing">Contributing</a> · <a href="#license">License</a>
@@ -14,7 +14,7 @@
   <a href="https://github.com/Alexi5000/TechTideAI2/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Alexi5000/TechTideAI2/ci.yml?branch=main&style=flat-square&label=CI"/></a>
   <a href="https://github.com/Alexi5000/TechTideAI2/releases/tag/v0.5.5"><img alt="version" src="https://img.shields.io/badge/version-0.5.5-1d4ed8?style=flat-square"/></a>
   <a href="#license"><img alt="license" src="https://img.shields.io/badge/license-MIT-22c55e?style=flat-square"/></a>
-  <a href="#how-to-verify"><img alt="tests" src="https://img.shields.io/badge/tests-124_TS+%2B_20_Py-0ea5e9?style=flat-square"/></a>
+  <a href="#how-to-verify"><img alt="tests" src="https://img.shields.io/badge/tests-131_TS+%2B_20_Py-0ea5e9?style=flat-square"/></a>
   <a href="#agent-roster"><img alt="agents" src="https://img.shields.io/badge/agents-61-f59e0b?style=flat-square"/></a>
   <a href="#what-works-today"><img alt="golden suite" src="https://img.shields.io/badge/golden_suite-33_tasks-7c3aed?style=flat-square"/></a>
 </p>
@@ -88,7 +88,7 @@ TechTideAI's first official release is tagged `v0.5.5`. The full release notes l
 - **33-task golden suite** is the day-0 regression baseline. The day-0 run is frozen in [`docs/EVALS/latest.json`](docs/EVALS/latest.json).
 - **61-agent invariant** is now strictly enforced by the test (`1 + 10 + 50 = 61`). Adding a worker without a sibling, or an orchestrator without a runtime-config update, fails the test.
 - **Contract drift hash** matches both runtimes (`a7e92f6b`). `pnpm exec tsx scripts/sync-contracts.ts` produces no diff.
-- **124 TS tests + 20 Python tests + ruff clean + 16 SVGs + 6 Mermaid diagrams + 0 em-dashes in the README.** The audit script in [`PRE_DEMO_AUDIT_PROMPT.md`](PRE_DEMO_AUDIT_PROMPT.md) reproduces this in two minutes.
+- **124 TS tests + 20 Python tests + ruff clean + 16 SVGs + 6 Mermaid diagrams + 0 em-dashes in the README** at the v0.5.5 cut. On `main` as of 2026-10-21, `pnpm -r test` runs 131 TS tests (backend 115, agents 14, apis 2) and `pytest` runs 20. The audit script in [`PRE_DEMO_AUDIT_PROMPT.md`](PRE_DEMO_AUDIT_PROMPT.md) reproduces this in two minutes.
 
 To verify locally:
 
