@@ -26,6 +26,8 @@ We ship a **local development stack** built from per-service Dockerfiles and a s
 
 The CI `docker` job builds the backend + frontend images on every PR and runs the smoke test. We do **not** push to a registry. We do **not** include production auth, TLS, or a multi-tenant stack. The deploy workflow (`.github/workflows/deploy.yml`) targets Railway + Vercel; production deployment is a separate decision.
 
+The local stack publishes Postgres, Weaviate, backend, frontend, and the optional Python sidecar only on host `127.0.0.1`. Service-to-service networking remains on the Compose network. Native backend startup also defaults to loopback; `HOST` remains configurable for explicitly protected deployments. These defaults reduce accidental network exposure but do not provide caller authentication or spend authorization for mutually untrusted local users.
+
 ## What we deliberately don't ship
 
 - **A Kubernetes chart.** The FDE picks the orchestrator per customer. We don't pre-judge.

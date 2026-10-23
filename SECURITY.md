@@ -33,7 +33,7 @@ We aim to:
 
 TechTideAI is a research / portfolio system. **Do not deploy it against production data without a security review.** Specifically:
 
-- Auth is not implemented. Routes trust the upstream gateway.
+- Auth is not implemented. Routes trust the upstream gateway. Native backend startup defaults to loopback, and the local Compose stack publishes every service on host loopback only. Containers retain their internal network connectivity. A non-loopback `HOST` or changed port publication is an explicit exposure decision and requires an authenticated gateway and spend controls before attaching provider credentials. Loopback does not isolate mutually untrusted local users or replace application authentication.
 - The Mastra agent runtime executes tool calls without sandboxing by default.
 - The approval gate is the recommended mitigation for high-risk actions; configure your deployment to require it.
 - Provider API keys must never be committed. Use `.env` (gitignored) or a secret manager.
