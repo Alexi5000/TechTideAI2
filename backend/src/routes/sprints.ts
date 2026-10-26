@@ -38,7 +38,7 @@ export async function registerSprintRoutes(app: FastifyInstance): Promise<void> 
 
   // GET /api/sprints/runs/:id
   app.get<{ Params: { id: string } }>("/api/sprints/runs/:id", async (request, reply) => {
-    const id = z.string().uuid().parse(request.params.id);
+    const id = z.guid().parse(request.params.id);
     const run = await repo.findById(id);
     if (!run) return reply.status(404).send({ error: "Not Found", message: "sprint run not found" });
     return reply.send(run);

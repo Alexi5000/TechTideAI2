@@ -38,9 +38,9 @@ export type ApprovalStatus = z.infer<typeof ApprovalStatusSchema>;
 
 export const ApprovalRequestSchema = z
   .object({
-    id: z.string().uuid(),
-    runId: z.string().uuid(),
-    orgId: z.string().uuid(),
+    id: z.guid(),
+    runId: z.guid(),
+    orgId: z.guid(),
     agentId: z.string().min(1),
     action: z.string().min(1),
     payload: z.record(z.string(), z.unknown()).default({}),
