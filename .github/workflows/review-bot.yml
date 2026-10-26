@@ -1,0 +1,130 @@
+name: Review Bot
+
+# Owner-triggered approval bot. An admin adds the `bot-review` label (or runs
+# this workflow by hand) after reading the PR. The bot approves the exact head
+# commit only when every gate below passes. It never merges.
+#
+# Gates:
+#   1. Triggered by a repository admin.
+#   2. PR is open, not a draft, and comes from this repository (no forks).
+#   3. PR does not touch .github/ except this file.
+#   4. Required checks (CI Gate, Detect changes, Notebook smoke) succeeded and
+#      every other check on the head commit finished without failing.
+#   5. No unresolved review threads and no outstanding change requests.
+#   6. The head commit did not change while the gates ran.
+#
+# Requires Settings > Actions > General > "Allow GitHub Actions to create and
+# approve pull requests". Turn that off to disable the bot.
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number
+        required: true
+
+permissions:
+  contents: read
+  checks: read
+  statuses: read
+  pull-requests: write
+
+concurrency:
+  group: review-bot-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: Review gate
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'bot-review'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number || inputs.pr }}
+      SENDER: ${{ github.triggering_actor }}
+      REQUIRED_CHECKS: "CI Gate|Detect changes|Notebook smoke"
+      SELF_CHECK: Review gate
+      BOT_FILE: .github/workflows/review-bot.yml
+    steps:
+      - name: Trigger is a repository admin
+        run: |
+          perm=$(gh api "repos/$REPO/collaborators/$SENDER/permission" -q .permission)
+          echo "$SENDER permission: $perm"
+          [ "$perm" = "admin" ] || { echo "::error::Only admins can trigger the review bot"; exit 1; }
+
+      - name: Pull request is eligible
+        id: pr
+        run: |
+          pr=$(gh api "repos/$REPO/pulls/$PR")
+          state=$(jq -r .state <<<"$pr"); draft=$(jq -r .draft <<<"$pr")
+          head_repo=$(jq -r .head.repo.full_name <<<"$pr"); sha=$(jq -r .head.sha <<<"$pr")
+          echo "state=$state draft=$draft head_repo=$head_repo sha=$sha"
+          [ "$state" = "open" ] || { echo "::error::PR is not open"; exit 1; }
+          [ "$draft" = "false" ] || { echo "::error::PR is a draft"; exit 1; }
+          [ "$head_repo" = "$REPO" ] || { echo "::error::Fork PRs are never bot-approved"; exit 1; }
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: No workflow or repository-config changes
+        run: |
+          files=$(gh api --paginate "repos/$REPO/pulls/$PR/files" -q '.[].filename')
+          bad=$(grep '^\.github/' <<<"$files" | grep -vxF "$BOT_FILE" || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Changes under .github/ need a human reviewer:"; echo "$bad"; exit 1
+          fi
+
+      - name: Checks passed on the head commit
+        env:
+          SHA: ${{ steps.pr.outputs.sha }}
+        run: |
+          for attempt in $(seq 1 60); do
+            runs=$(gh api --paginate "repos/$REPO/commits/$SHA/check-runs?filter=latest&per_page=100" \
+              -q '.check_runs[] | {name, status, conclusion}' | jq -s --arg self "$SELF_CHECK" '[.[] | select(.name != $self)]')
+            pending=$(jq '[.[] | select(.status != "completed")] | length' <<<"$runs")
+            failed=$(jq -r '.[] | select(.status == "completed" and (.conclusion | IN("success","skipped","neutral") | not)) | "\(.name): \(.conclusion)"' <<<"$runs")
+            if [ -n "$failed" ]; then echo "::error::Failing checks:"; echo "$failed"; exit 1; fi
+            if [ "$pending" -eq 0 ]; then break; fi
+            echo "Waiting for $pending running checks (attempt $attempt)"; sleep 30
+          done
+          [ "$pending" -eq 0 ] || { echo "::error::Checks still running after 30 minutes"; exit 1; }
+          IFS='|' read -ra required <<<"$REQUIRED_CHECKS"
+          for name in "${required[@]}"; do
+            c=$(jq -r --arg n "$name" '[.[] | select(.name == $n) | .conclusion] | first // "missing"' <<<"$runs")
+            echo "$name: $c"
+            [ "$c" = "success" ] || { echo "::error::Required check $name is $c"; exit 1; }
+          done
+
+      - name: No unresolved threads or change requests
+        run: |
+          owner=${REPO%/*}; name=${REPO#*/}
+          data=$(gh api graphql -F owner="$owner" -F name="$name" -F pr="$PR" -f query='
+            query($owner: String!, $name: String!, $pr: Int!) {
+              repository(owner: $owner, name: $name) {
+                pullRequest(number: $pr) {
+                  reviewThreads(first: 100) { nodes { isResolved } }
+                  latestOpinionatedReviews(first: 50) { nodes { state author { login } } }
+                }
+              }
+            }')
+          open=$(jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved | not)] | length' <<<"$data")
+          changes=$(jq '[.data.repository.pullRequest.latestOpinionatedReviews.nodes[] | select(.state == "CHANGES_REQUESTED")] | length' <<<"$data")
+          echo "unresolved threads=$open change requests=$changes"
+          [ "$open" -eq 0 ] && [ "$changes" -eq 0 ] || { echo "::error::Resolve review threads and change requests first"; exit 1; }
+
+      - name: Approve the exact head commit
+        env:
+          SHA: ${{ steps.pr.outputs.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          now=$(gh api "repos/$REPO/pulls/$PR" -q .head.sha)
+          [ "$now" = "$SHA" ] || { echo "::error::Head moved from $SHA to $now during the gate; re-run"; exit 1; }
+          body="Review bot approval for \`$SHA\`, requested by @$SENDER.
+          Gates passed: admin trigger, same-repo PR, no .github/ changes, required checks green, all other checks finished, no unresolved threads or change requests. Run: $RUN_URL"
+          gh api "repos/$REPO/pulls/$PR/reviews" -f commit_id="$SHA" -f event=APPROVE -f body="$body" -q '"approved: \(.html_url)"'
+
+      - name: Clear the trigger label
+        if: always() && github.event_name == 'pull_request'
+        run: gh api -X DELETE "repos/$REPO/issues/$PR/labels/bot-review" >/dev/null 2>&1 || true
