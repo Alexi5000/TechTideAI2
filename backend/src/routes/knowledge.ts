@@ -20,16 +20,16 @@ import {
 const DEFAULT_ORG_ID = "00000000-0000-0000-0000-000000000001";
 
 const createDocumentSchema = z.object({
-  orgId: z.string().uuid().default(DEFAULT_ORG_ID),
+  orgId: z.guid().default(DEFAULT_ORG_ID),
   title: z.string().min(1),
   source: z.string().min(1),
   collection: z.string().min(1).optional(),
   content: z.string().min(1),
-  metadata: z.record(z.unknown()).default({}),
+  metadata: z.record(z.string(), z.unknown()).default({}),
 });
 
 const searchSchema = z.object({
-  orgId: z.string().uuid().default(DEFAULT_ORG_ID),
+  orgId: z.guid().default(DEFAULT_ORG_ID),
   query: z.string().min(3),
   limit: z.number().int().min(1).max(20).default(5),
   collections: z.array(z.string().min(1)).optional(),
@@ -75,7 +75,7 @@ export async function registerKnowledgeRoutes(app: FastifyInstance) {
     "/api/knowledge/documents/:id",
     async (request, reply) => {
       try {
-        const id = z.string().uuid().parse(request.params.id);
+        const id = z.guid().parse(request.params.id);
         const document = await knowledgeService.getDocument(id);
         if (!document) {
           return reply.status(404).send({ error: "Not Found" });

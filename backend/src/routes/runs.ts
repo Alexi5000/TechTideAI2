@@ -18,13 +18,13 @@ import {
 } from "../domain/index.js";
 
 const createRunSchema = z.object({
-  orgId: z.string().uuid(),
+  orgId: z.guid(),
   agentId: z.string(),
-  input: z.record(z.unknown()).default({}),
+  input: z.record(z.string(), z.unknown()).default({}),
 });
 
 const listRunsQuerySchema = z.object({
-  orgId: z.string().uuid(),
+  orgId: z.guid(),
   limit: z
     .string()
     .optional()
@@ -76,7 +76,7 @@ export async function registerRunRoutes(app: FastifyInstance) {
       const { id } = request.params;
 
       // Validate UUID format
-      const uuidSchema = z.string().uuid();
+      const uuidSchema = z.guid();
       const validatedId = uuidSchema.parse(id);
 
       const run = await runService.getRun(validatedId);
@@ -111,7 +111,7 @@ export async function registerRunRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params;
-        const uuidSchema = z.string().uuid();
+        const uuidSchema = z.guid();
         const validatedId = uuidSchema.parse(id);
 
         const run = await runService.cancelRun(validatedId);
@@ -129,7 +129,7 @@ export async function registerRunRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params;
-        const uuidSchema = z.string().uuid();
+        const uuidSchema = z.guid();
         const validatedId = uuidSchema.parse(id);
 
         const events = await repository.findEventsByRunId(validatedId);
@@ -149,7 +149,7 @@ export async function registerRunRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params;
-        const validatedId = z.string().uuid().parse(id);
+        const validatedId = z.guid().parse(id);
         const tree = traceService.getTraceTreeForRun(validatedId);
         if (!tree) {
           return reply.status(404).send({

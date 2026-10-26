@@ -12,8 +12,8 @@ import { AgentNotFoundError, PersistenceUnavailableError } from "../domain/index
 const DEFAULT_ORG_ID = "00000000-0000-0000-0000-000000000001";
 
 const runAgentSchema = z.object({
-  input: z.record(z.unknown()).default({}),
-  orgId: z.string().uuid().default(DEFAULT_ORG_ID),
+  input: z.record(z.string(), z.unknown()).default({}),
+  orgId: z.guid().default(DEFAULT_ORG_ID),
 });
 
 export async function registerAgentRoutes(app: FastifyInstance) {

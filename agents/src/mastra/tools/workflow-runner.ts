@@ -123,7 +123,7 @@ export const workflowRunnerTool = createTool({
 
   inputSchema: z.object({
     workflowId: z.string().describe("ID of the workflow (e.g., 'data-sync', 'vendor-payment')"),
-    input: z.record(z.unknown()).default({}),
+    input: z.record(z.string(), z.unknown()).default({}),
     dryRun: z.boolean().default(false),
     runId: z.string().default("agent-runtime"),
     agentId: z.string().default("unknown-agent"),

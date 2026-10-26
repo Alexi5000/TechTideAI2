@@ -49,7 +49,7 @@ export async function registerApprovalRoutes(app: FastifyInstance): Promise<void
 
   // GET /api/approvals/:id - one approval.
   app.get<{ Params: { id: string } }>("/api/approvals/:id", async (request, reply) => {
-    const id = z.string().uuid().parse(request.params.id);
+    const id = z.guid().parse(request.params.id);
     const approval = await service.findById(id);
     if (!approval) return reply.status(404).send({ error: "Not Found", message: "approval not found" });
     return reply.send(approval);
@@ -58,7 +58,7 @@ export async function registerApprovalRoutes(app: FastifyInstance): Promise<void
   // POST /api/approvals/:id/grant - grant.
   app.post<{ Params: { id: string } }>("/api/approvals/:id/grant", async (request, reply) => {
     try {
-      const id = z.string().uuid().parse(request.params.id);
+      const id = z.guid().parse(request.params.id);
       const body = decideSchema.parse(request.body ?? {});
       const approval = await service.grant(id, body.decidedBy, body.rationale);
       return reply.send(approval);
@@ -70,7 +70,7 @@ export async function registerApprovalRoutes(app: FastifyInstance): Promise<void
   // POST /api/approvals/:id/deny - deny.
   app.post<{ Params: { id: string } }>("/api/approvals/:id/deny", async (request, reply) => {
     try {
-      const id = z.string().uuid().parse(request.params.id);
+      const id = z.guid().parse(request.params.id);
       const body = decideSchema.parse(request.body ?? {});
       const approval = await service.deny(id, body.decidedBy, body.rationale);
       return reply.send(approval);
