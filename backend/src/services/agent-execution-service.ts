@@ -172,8 +172,10 @@ export function createAgentExecutionService(
       const approvals = await approvalRepository.findByRunId(runId);
       const approval = approvals.find((a) => a.id === approvalId);
       if (!approval) throw new Error(`Approval ${approvalId} not found for run ${runId}`);
+      if (approval.status !== decision) throw new Error("Approval decision does not match stored status");
       const run = await runService.getRun(runId);
       if (!run) throw new Error(`Run ${runId} not found`);
+      if (run.orgId !== approval.orgId) throw new Error("Approval organization does not match run");
 
       if (decision === "denied") {
         return runService.failRun(runId, `Denied by operator: ${approval.rationale ?? ""}`.trim());

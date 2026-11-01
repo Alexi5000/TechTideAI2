@@ -19,3 +19,9 @@ Route tests exercise mocked valid/invalid identity, missing or revoked membershi
 The previously checked-in `0000_auth_stub.sql` was changed to preserve an existing `auth.uid()` instead of replacing it. The owner reported no deployment, but this repository is public: users who already applied the old migration need separate migration-history and repair guidance. Never assume editing a historical file repairs an already-deployed database or restore an authentication function without understanding its owner and implementation. Disposable plain PostgreSQL tests cover a pre-existing sentinel helper and a fresh stub; real Supabase behavior remains unverified.
 
 A production gate requires real Supabase integration tests, membership provisioning controls, authentication across all protected routes, and an independent security assessment.
+
+## Related approval and memory restrictions
+
+Migration `0008_protect_memory_and_approvals.sql` removes the unconditional memory policies and revokes public API-role access to the memory tables, which have no tenant ownership model. It also removes public API-role approval mutation privileges and policies; this is intentionally restrictive until a server-side, tenant-scoped approval implementation exists. These changes may break direct clients. The effective grants, service-role access, inherited roles, and behavior on a real Supabase installation must be verified before applying the migration. The plain PostgreSQL regression test uses synthetic grants; it does not establish Supabase production behavior.
+
+The execution service now checks the stored approval decision and organization before resuming, but approval storage is still in-memory and separately instantiated by the agent and approval routes. Approval endpoints and other routes remain unauthenticated, approval decisions are not atomic, and frontend authentication is incomplete. This is not a deployable approval workflow.
