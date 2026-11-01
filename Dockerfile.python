@@ -11,10 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends build-essential
     && rm -rf /var/lib/apt/lists/*
 
 COPY agents/python/pyproject.toml ./
-RUN pip install --upgrade pip hatchling
-RUN pip install ".[server]"
-
 COPY agents/python/src ./src
+RUN pip install --upgrade pip
+RUN pip install ".[server]"
 
 # ---- Stage 2: runtime ----
 FROM python:3.11-slim AS runtime
@@ -23,7 +22,6 @@ WORKDIR /app
 RUN useradd --create-home --uid 1001 app
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
-COPY --from=builder /app/src /app/src
 USER app
 EXPOSE 4051
 HEALTHCHECK --interval=15s --timeout=3s --start-period=10s --retries=3 \
