@@ -331,16 +331,16 @@ jobs:
         run: |
           ready=false
           for attempt in {1..60}; do
-            if docker exec "$PG_CONTAINER" pg_isready -U postgres >/dev/null 2>&1; then ready=true; break; fi
+            if docker exec "$PG_CONTAINER" pg_isready -h 127.0.0.1 -U postgres >/dev/null 2>&1; then ready=true; break; fi
             sleep 1
           done
           if [ "$ready" != true ]; then echo "Postgres was not ready"; exit 1; fi
           docker cp database/supabase/migrations "$PG_CONTAINER:/migrations"
           docker cp database/supabase/tests "$PG_CONTAINER:/tests"
-          docker exec "$PG_CONTAINER" createdb -U postgres techtide_auth_stub_test
-          docker exec "$PG_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d techtide_auth_stub_test -f /tests/auth-stub-preservation.sql
-          docker exec "$PG_CONTAINER" createdb -U postgres techtide_membership_test
-          docker exec "$PG_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d techtide_membership_test -f /tests/membership-privileges.sql
+          docker exec "$PG_CONTAINER" createdb -h 127.0.0.1 -U postgres techtide_auth_stub_test
+          docker exec "$PG_CONTAINER" psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U postgres -d techtide_auth_stub_test -f /tests/auth-stub-preservation.sql
+          docker exec "$PG_CONTAINER" createdb -h 127.0.0.1 -U postgres techtide_membership_test
+          docker exec "$PG_CONTAINER" psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U postgres -d techtide_membership_test -f /tests/membership-privileges.sql
 
   # ──────────────────────────────────────────────
   # Gate, all checks must pass before merge
