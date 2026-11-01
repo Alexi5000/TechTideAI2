@@ -70,8 +70,8 @@ The harness estimates cost at `$0.005 / 1k tokens` for OpenAI-class models. Repl
 ## CI policy
 
 - **PRs do not run evals** (cost guard). PRs run `pnpm run verify` (lint + tests + build) only.
-- **Nightly** runs the eval suite and posts results to `docs/EVALS/<date>.json` as a workflow artifact. Failures open a [Eval Result Report](../../.github/ISSUE_TEMPLATE/eval-result.yml).
-- **Manual dispatch** is available for pre-release validation. Use the `Run eval suite` action in the Actions tab.
+- **Nightly evals are switched off.** The `evals` workflow is disabled because no provider key is funded for CI. When it is re-enabled with an `OPENAI_API_KEY` secret, it runs the suite nightly, uploads `docs/EVALS/<date>.json` as an artifact, and failures can be filed with the [Eval Result Report](../.github/ISSUE_TEMPLATE/eval-result.yml) template.
+- **Run it locally** with your own key: `pnpm -C backend evals --suite golden-tasks.v1 --write-docs`.
 
 ## Reading a regression
 

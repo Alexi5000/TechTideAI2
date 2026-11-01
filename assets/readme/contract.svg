@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 300" width="1280" height="300" role="img" aria-labelledby="t d">
+  <title id="t">TechTideAI contract sync</title>
+  <desc id="d">contracts/schema.json is the single source of truth. scripts/sync-contracts.ts generates the TypeScript types and the Pydantic models and stamps the same FNV-1a drift hash on both; hand edits fail CI.</desc>
+  <style>
+    .sans { font-family: ui-sans-serif, -apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    
+    .sync { stroke-dasharray: 6 8; animation: sy 1.8s linear infinite; }
+    @keyframes sy { to { stroke-dashoffset: -28; } }
+    
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <defs>
+    <linearGradient id="ct-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050816"/>
+      <stop offset="1" stop-color="#0b1230"/>
+    </linearGradient>
+    <radialGradient id="ct-g1" cx="0.12" cy="0.1" r="0.6">
+      <stop offset="0" stop-color="#2de2c5" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#2de2c5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ct-g2" cx="0.92" cy="0.95" r="0.6">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="ct-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="300" rx="20" fill="url(#ct-bg)"/>
+  <rect width="1280" height="300" rx="20" fill="url(#ct-grid)"/>
+  <rect width="1280" height="300" rx="20" fill="url(#ct-g1)"/>
+  <rect width="1280" height="300" rx="20" fill="url(#ct-g2)"/>
+  <rect x="0.5" y="0.5" width="1279" height="299" rx="19.5" fill="none" stroke="#22305c"/>
+  <defs>
+    <marker id="ct-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2de2c5"/></marker>
+  </defs>
+  <text x="40" y="52" class="mono" font-size="12" letter-spacing="2.4" fill="#2de2c5">ONE CONTRACT, TWO RUNTIMES</text>
+  <text x="40" y="84" class="sans" font-size="26" font-weight="700" fill="#e8eefc">TypeScript and Python never drift apart.</text>
+  <g transform="translate(40 140)">
+    <rect width="300" height="100" rx="14" fill="#0e1636" stroke="#ffb547" stroke-opacity="0.75"/>
+    <rect x="0" y="36.0" width="3" height="28" rx="1.5" fill="#ffb547"/>
+    <text x="18" y="46.0" class="sans" font-size="15" font-weight="700" fill="#e8eefc">contracts/schema.json</text>
+    <text x="18" y="65.0" class="mono" font-size="11" fill="#8a97b8">single source of truth</text>
+    <text x="18" y="81.0" class="mono" font-size="11" fill="#ffb547">edit only this file</text>
+  </g>
+  <g transform="translate(490 140)">
+    <rect width="300" height="100" rx="14" fill="#0e1636" stroke="#2de2c5" stroke-opacity="0.75"/>
+    <rect x="0" y="36.0" width="3" height="28" rx="1.5" fill="#2de2c5"/>
+    <text x="18" y="46.0" class="sans" font-size="15" font-weight="700" fill="#e8eefc">scripts/sync-contracts.ts</text>
+    <text x="18" y="65.0" class="mono" font-size="11" fill="#8a97b8">generates both sides</text>
+    <text x="18" y="81.0" class="mono" font-size="11" fill="#2de2c5">FNV-1a drift hash</text>
+  </g>
+  <g transform="translate(940 112)">
+    <rect width="300" height="72" rx="14" fill="#0e1636" stroke="#5cc8ff" stroke-opacity="0.75"/>
+    <rect x="0" y="22.0" width="3" height="28" rx="1.5" fill="#5cc8ff"/>
+    <text x="18" y="34.0" class="sans" font-size="15" font-weight="700" fill="#e8eefc">TypeScript types</text>
+    <text x="18" y="53.0" class="mono" font-size="11" fill="#8a97b8">agents/src/runtime/…generated.ts</text>
+  </g>
+  <g transform="translate(940 196)">
+    <rect width="300" height="72" rx="14" fill="#0e1636" stroke="#8b5cf6" stroke-opacity="0.75"/>
+    <rect x="0" y="22.0" width="3" height="28" rx="1.5" fill="#8b5cf6"/>
+    <text x="18" y="34.0" class="sans" font-size="15" font-weight="700" fill="#e8eefc">Pydantic models</text>
+    <text x="18" y="53.0" class="mono" font-size="11" fill="#8a97b8">techtide_agents/contracts/generated.py</text>
+  </g>
+  <line x1="344" y1="190" x2="484" y2="190" stroke="#2de2c5" stroke-width="2" class="sync" marker-end="url(#ct-t)"/>
+  <path d="M794 175 C870 175, 870 148, 934 148" stroke="#2de2c5" stroke-width="2" fill="none" class="sync" marker-end="url(#ct-t)"/>
+  <path d="M794 205 C870 205, 870 232, 934 232" stroke="#2de2c5" stroke-width="2" fill="none" class="sync" marker-end="url(#ct-t)"/>
+  <text x="1240" y="286" text-anchor="end" class="mono" font-size="11" fill="#4b5878">same hash stamped on both sides · hand edits fail CI</text>
+
+</svg>
