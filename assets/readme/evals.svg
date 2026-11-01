@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 460" width="1280" height="460" role="img" aria-labelledby="t d">
+  <title id="t">TechTideAI evaluation loops</title>
+  <desc id="d">Left: the golden suite, 33 tasks scored by 7 versioned scorers; a pass-rate drop of 5 percent or more against the frozen baseline fails the gate and writes a post-mortem. Right: the three-agent sprint loop of generator, evaluator and optional judge, ending in succeeded, plateau, max-iterations or errored.</desc>
+  <style>
+    .sans { font-family: ui-sans-serif, -apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    
+    .orbit { stroke-dasharray: 8 10; animation: orb 3s linear infinite; }
+    @keyframes orb { to { stroke-dashoffset: -36; } }
+    
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <defs>
+    <linearGradient id="ev-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050816"/>
+      <stop offset="1" stop-color="#0b1230"/>
+    </linearGradient>
+    <radialGradient id="ev-g1" cx="0.12" cy="0.1" r="0.6">
+      <stop offset="0" stop-color="#2de2c5" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#2de2c5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ev-g2" cx="0.92" cy="0.95" r="0.6">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="ev-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="460" rx="20" fill="url(#ev-bg)"/>
+  <rect width="1280" height="460" rx="20" fill="url(#ev-grid)"/>
+  <rect width="1280" height="460" rx="20" fill="url(#ev-g1)"/>
+  <rect width="1280" height="460" rx="20" fill="url(#ev-g2)"/>
+  <rect x="0.5" y="0.5" width="1279" height="459" rx="19.5" fill="none" stroke="#22305c"/>
+  <defs>
+    <marker id="ev-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2de2c5"/></marker>
+    <marker id="ev-v" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8b5cf6"/></marker>
+    <marker id="ev-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a97b8"/></marker>
+  </defs>
+  <text x="40" y="52" class="mono" font-size="12" letter-spacing="2.4" fill="#2de2c5">EVALS ARE THE REGRESSION DASHBOARD</text>
+  <text x="40" y="84" class="sans" font-size="26" font-weight="700" fill="#e8eefc">Two loops: a golden suite that gates, a sprint harness that converges.</text>
+  <g transform="translate(40 120)">
+    <rect width="520" height="300" rx="16" fill="#0e1636" stroke="#22305c"/>
+    <text x="24" y="38" class="sans" font-size="17" font-weight="700" fill="#e8eefc">Golden suite</text>
+    <text x="24" y="58" class="mono" font-size="11" fill="#8a97b8">evals/fixtures/golden-tasks.v1.json</text>
+    <text x="24" y="100" class="sans" font-size="24" font-weight="800" fill="#8b5cf6">33</text>
+    <text x="84" y="96" class="sans" font-size="13" fill="#e8eefc">tasks across the director + all 10 orchestrators</text>
+    <text x="24" y="134" class="sans" font-size="24" font-weight="800" fill="#2de2c5">7</text>
+    <text x="84" y="130" class="sans" font-size="13" fill="#e8eefc">scorers: exact-match, regex, json-schema, llm-judge,</text>
+    <text x="84" y="164" class="sans" font-size="13" fill="#e8eefc">rubric-weighted, four-axis-grader, plateau</text>
+    <text x="24" y="208" class="sans" font-size="24" font-weight="800" fill="#ffb547">5%</text>
+    <text x="84" y="204" class="sans" font-size="13" fill="#e8eefc">pass-rate drop vs. frozen baseline fails the gate</text>
+    <text x="24" y="242" class="sans" font-size="24" font-weight="800" fill="#ff6b8b">1</text>
+    <text x="84" y="238" class="sans" font-size="13" fill="#e8eefc">post-mortem written per failing run</text>
+    <text x="24" y="278" class="mono" font-size="11" fill="#4b5878">pnpm -C backend evals --suite golden-tasks.v1</text>
+  </g>
+  <circle cx="860" cy="270" r="112" fill="none" stroke="#8b5cf6" stroke-opacity="0.6" stroke-width="2" class="orbit"/>
+  <g transform="translate(794.0 138.0)"><rect width="132" height="40" rx="20" fill="#050816" stroke="#5cc8ff"/><text x="66.0" y="25" text-anchor="middle" class="sans" font-size="13" font-weight="700" fill="#e8eefc">Generator</text></g>
+  <g transform="translate(891.0 306.0)"><rect width="132" height="40" rx="20" fill="#050816" stroke="#2de2c5"/><text x="66.0" y="25" text-anchor="middle" class="sans" font-size="13" font-weight="700" fill="#e8eefc">Evaluator</text></g>
+  <g transform="translate(697.0 306.0)"><rect width="132" height="40" rx="20" fill="#050816" stroke="#8b5cf6"/><text x="66.0" y="25" text-anchor="middle" class="sans" font-size="13" font-weight="700" fill="#e8eefc">Judge (opt.)</text></g>
+  <text x="860" y="266" text-anchor="middle" class="sans" font-size="15" font-weight="700" fill="#e8eefc">sprint loop</text>
+  <text x="860" y="286" text-anchor="middle" class="mono" font-size="10" fill="#8a97b8">plateau detector watches</text>
+  <text x="860" y="300" text-anchor="middle" class="mono" font-size="10" fill="#8a97b8">the rolling score delta</text>
+  <path d="M976 270 C1052 270, 1042 168, 1060 168" fill="none" stroke="#a3e635" stroke-opacity="0.75" stroke-width="1.5"/>
+  <g transform="translate(1064 150)"><rect width="176" height="36" rx="18" fill="#a3e635" fill-opacity="0.1" stroke="#a3e635"/><text x="88" y="23" text-anchor="middle" class="mono" font-size="12" fill="#e8eefc">succeeded</text></g>
+  <path d="M976 270 C1052 270, 1042 230, 1060 230" fill="none" stroke="#ffb547" stroke-opacity="0.75" stroke-width="1.5"/>
+  <g transform="translate(1064 212)"><rect width="176" height="36" rx="18" fill="#ffb547" fill-opacity="0.1" stroke="#ffb547"/><text x="88" y="23" text-anchor="middle" class="mono" font-size="12" fill="#e8eefc">plateau</text></g>
+  <path d="M976 270 C1052 270, 1042 292, 1060 292" fill="none" stroke="#5cc8ff" stroke-opacity="0.75" stroke-width="1.5"/>
+  <g transform="translate(1064 274)"><rect width="176" height="36" rx="18" fill="#5cc8ff" fill-opacity="0.1" stroke="#5cc8ff"/><text x="88" y="23" text-anchor="middle" class="mono" font-size="12" fill="#e8eefc">max-iterations</text></g>
+  <path d="M976 270 C1052 270, 1042 354, 1060 354" fill="none" stroke="#ff6b8b" stroke-opacity="0.75" stroke-width="1.5"/>
+  <g transform="translate(1064 336)"><rect width="176" height="36" rx="18" fill="#ff6b8b" fill-opacity="0.1" stroke="#ff6b8b"/><text x="88" y="23" text-anchor="middle" class="mono" font-size="12" fill="#e8eefc">errored</text></g>
+  <text x="860" y="430" text-anchor="middle" class="mono" font-size="11" fill="#4b5878">backend/src/services/three-agent-harness.ts</text>
+
+</svg>
