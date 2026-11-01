@@ -25,6 +25,35 @@ describe("knowledge authorization boundary", () => {
   });
   const app = async () => { const server = Fastify(); await registerKnowledgeRoutes(server); return server; };
 
+  it.each([
+    { method: "POST" as const, url: "/api/knowledge/search", payload: body },
+    { method: "POST" as const, url: "/api/knowledge/documents", payload: {orgId:org,title:"t",source:"s",content:"text"} },
+    { method: "GET" as const, url: `/api/knowledge/documents/${doc}?orgId=${org}` },
+  ])("limits $method $url before authorization", async (request) => {
+    const server = await app();
+    mocks.membership.mockResolvedValue({data:{role:"admin"},error:null});
+    mocks.indexDocument.mockResolvedValue({document:{},chunkCount:1});
+    mocks.getDocument.mockResolvedValue(null);
+    const inject = () => server.inject({...request, headers:{authorization:"Bearer token"}});
+    for (let i = 0; i < 60; i++) expect((await inject()).statusCode).not.toBe(429);
+    const calls = [mocks.getUser, mocks.membership, mocks.search, mocks.getDocument, mocks.indexDocument].map(mock => mock.mock.calls.length);
+    expect((await inject()).statusCode).toBe(429);
+    expect([mocks.getUser, mocks.membership, mocks.search, mocks.getDocument, mocks.indexDocument].map(mock => mock.mock.calls.length)).toEqual(calls);
+    await server.close();
+  });
+
+  it("keeps quotas separate by IP and endpoint and ignores untrusted forwarded IPs", async () => {
+    const server = await app();
+    const request = { method: "POST" as const, url: "/api/knowledge/search", payload: body, headers: {authorization:"Bearer token"} };
+    for (let i = 0; i < 60; i++) {
+      expect((await server.inject({...request, remoteAddress:"192.0.2.1"})).statusCode).toBe(200);
+    }
+    expect((await server.inject({...request, remoteAddress:"192.0.2.1", headers:{...request.headers,"x-forwarded-for":"192.0.2.99"}})).statusCode).toBe(429);
+    expect((await server.inject({...request, remoteAddress:"192.0.2.2"})).statusCode).toBe(200);
+    expect((await server.inject({method:"GET",url:`/api/knowledge/documents/${doc}?orgId=${org}`,remoteAddress:"192.0.2.1",headers:request.headers})).statusCode).toBe(404);
+    await server.close();
+  });
+
   it("rejects missing and invalid bearer tokens", async () => {
     const server = await app();
     expect((await server.inject({method:"POST",url:"/api/knowledge/search",payload:body})).statusCode).toBe(401);

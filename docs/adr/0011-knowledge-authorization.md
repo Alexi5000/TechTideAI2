@@ -12,6 +12,8 @@ This is a breaking API change. Organization membership can change between the me
 
 ## Verification and limits
 
+Each knowledge endpoint limits each client IP to 60 requests per minute per server instance before authorization or service work. The in-memory counters reset on restart and are not shared across replicas; a multi-instance deployment needs a shared rate-limit store. Fastify does not trust proxy headers by default. If deployed behind a proxy, configure and verify a trusted-proxy boundary before relying on client IPs; blindly trusting forwarded headers permits spoofing. Clients sharing an IP also share its endpoint quota.
+
 Route tests exercise mocked valid/invalid identity, missing or revoked membership, forged organization selection, scoped document lookup, role-based writes, and membership lookup failure. They do not validate real tokens, Supabase policy/grant behavior, concurrent revocation or the other application routes. On a disposable plain PostgreSQL 16 instance, migration 0007 revoked direct membership mutation grants from synthetic anon/authenticated roles; this is not a real Supabase JWT, grants or RLS integration test.
 
 The previously checked-in `0000_auth_stub.sql` was changed to preserve an existing `auth.uid()` instead of replacing it. The owner reported no deployment, but this repository is public: users who already applied the old migration need separate migration-history and repair guidance. Never assume editing a historical file repairs an already-deployed database or restore an authentication function without understanding its owner and implementation. Disposable plain PostgreSQL tests cover a pre-existing sentinel helper and a fresh stub; real Supabase behavior remains unverified.

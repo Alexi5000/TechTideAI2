@@ -5,6 +5,7 @@
  */
 
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import rateLimit from "@fastify/rate-limit";
 import { z } from "zod";
 import {
   createKnowledgeRepository,
@@ -33,6 +34,8 @@ const searchSchema = z.object({
 });
 
 export async function registerKnowledgeRoutes(app: FastifyInstance) {
+  await app.register(rateLimit, { global: false });
+  const rateLimitConfig = { config: { rateLimit: { max: 60, timeWindow: "1 minute" } } };
   const repository = createKnowledgeRepository(supabase);
   const vectorRepository = createKnowledgeVectorRepository();
   const knowledgeService = createKnowledgeService({
@@ -75,7 +78,7 @@ export async function registerKnowledgeRoutes(app: FastifyInstance) {
   };
 
   // POST /api/knowledge/documents - Create + index a knowledge document
-  app.post("/api/knowledge/documents", async (request, reply) => {
+  app.post("/api/knowledge/documents", rateLimitConfig, async (request, reply) => {
     try {
       const payload = createDocumentSchema.parse(request.body);
       if (!await authorize(request, reply, payload.orgId, true)) return;
@@ -89,6 +92,7 @@ export async function registerKnowledgeRoutes(app: FastifyInstance) {
   // GET /api/knowledge/documents/:id - Fetch a document
   app.get<{ Params: { id: string } }>(
     "/api/knowledge/documents/:id",
+    rateLimitConfig,
     async (request, reply) => {
       try {
         const id = z.guid().parse(request.params.id);
@@ -106,7 +110,7 @@ export async function registerKnowledgeRoutes(app: FastifyInstance) {
   );
 
   // POST /api/knowledge/search - Vector search over knowledge chunks
-  app.post("/api/knowledge/search", async (request, reply) => {
+  app.post("/api/knowledge/search", rateLimitConfig, async (request, reply) => {
     try {
       const payload = searchSchema.parse(request.body);
       if (!await authorize(request, reply, payload.orgId, false)) return;
