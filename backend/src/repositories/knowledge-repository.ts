@@ -80,13 +80,14 @@ export function createKnowledgeRepository(
       return mapDbDocumentToDocument(data as DbKnowledgeDocument);
     },
 
-    async getDocument(id: string): Promise<KnowledgeDocument | null> {
+    async getDocument(id: string, orgId: string): Promise<KnowledgeDocument | null> {
       const client = requireSupabase();
 
       const { data, error } = await client
         .from("knowledge_documents")
         .select()
         .eq("id", id)
+        .eq("org_id", orgId)
         .single();
 
       if (error) {

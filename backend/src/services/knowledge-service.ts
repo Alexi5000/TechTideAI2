@@ -69,8 +69,8 @@ export function createKnowledgeService(
   const { repository, vectorRepository } = deps;
 
   return {
-    async getDocument(id: string): Promise<KnowledgeDocument | null> {
-      return repository.getDocument(id);
+    async getDocument(id: string, orgId: string): Promise<KnowledgeDocument | null> {
+      return repository.getDocument(id, orgId);
     },
 
     async indexDocument(

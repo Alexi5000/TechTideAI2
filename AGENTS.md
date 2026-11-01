@@ -95,6 +95,8 @@ The build order is `apis → agents → backend`. To keep that DAG acyclic, any 
 
 - Read this file on session start. Update it (and the matching ADR) when the architecture changes.
 - Run `pnpm run verify` before claiming a change is done.
+- Knowledge vector tenant IDs use the versioned exact-match schema in `docs/adr/0010-weaviate-tenant-identifiers.md`; verify the dedicated Weaviate isolation job separately from `pnpm run verify`.
+- Knowledge route authorization and its limitations are in `docs/adr/0011-knowledge-authorization.md`; other routes are not covered by that decision.
 - Update `evals/fixtures/` when you add an agent capability. The eval suite is the documentation of what the system does.
 - Prefer OCP-friendly extensions over mutation. The registry/policy/scorer patterns exist for a reason.
 - Be honest in docs. The README, ADRs, and benchmark doc say what is real. Aspirational copy is a bug.

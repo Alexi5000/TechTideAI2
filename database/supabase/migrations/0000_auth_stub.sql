@@ -18,13 +18,19 @@ create table if not exists auth.users (
 
 -- The Supabase auth schema also exposes `auth.uid()` (a helper function
 -- that returns the current request's user id). Provide a stub.
-create or replace function auth.uid()
-returns uuid
-language sql
-stable
-as $$
-  select null::uuid;
-$$;
+do $stub$
+begin
+  if to_regprocedure('auth.uid()') is null then
+    execute $definition$
+      create function auth.uid()
+      returns uuid
+      language sql
+      stable
+      as 'select null::uuid'
+    $definition$;
+  end if;
+end
+$stub$;
 
 -- Supabase pre-defines three roles that the RLS policies reference:
 -- `anon` (unauthenticated), `authenticated` (logged-in user),
