@@ -27,6 +27,7 @@
     "apis",
     "agents"
   ],
+  "packageManager": "pnpm@9.15.9",
   "engines": {
     "node": "^22.13.0 || >=24",
     "pnpm": ">=9"
