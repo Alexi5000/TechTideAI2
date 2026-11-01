@@ -9,6 +9,7 @@
  */
 
 import { randomUUID } from "node:crypto";
+import { ApprovalAlreadyDecidedError } from "../domain/index.js";
 
 import type {
   ApprovalRequest,
@@ -30,7 +31,7 @@ export interface IApprovalRepository {
   create(input: CreateApprovalInput): Promise<ApprovalRequest>;
   findById(id: string): Promise<ApprovalRequest | null>;
   findByRunId(runId: string): Promise<ApprovalRequest[]>;
-  list(opts: { status?: ApprovalStatus | undefined; limit?: number | undefined }): Promise<ApprovalRequest[]>;
+  list(opts: { orgId?: string | undefined; status?: ApprovalStatus | undefined; limit?: number | undefined }): Promise<ApprovalRequest[]>;
   decide(
     id: string,
     decision: { status: Extract<ApprovalStatus, "granted" | "denied">; decidedBy: string; rationale: string | null },
@@ -71,10 +72,10 @@ export class InMemoryApprovalRepository implements IApprovalRepository {
     return [...this.approvals.values()].filter((a) => a.runId === runId);
   }
 
-  async list(opts: { status?: ApprovalStatus; limit?: number }): Promise<ApprovalRequest[]> {
+  async list(opts: { orgId?: string; status?: ApprovalStatus; limit?: number }): Promise<ApprovalRequest[]> {
     const limit = opts.limit ?? 50;
     const sorted = [...this.approvals.values()].sort((a, b) => b.requestedAt.localeCompare(a.requestedAt));
-    const filtered = opts.status ? sorted.filter((a) => a.status === opts.status) : sorted;
+    const filtered = sorted.filter((a) => (!opts.orgId || a.orgId === opts.orgId) && (!opts.status || a.status === opts.status));
     return filtered.slice(0, limit);
   }
 
@@ -84,6 +85,7 @@ export class InMemoryApprovalRepository implements IApprovalRepository {
   ): Promise<ApprovalRequest> {
     const approval = this.approvals.get(id);
     if (!approval) throw new Error(`Approval ${id} not found`);
+    if (approval.status !== "pending") throw new ApprovalAlreadyDecidedError(id, approval.status);
     const updated: ApprovalRequest = {
       ...approval,
       status: decision.status,

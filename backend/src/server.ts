@@ -11,11 +11,13 @@ import { registerKnowledgeRoutes } from "./routes/knowledge.js";
 import { registerEvalRoutes } from "./routes/evals.js";
 import { registerApprovalRoutes } from "./routes/approvals.js";
 import { registerSprintRoutes } from "./routes/sprints.js";
+import { createInMemoryApprovalRepository } from "./repositories/approval-repository.js";
 
 export async function buildServer() {
   const app = Fastify({
     logger: env.NODE_ENV !== "test",
   });
+  const approvalRepository = createInMemoryApprovalRepository();
 
   await app.register(cors, {
     origin: parseOrigins(env.CORS_ORIGIN),
@@ -32,12 +34,12 @@ export async function buildServer() {
   }));
 
   await registerHealthRoutes(app);
-  await registerAgentRoutes(app);
+  await registerAgentRoutes(app, approvalRepository);
   await registerLlmRoutes(app);
   await registerRunRoutes(app);
   await registerKnowledgeRoutes(app);
   await registerEvalRoutes(app);
-  await registerApprovalRoutes(app);
+  await registerApprovalRoutes(app, approvalRepository);
   await registerSprintRoutes(app);
 
   return app;

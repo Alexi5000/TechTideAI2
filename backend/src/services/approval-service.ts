@@ -76,7 +76,7 @@ export class ApprovalService {
     return this.repo.expireStale(this.clock());
   }
 
-  async list(opts?: { status?: ApprovalRequest["status"] | undefined; limit?: number | undefined }): Promise<ApprovalRequest[]> {
+  async list(opts?: { orgId?: string | undefined; status?: ApprovalRequest["status"] | undefined; limit?: number | undefined }): Promise<ApprovalRequest[]> {
     return this.repo.list(opts ?? {});
   }
 

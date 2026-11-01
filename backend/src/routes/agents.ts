@@ -4,7 +4,7 @@ import { agentRegistry, getAgentById, createMastraRuntime } from "@techtide/agen
 import { createRunRepository } from "../repositories/index.js";
 import { createRunService } from "../services/run-service.js";
 import { createAgentExecutionService, createAgentLookup, ApprovalService } from "../services/index.js";
-import { createInMemoryApprovalRepository } from "../repositories/approval-repository.js";
+import { createInMemoryApprovalRepository, type IApprovalRepository } from "../repositories/approval-repository.js";
 import { supabase } from "../services/supabase.js";
 import { AgentNotFoundError, PersistenceUnavailableError } from "../domain/index.js";
 
@@ -16,13 +16,12 @@ const runAgentSchema = z.object({
   orgId: z.guid().default(DEFAULT_ORG_ID),
 });
 
-export async function registerAgentRoutes(app: FastifyInstance) {
+export async function registerAgentRoutes(app: FastifyInstance, approvalRepository: IApprovalRepository = createInMemoryApprovalRepository()) {
   // Assemble dependencies (could move to DI container)
   const repository = createRunRepository(supabase);
   const runService = createRunService(repository);
   const agentRuntime = createMastraRuntime();
   const agentLookup = createAgentLookup();
-  const approvalRepository = createInMemoryApprovalRepository();
   const approvalService = new ApprovalService({ repository: approvalRepository });
 
   const executionService = createAgentExecutionService({
