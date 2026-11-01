@@ -46,16 +46,20 @@ jobs:
             backend:
               - 'backend/**'
               - 'pnpm-lock.yaml'
+              - 'package.json'
             frontend:
               - 'frontend/**'
               - 'pnpm-lock.yaml'
+              - 'package.json'
             agents:
               - 'agents/src/**'
               - 'agents/package.json'
               - 'pnpm-lock.yaml'
+              - 'package.json'
             apis:
               - 'apis/**'
               - 'pnpm-lock.yaml'
+              - 'package.json'
             python:
               - 'agents/python/**'
             database:
