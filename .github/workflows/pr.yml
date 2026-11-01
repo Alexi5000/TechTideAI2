@@ -39,6 +39,7 @@ jobs:
             apis
             database
             deps
+            deps-dev
           requireScope: false
 
   # ──────────────────────────────────────────────
