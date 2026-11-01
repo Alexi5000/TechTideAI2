@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
+import { ZodError } from "zod";
 import { env } from "./config/env.js";
 import { parseOrigins } from "./utils/origin.js";
 import { registerHealthRoutes } from "./routes/health.js";
@@ -24,6 +25,20 @@ export async function buildServer() {
 
   await app.register(helmet, {
     contentSecurityPolicy: false,
+  });
+
+  app.setErrorHandler((error, _request, reply) => {
+    if (error instanceof ZodError) {
+      return reply.status(400).send({
+        error: "Bad Request",
+        message: "Request validation failed",
+        issues: error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          message: issue.message,
+        })),
+      });
+    }
+    return reply.send(error);
   });
 
   app.get("/", async () => ({
