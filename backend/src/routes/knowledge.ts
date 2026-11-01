@@ -34,7 +34,7 @@ const searchSchema = z.object({
 });
 
 export async function registerKnowledgeRoutes(app: FastifyInstance) {
-  await app.register(rateLimit, { global: false });
+  if (!app.hasDecorator("rateLimit")) await app.register(rateLimit, { global: false });
   const rateLimitConfig = { config: { rateLimit: { max: 60, timeWindow: "1 minute" } } };
   const repository = createKnowledgeRepository(supabase);
   const vectorRepository = createKnowledgeVectorRepository();

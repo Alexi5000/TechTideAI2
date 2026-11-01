@@ -19,6 +19,16 @@ export async function buildServer() {
   });
   const approvalRepository = createInMemoryApprovalRepository();
 
+  // These surfaces lack tenant-scoped execution or durable approval enforcement.
+  // Keep them unavailable until those boundaries are implemented and reviewed.
+  app.addHook("onRequest", async (request, reply) => {
+    const route = request.routeOptions.url ?? "";
+    if (route === "/api/agents/:id/run" || route === "/api/llm" ||
+        route.startsWith("/api/evals/") || route.startsWith("/api/sprints/")) {
+      return reply.code(503).send({error:"Service Unavailable",message:"This endpoint is disabled pending security hardening"});
+    }
+  });
+
   await app.register(cors, {
     origin: parseOrigins(env.CORS_ORIGIN),
     credentials: true,
