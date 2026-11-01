@@ -73,6 +73,15 @@ The harness estimates cost at `$0.005 / 1k tokens` for OpenAI-class models. Repl
 - **Nightly** runs the eval suite and posts results to `docs/EVALS/<date>.json` as a workflow artifact. Failures open a [Eval Result Report](../../.github/ISSUE_TEMPLATE/eval-result.yml).
 - **Manual dispatch** is available for pre-release validation. Use the `Run eval suite` action in the Actions tab.
 
+### CI secrets
+
+The `evals` workflow needs the `OPENAI_API_KEY` repository Actions secret, because agents and the default judge both run on `gpt-4o`. `ANTHROPIC_API_KEY` is optional and is only used when an Anthropic judge model is selected. When `OPENAI_API_KEY` is missing, the first step fails and prints an error with the fix. The job never reports a pass without calling a provider. To set the key:
+
+```bash
+gh secret set OPENAI_API_KEY -R Alexi5000/TechTideAI2
+gh workflow run evals.yml -R Alexi5000/TechTideAI2 --ref main
+```
+
 ## Reading a regression
 
 When `passRate` drops by more than `EVAL_REGRESSION_THRESHOLD_PCT` (default 5%), the harness throws `EvalRegressionDetectedError` and exits non-zero. The CLI prints the per-task breakdown so you can see exactly which tasks regressed. Common causes:

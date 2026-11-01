@@ -45,7 +45,13 @@ jobs:
       - name: Validate provider configuration
         run: |
           if [ -z "$OPENAI_API_KEY" ]; then
-            echo "::error::Configure the OPENAI_API_KEY repository secret before running live evaluations."
+            msg="OPENAI_API_KEY repository secret is not set, so live evals cannot run. Owner action: gh secret set OPENAI_API_KEY -R ${GITHUB_REPOSITORY} (see issue #90 and docs/EVALS.md#ci-secrets)."
+            echo "::error title=Missing OPENAI_API_KEY::${msg}"
+            {
+              echo "### Evals did not run"
+              echo
+              echo "${msg}"
+            } >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
