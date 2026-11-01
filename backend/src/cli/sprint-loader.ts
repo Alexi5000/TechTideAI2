@@ -7,11 +7,15 @@
  */
 
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { parseSprintContract, type SprintContract } from "../domain/entities/sprint-contract.js";
 
-const DEFAULT_SPRINTS_DIR = resolve(process.cwd(), "../../evals/sprints");
+// Resolve from this file's location so the API server (cwd = backend/) and the
+// CLI find the same directory. backend/src/cli -> repo root is three levels up.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const DEFAULT_SPRINTS_DIR = resolve(HERE, "..", "..", "..", "evals", "sprints");
 
 export interface LoadSprintOptions {
   sprintsDir?: string;
