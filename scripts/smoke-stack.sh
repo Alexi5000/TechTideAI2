@@ -53,8 +53,11 @@ echo "==> Curling /api/agents on backend (through frontend nginx proxy)"
 curl -fsS http://localhost:5180/api/agents
 echo
 
-echo "==> Listing available eval suites"
-curl -fsS http://localhost:5180/api/evals/suites
-echo
+echo "==> Confirming the safety hold on eval suites"
+eval_status=$(curl -sS -o /dev/null -w "%{http_code}" http://localhost:5180/api/evals/suites)
+if [ "$eval_status" != "503" ]; then
+  echo "Expected 503 from /api/evals/suites, got $eval_status"
+  exit 1
+fi
 
 echo "==> Smoke OK"

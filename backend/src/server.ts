@@ -20,6 +20,15 @@ export async function buildServer() {
   });
   const approvalRepository = createInMemoryApprovalRepository();
 
+  await app.register(cors, {
+    origin: parseOrigins(env.CORS_ORIGIN),
+    credentials: true,
+  });
+
+  await app.register(helmet, {
+    contentSecurityPolicy: false,
+  });
+
   // These surfaces lack tenant-scoped execution or durable approval enforcement.
   // Keep them unavailable until those boundaries are implemented and reviewed.
   app.addHook("onRequest", async (request, reply) => {
@@ -28,15 +37,6 @@ export async function buildServer() {
         route.startsWith("/api/evals/") || route.startsWith("/api/sprints/")) {
       return reply.code(503).send({error:"Service Unavailable",message:"This endpoint is disabled pending security hardening"});
     }
-  });
-
-  await app.register(cors, {
-    origin: parseOrigins(env.CORS_ORIGIN),
-    credentials: true,
-  });
-
-  await app.register(helmet, {
-    contentSecurityPolicy: false,
   });
 
   app.setErrorHandler((error, _request, reply) => {

@@ -36,22 +36,26 @@ function toCollectionsArray(collection: string | null) {
 }
 
 export function createKnowledgeVectorRepository(): IKnowledgeVectorRepository {
+  async function assertExistingSchema(response: Response): Promise<void> {
+    const schema = await response.json();
+    const properties = Array.isArray(schema.properties) ? schema.properties : [];
+    const orgProperties = properties.filter((p: { name?: string }) => p.name === "orgId");
+    const orgProperty = orgProperties[0];
+    if (orgProperties.length !== 1 || !Array.isArray(orgProperty.dataType) || orgProperty.dataType.length !== 1 || orgProperty.dataType[0] !== "text" || orgProperty.tokenization !== "field" || orgProperty.indexFilterable !== true) {
+      throw new VectorStoreUnavailableError("Incompatible knowledge collection tenant schema");
+    }
+    const legacy = await weaviateFetch(`/v1/schema/${LEGACY_CLASS_NAME}`, { method: "GET" });
+    if (legacy.ok) throw new VectorStoreUnavailableError("Legacy and V2 coexist; cutover is not approved");
+    if (legacy.status !== 404) throw new VectorStoreUnavailableError("Unable to verify legacy cutover state");
+  }
+
   async function ensureSchema(): Promise<void> {
     const response = await weaviateFetch(`/v1/schema/${CLASS_NAME}`, {
       method: "GET",
     });
 
     if (response.ok) {
-      const schema = await response.json();
-      const properties = Array.isArray(schema.properties) ? schema.properties : [];
-      const orgProperties = properties.filter((p: { name?: string }) => p.name === "orgId");
-      const orgProperty = orgProperties[0];
-      if (orgProperties.length !== 1 || !Array.isArray(orgProperty.dataType) || orgProperty.dataType.length !== 1 || orgProperty.dataType[0] !== "text" || orgProperty.tokenization !== "field" || orgProperty.indexFilterable !== true) {
-        throw new VectorStoreUnavailableError("Incompatible knowledge collection tenant schema");
-      }
-      const legacy = await weaviateFetch(`/v1/schema/${LEGACY_CLASS_NAME}`, { method: "GET" });
-      if (legacy.ok) throw new VectorStoreUnavailableError("Legacy and V2 coexist; cutover is not approved");
-      if (legacy.status !== 404) throw new VectorStoreUnavailableError("Unable to verify legacy cutover state");
+      await assertExistingSchema(response);
       return;
     }
 
@@ -77,6 +81,12 @@ export function createKnowledgeVectorRepository(): IKnowledgeVectorRepository {
 
     if (!createResponse.ok) {
       const body = await createResponse.text();
+      // A concurrent first request may have created the class; validate it rather than failing.
+      const existing = await weaviateFetch(`/v1/schema/${CLASS_NAME}`, { method: "GET" });
+      if (existing.ok) {
+        await assertExistingSchema(existing);
+        return;
+      }
       throw new VectorStoreUnavailableError(
         `Failed to create Weaviate schema: ${createResponse.status} ${body}`,
       );
@@ -119,7 +129,6 @@ export function createKnowledgeVectorRepository(): IKnowledgeVectorRepository {
         `Weaviate batch insert failed: ${response.status} ${body}`,
       );
     }
-    await ensureSchema();
     const results: unknown = await response.json();
     const expectedIds = new Set(chunks.map((chunk) => chunk.id));
     if (expectedIds.size !== chunks.length || !Array.isArray(results) || results.length !== expectedIds.size) {

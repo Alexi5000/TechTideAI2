@@ -76,6 +76,8 @@ export function createKnowledgeService(
     async indexDocument(
       input: CreateKnowledgeDocumentInput,
     ): Promise<KnowledgeIndexResult> {
+      await vectorRepository.ensureSchema();
+
       const document = await repository.createDocument(input);
 
       const chunks = chunkTextByWords(
@@ -93,8 +95,6 @@ export function createKnowledgeService(
           tokenCount: chunk.tokenCount,
         })),
       );
-
-      await vectorRepository.ensureSchema();
 
       const vectors = await embedInBatches(
         persistedChunks.map((chunk) => chunk.content),

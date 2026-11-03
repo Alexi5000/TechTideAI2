@@ -15,4 +15,12 @@ describe("unfinished execution surfaces", () => {
     expect(result.statusCode).toBe(503);
     await app.close();
   });
+
+  it("keeps security and CORS headers on held responses", async () => {
+    const app=await buildServer();
+    const result=await app.inject({method:"GET",url:"/api/evals/runs",headers:{origin:"http://localhost:5173"}});
+    expect(result.statusCode).toBe(503);
+    expect(result.headers["x-content-type-options"]).toBe("nosniff");
+    await app.close();
+  });
 });
