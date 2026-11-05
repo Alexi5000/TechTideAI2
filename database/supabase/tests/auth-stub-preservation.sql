@@ -13,7 +13,7 @@ create schema auth;
 create function auth.uid() returns uuid language sql stable
 as $$ select 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid $$;
 
-\ir ../migrations/0000_auth_stub.sql
+\ir ../migrations/0009_protect_auth_uid.sql
 
 do $$
 begin
