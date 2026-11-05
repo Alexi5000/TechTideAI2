@@ -78,6 +78,20 @@ describe("ApprovalService", () => {
     await expect(svc.deny(approval.id, "operator-2")).rejects.toBeInstanceOf(ApprovalAlreadyDecidedError);
   });
 
+  it("allows only one concurrent decision", async () => {
+    const svc = makeService();
+    const approval = await svc.request({
+      orgId: "00000000-0000-0000-0000-000000000001",
+      runId: "00000000-0000-0000-0000-000000000002",
+      agentId: "orch-centaurus-a", action: "issue_payment", payload: {}, riskTier: "billing",
+    });
+    const decisions = await Promise.allSettled([
+      svc.grant(approval.id, "operator-1"), svc.deny(approval.id, "operator-2"),
+    ]);
+    expect(decisions.filter((item) => item.status === "fulfilled")).toHaveLength(1);
+    expect(decisions.filter((item) => item.status === "rejected")).toHaveLength(1);
+  });
+
   it("throws NotFound on unknown id", async () => {
     const svc = makeService();
     await expect(svc.grant("00000000-0000-0000-0000-000000000999", "op")).rejects.toBeInstanceOf(ApprovalNotFoundError);

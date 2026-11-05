@@ -12,11 +12,13 @@ import { registerKnowledgeRoutes } from "./routes/knowledge.js";
 import { registerEvalRoutes } from "./routes/evals.js";
 import { registerApprovalRoutes } from "./routes/approvals.js";
 import { registerSprintRoutes } from "./routes/sprints.js";
+import { createInMemoryApprovalRepository } from "./repositories/approval-repository.js";
 
 export async function buildServer() {
   const app = Fastify({
     logger: env.NODE_ENV !== "test",
   });
+  const approvalRepository = createInMemoryApprovalRepository();
 
   await app.register(cors, {
     origin: parseOrigins(env.CORS_ORIGIN),
@@ -25,6 +27,16 @@ export async function buildServer() {
 
   await app.register(helmet, {
     contentSecurityPolicy: false,
+  });
+
+  // These surfaces lack tenant-scoped execution or durable approval enforcement.
+  // Keep them unavailable until those boundaries are implemented and reviewed.
+  app.addHook("onRequest", async (request, reply) => {
+    const route = request.routeOptions.url ?? "";
+    if (route === "/api/agents/:id/run" || route === "/api/llm" ||
+        route.startsWith("/api/evals/") || route.startsWith("/api/sprints/")) {
+      return reply.code(503).send({error:"Service Unavailable",message:"This endpoint is disabled pending security hardening"});
+    }
   });
 
   app.setErrorHandler((error, _request, reply) => {
@@ -47,12 +59,12 @@ export async function buildServer() {
   }));
 
   await registerHealthRoutes(app);
-  await registerAgentRoutes(app);
+  await registerAgentRoutes(app, approvalRepository);
   await registerLlmRoutes(app);
   await registerRunRoutes(app);
   await registerKnowledgeRoutes(app);
   await registerEvalRoutes(app);
-  await registerApprovalRoutes(app);
+  await registerApprovalRoutes(app, approvalRepository);
   await registerSprintRoutes(app);
 
   return app;

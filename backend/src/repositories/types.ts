@@ -75,7 +75,7 @@ export interface CreateKnowledgeChunkInput {
 
 export interface IKnowledgeRepository {
   createDocument(input: CreateKnowledgeDocumentInput): Promise<KnowledgeDocument>;
-  getDocument(id: string): Promise<KnowledgeDocument | null>;
+  getDocument(id: string, orgId: string): Promise<KnowledgeDocument | null>;
   addChunks(
     documentId: string,
     orgId: string,

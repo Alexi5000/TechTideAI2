@@ -268,13 +268,88 @@ jobs:
           ANTHROPIC_API_KEY: sk-ant-stub-for-ci
         run: bash scripts/smoke-stack.sh
 
+  weaviate-isolation:
+    name: Weaviate tenant isolation and migration
+    runs-on: ubuntu-latest
+    services:
+      fresh:
+        image: cr.weaviate.io/semitechnologies/weaviate@sha256:7dba0539f640539f83e14bfe4fcf73581a3e3a0c07ff60c3b32f85b3a992e7ed
+        ports:
+          - 127.0.0.1:18080:8080
+        env:
+          AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+          PERSISTENCE_DATA_PATH: /var/lib/weaviate
+          DEFAULT_VECTORIZER_MODULE: none
+          CLUSTER_HOSTNAME: node1
+      legacy:
+        image: cr.weaviate.io/semitechnologies/weaviate@sha256:7dba0539f640539f83e14bfe4fcf73581a3e3a0c07ff60c3b32f85b3a992e7ed
+        ports:
+          - 127.0.0.1:18081:8080
+        env:
+          AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+          PERSISTENCE_DATA_PATH: /var/lib/weaviate
+          DEFAULT_VECTORIZER_MODULE: none
+          CLUSTER_HOSTNAME: node1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Wait for isolated Weaviate instances
+        run: |
+          for port in 18080 18081; do
+            ready=false
+            for attempt in {1..60}; do
+              if curl -fsS "http://127.0.0.1:${port}/v1/.well-known/ready" >/dev/null; then ready=true; break; fi
+              sleep 1
+            done
+            if [ "$ready" != true ]; then echo "Weaviate on $port was not ready"; exit 1; fi
+          done
+      - name: Verify exact tenant isolation
+        env:
+          TEST_WEAVIATE_URL: http://127.0.0.1:18080
+        run: node --test backend/tests/weaviate-search.integration.mjs
+      - name: Rehearse legacy migration
+        env:
+          TEST_WEAVIATE_URL: http://127.0.0.1:18081
+        run: node --test backend/tests/weaviate-migration.integration.mjs
+
+  postgres-auth-safety:
+    name: Postgres authentication migration safety
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres@sha256:0cefaabd882e42bcb2a2f3dc56d3ce4770560ba62fd7f197f1a2e008fd5731ab
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Verify auth stub and membership grants in disposable databases
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          ready=false
+          for attempt in {1..60}; do
+            if docker exec "$PG_CONTAINER" pg_isready -h 127.0.0.1 -U postgres >/dev/null 2>&1; then ready=true; break; fi
+            sleep 1
+          done
+          if [ "$ready" != true ]; then echo "Postgres was not ready"; exit 1; fi
+          docker cp database/supabase/migrations "$PG_CONTAINER:/migrations"
+          docker cp database/supabase/tests "$PG_CONTAINER:/tests"
+          docker exec "$PG_CONTAINER" createdb -h 127.0.0.1 -U postgres techtide_auth_stub_test
+          docker exec "$PG_CONTAINER" psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U postgres -d techtide_auth_stub_test -f /tests/auth-stub-preservation.sql
+          docker exec "$PG_CONTAINER" createdb -h 127.0.0.1 -U postgres techtide_membership_test
+          docker exec "$PG_CONTAINER" psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U postgres -d techtide_membership_test -f /tests/membership-privileges.sql
+          docker exec "$PG_CONTAINER" createdb -h 127.0.0.1 -U postgres techtide_policy_test
+          docker exec "$PG_CONTAINER" psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U postgres -d techtide_policy_test -f /tests/memory-approval-privileges.sql
+
   # ──────────────────────────────────────────────
   # Gate, all checks must pass before merge
   # ──────────────────────────────────────────────
   ci-gate:
     name: CI Gate
     if: always()
-    needs: [typescript, python, database, contracts-drift, docker]
+    needs: [typescript, python, database, contracts-drift, docker, weaviate-isolation, postgres-auth-safety]
     runs-on: ubuntu-latest
     steps:
       - name: Check results
@@ -284,6 +359,8 @@ jobs:
           echo "Database:        ${{ needs.database.result }}"
           echo "Contracts drift: ${{ needs.contracts-drift.result }}"
           echo "Docker:          ${{ needs.docker.result }}"
+          echo "Weaviate:        ${{ needs.weaviate-isolation.result }}"
+          echo "Postgres auth:    ${{ needs.postgres-auth-safety.result }}"
 
           # Fail if any required job failed (skipped is OK, means no changes)
           if [[ "${{ needs.typescript.result }}" == "failure" ]]; then exit 1; fi
@@ -291,5 +368,7 @@ jobs:
           if [[ "${{ needs.database.result }}" == "failure" ]]; then exit 1; fi
           if [[ "${{ needs.contracts-drift.result }}" == "failure" ]]; then exit 1; fi
           if [[ "${{ needs.docker.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.weaviate-isolation.result }}" != "success" ]]; then exit 1; fi
+          if [[ "${{ needs.postgres-auth-safety.result }}" != "success" ]]; then exit 1; fi
 
           echo "✅ All checks passed or were skipped"

@@ -1,28 +1,26 @@
 import type { FastifyInstance } from "fastify";
+import rateLimit from "@fastify/rate-limit";
 import { z } from "zod";
 import { agentRegistry, getAgentById, createMastraRuntime } from "@techtide/agents";
 import { createRunRepository } from "../repositories/index.js";
 import { createRunService } from "../services/run-service.js";
 import { createAgentExecutionService, createAgentLookup, ApprovalService } from "../services/index.js";
-import { createInMemoryApprovalRepository } from "../repositories/approval-repository.js";
+import { createInMemoryApprovalRepository, type IApprovalRepository } from "../repositories/approval-repository.js";
 import { supabase } from "../services/supabase.js";
 import { AgentNotFoundError, PersistenceUnavailableError } from "../domain/index.js";
 
-// Default org ID for MVP (matches seed.sql)
-const DEFAULT_ORG_ID = "00000000-0000-0000-0000-000000000001";
-
 const runAgentSchema = z.object({
   input: z.record(z.string(), z.unknown()).default({}),
-  orgId: z.guid().default(DEFAULT_ORG_ID),
+  orgId: z.guid().transform((value) => value.toLowerCase()),
 });
 
-export async function registerAgentRoutes(app: FastifyInstance) {
+export async function registerAgentRoutes(app: FastifyInstance, approvalRepository: IApprovalRepository = createInMemoryApprovalRepository()) {
+  if (!app.hasDecorator("rateLimit")) await app.register(rateLimit, {global:false});
   // Assemble dependencies (could move to DI container)
   const repository = createRunRepository(supabase);
   const runService = createRunService(repository);
   const agentRuntime = createMastraRuntime();
   const agentLookup = createAgentLookup();
-  const approvalRepository = createInMemoryApprovalRepository();
   const approvalService = new ApprovalService({ repository: approvalRepository });
 
   const executionService = createAgentExecutionService({
@@ -54,11 +52,26 @@ export async function registerAgentRoutes(app: FastifyInstance) {
   // POST /api/agents/:id/run - Execute an agent
   app.post<{ Params: { id: string } }>(
     "/api/agents/:id/run",
+    {config:{rateLimit:{max:60,timeWindow:"1 minute"}}},
     async (request, reply) => {
       const { id: agentId } = request.params;
 
       try {
+        const match = /^Bearer ([^\s]+)$/i.exec(request.headers.authorization ?? "");
+        if (!match) return reply.code(401).send({error:"Unauthorized"});
+        if (!supabase) return reply.code(503).send({error:"Authorization unavailable"});
+        let userId: string;
+        try {
+          const {data,error} = await supabase.auth.getUser(match[1]);
+          if (error || !data.user) return reply.code(401).send({error:"Unauthorized"});
+          userId = data.user.id;
+        } catch { return reply.code(503).send({error:"Authorization unavailable"}); }
         const payload = runAgentSchema.parse(request.body);
+        try {
+          const {data,error} = await supabase.from("org_members").select("role").eq("org_id",payload.orgId).eq("user_id",userId).maybeSingle();
+          if (error) return reply.code(503).send({error:"Authorization unavailable"});
+          if (!data || !["owner","admin"].includes(data.role)) return reply.code(403).send({error:"Forbidden"});
+        } catch { return reply.code(503).send({error:"Authorization unavailable"}); }
 
         // Delegate to execution service (business logic lives there)
         const run = await executionService.executeAgent(
